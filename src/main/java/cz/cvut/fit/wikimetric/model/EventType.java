@@ -6,18 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class EventType {
-
-    /* ATTRIBUTES */
-
-    @Id
-    @GeneratedValue
-    private Long ID;
-
-    @Column(unique = true, nullable = false)
-    private String name;
-
-
+public class EventType extends Classifier {
 
     /* CONSTRUCTORS */
 
@@ -27,23 +16,4 @@ public class EventType {
         this.name = name;
     }
 
-
-
-    /* GETTERS */
-
-    public Long getID() {
-        return ID;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-
-
-    /* SETTERS */
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
