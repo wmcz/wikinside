@@ -1,12 +1,15 @@
 package cz.cvut.fit.wikimetric.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 public class Tag extends Classifier {
+
+    /* ATTRIBUTES */
+
+    @ManyToMany
+    Collection<User> users;
 
     /* CONSTRUCTORS */
 

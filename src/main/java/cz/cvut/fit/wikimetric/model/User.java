@@ -13,10 +13,10 @@ public class User {
     @Id
     private Long ID; // MediaWiki user_id user attribute
 
-    @ManyToMany(mappedBy = "userID")
+    @ManyToMany(mappedBy = "users")
     private Collection<Tag> tags;
 
-    @ManyToMany(mappedBy = "userID")
+    @ManyToMany(mappedBy = "participants")
     private Collection<Event> events;
 
 

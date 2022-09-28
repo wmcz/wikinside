@@ -25,7 +25,7 @@ public class Event { //TODO: consider a less ambiguous name (Program? Campaign?)
     private Date startDate;
     private Date endDate;
 
-    @ManyToMany(mappedBy = "eventID")
+    @ManyToMany
     private Collection<User> participants;
 
 
