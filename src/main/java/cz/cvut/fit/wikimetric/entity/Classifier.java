@@ -1,4 +1,4 @@
-package cz.cvut.fit.wikimetric.model;
+package cz.cvut.fit.wikimetric.entity;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;

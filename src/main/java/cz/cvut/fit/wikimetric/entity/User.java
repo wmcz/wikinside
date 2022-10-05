@@ -1,4 +1,4 @@
-package cz.cvut.fit.wikimetric.model;
+package cz.cvut.fit.wikimetric.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

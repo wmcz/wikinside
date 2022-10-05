@@ -1,11 +1,9 @@
-package cz.cvut.fit.wikimetric.model;
+package cz.cvut.fit.wikimetric.entity;
 
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 import java.util.HashSet;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class EventTest {
 
