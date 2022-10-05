@@ -13,7 +13,7 @@ public class Event { //TODO: consider a less ambiguous name (Program? Campaign?)
 
     @Id
     @GeneratedValue
-    private Long ID;
+    private Long id;
 
     @ManyToOne
     @Nullable
@@ -46,8 +46,8 @@ public class Event { //TODO: consider a less ambiguous name (Program? Campaign?)
         this.participants = participants;
     }
 
-    public Long getID() {
-        return ID;
+    public Long getId() {
+        return id;
     }
 
 

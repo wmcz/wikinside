@@ -11,7 +11,7 @@ public class User {
     /* ATTRIBUTES */
 
     @Id
-    private Long ID; // MediaWiki user_id user attribute
+    private Long id; // MediaWiki user_id user attribute
 
     @ManyToMany(mappedBy = "users")
     private Collection<Tag> tags;
@@ -25,12 +25,12 @@ public class User {
 
     protected User() {}
 
-    public User(Long ID) {
-        this.ID = ID;
+    public User(Long id) {
+        this.id = id;
     }
 
-    public User(Long ID, Collection<Tag> tags, Collection<Event> events) {
-        this.ID = ID;
+    public User(Long id, Collection<Tag> tags, Collection<Event> events) {
+        this.id = id;
         this.tags = tags;
         this.events = events;
     }
@@ -39,8 +39,8 @@ public class User {
 
     /* GETTERS */
 
-    public Long getID() {
-        return ID;
+    public Long getId() {
+        return id;
     }
 
     public Collection<Tag> getTags() {

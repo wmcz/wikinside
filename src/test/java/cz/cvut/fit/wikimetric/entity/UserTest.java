@@ -6,8 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class UserTest {
     @Test
-    void getID() {
+    void getId() {
         User user = new User(1L);
-        assert user.getID() == 1;
+        assert user.getId() == 1;
     }
 }

@@ -15,14 +15,14 @@ public abstract class Classifier {
 
     @Id
     @GeneratedValue
-    private Long ID;
+    private Long id;
 
 
 
     /* GETTERS */
 
-    public Long getID() {
-        return ID;
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
