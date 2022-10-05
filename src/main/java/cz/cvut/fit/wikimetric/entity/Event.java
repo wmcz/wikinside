@@ -3,6 +3,7 @@ package cz.cvut.fit.wikimetric.entity;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Date;
 
@@ -22,8 +23,8 @@ public class Event { //TODO: consider a less ambiguous name (Program? Campaign?)
     @Column(unique=true, nullable = false)
     private String name;
 
-    private Date startDate;
-    private Date endDate;
+    private Instant startDate;
+    private Instant endDate;
 
     @ManyToMany
     private Collection<User> participants;
@@ -38,7 +39,7 @@ public class Event { //TODO: consider a less ambiguous name (Program? Campaign?)
         this.name = name;
     }
 
-    public Event(@Nullable EventType eventType, String name, Date startDate, Date endDate, Collection<User> participants) {
+    public Event(@Nullable EventType eventType, String name, Instant startDate, Instant endDate, Collection<User> participants) {
         this.eventType = eventType;
         this.name = name;
         this.startDate = startDate;
@@ -63,11 +64,11 @@ public class Event { //TODO: consider a less ambiguous name (Program? Campaign?)
         return name;
     }
 
-    public Date getStartDate() {
+    public Instant getStartDate() {
         return startDate;
     }
 
-    public Date getEndDate() {
+    public Instant getEndDate() {
         return endDate;
     }
 
@@ -87,11 +88,11 @@ public class Event { //TODO: consider a less ambiguous name (Program? Campaign?)
         this.name = name;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(Instant startDate) {
         this.startDate = startDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(Instant endDate) {
         this.endDate = endDate;
     }
 
