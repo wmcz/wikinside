@@ -13,7 +13,7 @@ public class User {
     @Id
     private Long id; // MediaWiki user_id user attribute
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany
     private Collection<Tag> tags;
 
     @ManyToMany(mappedBy = "participants")
@@ -61,5 +61,15 @@ public class User {
 
     public void setEvents(Collection<Event> events) {
         this.events = events;
+    }
+
+    public User addTag(Tag tag) {
+        tags.add(tag);
+        return this;
+    }
+
+    public User removeTag(Tag tag) {
+        tags.remove(tag);
+        return this;
     }
 }

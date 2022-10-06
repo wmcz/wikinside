@@ -8,7 +8,7 @@ public class Tag extends Classifier {
 
     /* ATTRIBUTES */
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "tags")
     Collection<User> users;
 
     /* CONSTRUCTORS */
