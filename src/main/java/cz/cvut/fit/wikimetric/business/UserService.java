@@ -1,7 +1,7 @@
 package cz.cvut.fit.wikimetric.business;
 
-import cz.cvut.fit.wikimetric.entity.Tag;
-import cz.cvut.fit.wikimetric.entity.User;
+import cz.cvut.fit.wikimetric.model.Tag;
+import cz.cvut.fit.wikimetric.model.User;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

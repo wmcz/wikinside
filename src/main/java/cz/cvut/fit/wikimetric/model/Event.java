@@ -1,11 +1,10 @@
-package cz.cvut.fit.wikimetric.entity;
+package cz.cvut.fit.wikimetric.model;
 
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.Collection;
-import java.util.Date;
 
 @Entity
 public class Event implements IdAble<Long> { //TODO: consider a less ambiguous name (Program? Campaign?)
@@ -29,6 +28,8 @@ public class Event implements IdAble<Long> { //TODO: consider a less ambiguous n
     @ManyToMany
     private Collection<User> participants;
 
+    @Transient
+    private Impact impact;
 
 
     /* CONSTRUCTORS */

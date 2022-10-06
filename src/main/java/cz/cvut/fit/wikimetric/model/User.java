@@ -1,8 +1,9 @@
-package cz.cvut.fit.wikimetric.entity;
+package cz.cvut.fit.wikimetric.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 import java.util.Collection;
 
 @Entity
@@ -18,6 +19,9 @@ public class User implements IdAble<Long> {
 
     @ManyToMany(mappedBy = "participants")
     private Collection<Event> events;
+
+    @Transient
+    private Impact impact;
 
 
 

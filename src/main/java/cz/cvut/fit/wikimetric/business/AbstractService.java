@@ -1,6 +1,6 @@
 package cz.cvut.fit.wikimetric.business;
 
-import cz.cvut.fit.wikimetric.entity.IdAble;
+import cz.cvut.fit.wikimetric.model.IdAble;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

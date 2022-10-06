@@ -1,6 +1,6 @@
-package cz.cvut.fit.wikimetric.api;
+package cz.cvut.fit.wikimetric.api.controller.internal;
 
-import cz.cvut.fit.wikimetric.dto.EventDto;
+import cz.cvut.fit.wikimetric.model.Event;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -9,22 +9,22 @@ import org.springframework.web.server.ResponseStatusException;
 public class EventController {
 
     @PostMapping("/events")
-    EventDto create(@RequestBody EventDto event) {
+    Event create(@RequestBody Event event) {
         throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
     }
 
     @PostMapping("/events/{id}")
-    EventDto get(@PathVariable Long id) {
+    Event get(@PathVariable Long id) {
         throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
     }
 
     @PostMapping("/events")
-    EventDto getMany() { //TODO: filters
+    Event getMany() { //TODO: filters
         throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
     }
 
     @PutMapping("/events}")
-    EventDto update(@RequestBody EventDto user) {
+    Event update(@RequestBody Event user) {
         throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
     }
 

@@ -1,4 +1,4 @@
-package cz.cvut.fit.wikimetric.entity;
+package cz.cvut.fit.wikimetric.model;
 
 public interface IdAble<ID> {
     public ID getId();
