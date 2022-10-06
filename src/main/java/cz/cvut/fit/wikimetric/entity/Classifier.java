@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public abstract class Classifier {
+public abstract class Classifier implements IdAble<Long> {
 
     /* ATTRIBUTES */
 

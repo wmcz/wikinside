@@ -6,7 +6,7 @@ import javax.persistence.ManyToMany;
 import java.util.Collection;
 
 @Entity
-public class User {
+public class User implements IdAble<Long> {
 
     /* ATTRIBUTES */
 

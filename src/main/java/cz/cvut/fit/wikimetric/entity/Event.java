@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Date;
 
 @Entity
-public class Event { //TODO: consider a less ambiguous name (Program? Campaign?)
+public class Event implements IdAble<Long> { //TODO: consider a less ambiguous name (Program? Campaign?)
 
     /* ATTRIBUTES */
 
