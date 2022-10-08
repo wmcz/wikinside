@@ -13,17 +13,17 @@ public class EventController {
         throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    @PostMapping("/events/{id}")
+    @GetMapping("/events/{id}")
     Event get(@PathVariable Long id) {
         throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    @PostMapping("/events")
+    @GetMapping("/events")
     Event getMany() { //TODO: filters
         throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    @PutMapping("/events}")
+    @PutMapping("/events")
     Event update(@RequestBody Event user) {
         throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
     }
