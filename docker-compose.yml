@@ -16,6 +16,6 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - "SPRING_DATASOURCE_URL=jdbc:mariadb://localhost:3306/metrics"
+      - "SPRING_DATASOURCE_URL=jdbc:mariadb://db:3306/metrics"
       - "SPRING_DATASOURCE_USERNAME=root"
       - "SPRING_DATASOURCE_PASSWORD=example"
