@@ -68,12 +68,12 @@ public class User implements IdAble<Long> {
     }
 
     public User addTag(Tag tag) {
-        tags.add(tag);
+        tags.add(tag.addUser(this));
         return this;
     }
 
     public User removeTag(Tag tag) {
-        tags.remove(tag);
+        tags.remove(tag.removeUser(this));
         return this;
     }
 }
