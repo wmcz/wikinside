@@ -1,6 +1,6 @@
 package cz.cvut.fit.wikimetric.model;
 
-public class Impact {
+abstract class Impact {
 
 
     private final int createdPages;

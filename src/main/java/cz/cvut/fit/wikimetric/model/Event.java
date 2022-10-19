@@ -29,7 +29,7 @@ public class Event implements IdAble<Long> { //TODO: consider a less ambiguous n
     private Collection<User> participants;
 
     @Transient
-    private Impact impact;
+    private EventImpact impact;
 
 
     /* CONSTRUCTORS */
