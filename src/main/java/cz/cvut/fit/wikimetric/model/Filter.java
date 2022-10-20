@@ -10,23 +10,25 @@ import java.util.Collection;
 public class Filter {
     @Id
     @GeneratedValue
-    Long id;
+    private Long id;
+
+    private String name;
 
     @ManyToMany
-    Collection<Tag> includedTags;
+    private Collection<Tag> includedTags;
 
     @ManyToMany
-    Collection<Tag> excludedTags;
+    private Collection<Tag> excludedTags;
 
     @ManyToMany
-    Collection<EventType> includedEventTypes;
+    private Collection<EventType> includedEventTypes;
 
     @ManyToMany
-    Collection<EventType> excludedEventTypes;
+    private Collection<EventType> excludedEventTypes;
 
     @ManyToMany
-    Collection<Project> includedProjects;
+    private Collection<Project> includedProjects;
 
     @ManyToMany
-    Collection<Project> excludedProjects;
+    private Collection<Project> excludedProjects;
 }
