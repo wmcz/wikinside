@@ -15,13 +15,13 @@ public class User implements IdAble<Long> {
     private Long id; // MediaWiki user_id user attribute
 
     @ManyToMany
-    private Collection<Tag> tags;
+    private Collection<UserTag> tags;
 
     @ManyToMany(mappedBy = "participants")
     private Collection<Event> events;
 
     @Transient
-    private Impact impact;
+    private UserImpact impact;
 
 
 
@@ -33,7 +33,7 @@ public class User implements IdAble<Long> {
         this.id = id;
     }
 
-    public User(Long id, Collection<Tag> tags, Collection<Event> events) {
+    public User(Long id, Collection<UserTag> tags, Collection<Event> events) {
         this.id = id;
         this.tags = tags;
         this.events = events;
@@ -47,7 +47,7 @@ public class User implements IdAble<Long> {
         return id;
     }
 
-    public Collection<Tag> getTags() {
+    public Collection<UserTag> getTags() {
         return tags;
     }
 
@@ -59,7 +59,7 @@ public class User implements IdAble<Long> {
 
     /* SETTERS */
 
-    public void setTags(Collection<Tag> tags) {
+    public void setTags(Collection<UserTag> tags) {
         this.tags = tags;
     }
 
@@ -67,13 +67,13 @@ public class User implements IdAble<Long> {
         this.events = events;
     }
 
-    public User addTag(Tag tag) {
-        tags.add(tag.addUser(this));
+    public User addTag(UserTag tag) {
+        tags.add(tag.addTagged(this));
         return this;
     }
 
-    public User removeTag(Tag tag) {
-        tags.remove(tag.removeUser(this));
+    public User removeTag(UserTag tag) {
+        tags.remove(tag.removeTagged(this));
         return this;
     }
 }

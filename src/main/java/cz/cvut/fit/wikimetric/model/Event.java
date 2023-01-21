@@ -15,9 +15,8 @@ public class Event implements IdAble<Long> { //TODO: consider a less ambiguous n
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
-    @Nullable
-    private EventType eventType;
+    @ManyToMany
+    private Collection<EventTag> tags;
 
     @Column(unique=true, nullable = false)
     private String name;
@@ -40,8 +39,8 @@ public class Event implements IdAble<Long> { //TODO: consider a less ambiguous n
         this.name = name;
     }
 
-    public Event(@Nullable EventType eventType, String name, Instant startDate, Instant endDate, Collection<User> participants) {
-        this.eventType = eventType;
+    public Event(Collection<EventTag> tags, String name, Instant startDate, Instant endDate, Collection<User> participants) {
+        this.tags = tags;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -56,9 +55,9 @@ public class Event implements IdAble<Long> { //TODO: consider a less ambiguous n
 
     /* GETTERS */
 
-    @Nullable
-    public EventType getEventType() {
-        return eventType;
+
+    public Collection<EventTag> getTags() {
+        return tags;
     }
 
     public String getName() {
@@ -81,8 +80,8 @@ public class Event implements IdAble<Long> { //TODO: consider a less ambiguous n
 
     /* SETTERS */
 
-    public void setEventType(@Nullable EventType eventType) {
-        this.eventType = eventType;
+    public void setTags(Collection<EventTag> tags) {
+        this.tags = tags;
     }
 
     public void setName(String name) {

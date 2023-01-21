@@ -2,78 +2,67 @@ package cz.cvut.fit.wikimetric.model;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
-public class Tag extends Classifier {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public abstract class Tag<E> implements IdAble<Long> {
 
     /* ATTRIBUTES */
 
+    @Column(unique = true, nullable = false)
+    protected String name;
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
     private final boolean assignable;
-    @ManyToOne
-    private Tag parent;
-
-    @OneToMany(mappedBy = "parent")
-    private Set<Tag> children;
-
-    @ManyToMany(mappedBy = "tags")
-    private Collection<User> users;
 
 
-    /* CONSTRUCTORS */
+    protected Tag(String name, boolean assignable) {
+        this.name = name;
+        this.assignable = assignable;
+    }
 
     protected Tag() {
         this("", true);
     }
 
-    public Tag(String name, boolean assignable) {
-        this.assignable = assignable;
-        this.name = name;
-        this.children = new HashSet<Tag>();
-        this.users = assignable ? new HashSet<>() : Collections.emptySet();
-    }
-    public Tag(String name) {
+    protected Tag(String name) {
         this(name, true);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public boolean isAssignable() {
         return assignable;
     }
 
-    public Tag removeParent() {
+    public abstract Collection<E> getTagged();
 
-        if (this.parent != null) {
-            parent.children.remove(this);
-            this.parent = null;
-        }
+    public abstract Tag<E> getParent();
 
-        return this;
+    public abstract Collection<? extends Tag<E>> getChildren();
+
+    /* SETTERS */
+
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Tag assignParent(Tag parent) {
-        this.removeParent();
-        parent.children.add(this);
-        this.parent = parent;
-        return this;
-    }
+    public abstract Tag<E> setTagged(Collection<E> tagged);
+    public abstract Tag<E> addTagged(E tagged);
+    public abstract Tag<E> removeTagged(E tagged);
+    public abstract Tag<E> setChildren(Collection<Tag<E>> tags);
 
-    public Tag addUser(User user) {
-        this.users.add(user);
-        return this;
-    }
+    public abstract Tag<E> addChild(Tag<E> tag);
+    public abstract Tag<E> removeChild(Tag<E> tag);
+    public abstract Tag<E> setParent(Tag<E> tag);
 
-    public Tag removeUser(User user) {
-        this.users.remove(user);
-        return this;
-    }
-
-    public Collection<Tag> getChildren() {
-        return children;
-    }
-
-    public Collection<User> getUsers() {
-        return users;
-    }
 }

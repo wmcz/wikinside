@@ -3,8 +3,8 @@ package cz.cvut.fit.wikimetric.model;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 
 class EventTest {
 
@@ -20,7 +20,7 @@ class EventTest {
     void getStartDate() {
         Instant startDate = Instant.ofEpochSecond(1000213391);
 
-        Event event = new Event(new EventType(), "name", startDate, startDate.plusSeconds(2048), Collections.emptySet());
+        Event event = new Event(Collections.emptySet(), "name", startDate, startDate.plusSeconds(2048), Collections.emptySet());
         assert event.getStartDate() == startDate;
     }
 
@@ -28,7 +28,7 @@ class EventTest {
     void getEndDate() {
         Instant endDate = Instant.ofEpochSecond(1000215439);
 
-        Event event = new Event(new EventType(), "name", endDate.minusSeconds(2048), endDate, Collections.emptySet());
+        Event event = new Event(Collections.emptySet(), "name", endDate.minusSeconds(2048), endDate, Collections.emptySet());
         assert event.getEndDate() == endDate;
     }
 
@@ -50,7 +50,7 @@ class EventTest {
         Instant startDate = Instant.ofEpochSecond(1000213391);
         Instant newDate = Instant.EPOCH;
 
-        Event event = new Event(new EventType(), "name", startDate, startDate.plusSeconds(2048), Collections.emptySet());
+        Event event = new Event(Collections.emptySet(), "name", startDate, startDate.plusSeconds(2048), Collections.emptySet());
         assert event.getStartDate() == startDate;
 
         event.setStartDate(newDate);
@@ -63,7 +63,7 @@ class EventTest {
         Instant endDate = Instant.ofEpochSecond(2048);
         Instant newDate = Instant.ofEpochSecond(1000215439);
 
-        Event event = new Event(new EventType(), "name", endDate.minusSeconds(2048), endDate, Collections.emptySet());
+        Event event = new Event(Collections.emptySet(), "name", endDate.minusSeconds(2048), endDate, Collections.emptySet());
         assert event.getEndDate() == endDate;
 
         event.setEndDate(newDate);

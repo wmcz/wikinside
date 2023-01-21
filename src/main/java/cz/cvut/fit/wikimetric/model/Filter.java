@@ -15,16 +15,16 @@ public class Filter {
     private String name;
 
     @ManyToMany
-    private Collection<Tag> includedTags;
+    private Collection<UserTag> includedUserTags;
 
     @ManyToMany
-    private Collection<Tag> excludedTags;
+    private Collection<UserTag> excludedUserTags;
 
     @ManyToMany
-    private Collection<EventType> includedEventTypes;
+    private Collection<EventTag> includedEventTags;
 
     @ManyToMany
-    private Collection<EventType> excludedEventTypes;
+    private Collection<EventTag> excludedEventTags;
 
     @ManyToMany
     private Collection<Project> includedProjects;
