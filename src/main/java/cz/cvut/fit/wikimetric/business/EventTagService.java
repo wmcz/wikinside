@@ -14,6 +14,9 @@ public class EventTagService extends AbstractService<EventTag, Long> {
     }
 
     public Optional<EventTag> setParent(EventTag tag, EventTag parent) {
-        return update(tag.setParent(parent));
+        Optional<EventTag> res = update(tag.setParent(parent));
+        if (update(parent).isEmpty())
+            throw new IllegalStateException("Inconsistent data: parent-child relationship could not be established properly for the following tags:" + parent.getId() + ", " + tag.getId());
+        return res;
     }
 }

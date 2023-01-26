@@ -14,6 +14,9 @@ public class UserTagService extends AbstractService<UserTag, Long> {
     }
 
     public Optional<UserTag> setParent(UserTag tag, UserTag parent) {
-        return update(tag.setParent(parent));
+        Optional<UserTag> res = update(tag.setParent(parent));
+        if (update(parent).isEmpty())
+            throw new IllegalStateException("Inconsistent data: parent-child relationship could not be established properly for the following tags:" + parent.getId() + ", " + tag.getId());
+        return res;
     }
 }
