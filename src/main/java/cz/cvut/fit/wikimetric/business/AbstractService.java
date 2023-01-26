@@ -31,6 +31,8 @@ public abstract class AbstractService<T extends IdAble<ID>, ID> {
         return repository.findById(id);
     }
 
+    public Iterable<T> findAll() { return repository.findAll(); }
+
     private <S extends T> S save(S entity) {
         return repository.save(entity);
     }

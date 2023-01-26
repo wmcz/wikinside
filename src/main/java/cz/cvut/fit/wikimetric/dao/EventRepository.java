@@ -8,5 +8,7 @@ import java.util.Collection;
 
 public interface EventRepository extends CrudRepository<Event, Long> {
     Collection<Event> findEventsByName(String name);
-    Collection<Event> findEventsByEventType(EventTag eventTag);
+    Collection<Event> findEventsByTagsContains(Collection<EventTag> tags);
+
+
 }
