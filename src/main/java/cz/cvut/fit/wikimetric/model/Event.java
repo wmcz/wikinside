@@ -1,7 +1,5 @@
 package cz.cvut.fit.wikimetric.model;
 
-import org.springframework.lang.Nullable;
-
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.Collection;
@@ -84,19 +82,33 @@ public class Event implements IdAble<Long> { //TODO: consider a less ambiguous n
         this.tags = tags;
     }
 
-    public void setName(String name) {
+    public Event addTag(EventTag tag) {
+        this.tags.add(tag);
+        return this;
+    }
+
+    public Event removeTag(EventTag tag) {
+        this.tags.remove(tag);
+        return this;
+    }
+
+    public Event setName(String name) {
         this.name = name;
+        return this;
     }
 
-    public void setStartDate(Instant startDate) {
+    public Event setStartDate(Instant startDate) {
         this.startDate = startDate;
+        return this;
     }
 
-    public void setEndDate(Instant endDate) {
+    public Event setEndDate(Instant endDate) {
         this.endDate = endDate;
+        return this;
     }
 
-    public void setParticipants(Collection<User> eventParticipants) {
+    public Event setParticipants(Collection<User> eventParticipants) {
         this.participants = eventParticipants;
+        return this;
     }
 }

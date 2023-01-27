@@ -1,21 +1,29 @@
 package cz.cvut.fit.wikimetric.api.controller.internal;
 
+import cz.cvut.fit.wikimetric.business.EventService;
 import cz.cvut.fit.wikimetric.model.Event;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class EventController {
 
+    private EventService eventService;
+
     @PostMapping("/events")
     Event create(@RequestBody Event event) {
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
+        return eventService
+                .create(event)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event already exists"));
     }
 
     @GetMapping("/events/{id}")
     Event get(@PathVariable Long id) {
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
+        return eventService
+                .findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
     }
 
     @GetMapping("/events")
@@ -24,13 +32,17 @@ public class EventController {
     }
 
     @PutMapping("/events")
-    Event update(@RequestBody Event user) {
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
+    Event update(@RequestBody Event event) {
+        return eventService
+                .update(event)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event does not exist"));
     }
 
     @DeleteMapping("/events/{id}")
-    void delete(@PathVariable Long id) {
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
+    ResponseEntity<?> delete(@PathVariable Long id) {
+        eventService.deleteById(id);
+        return ResponseEntity.noContent().build();
+
     }
 
 }
