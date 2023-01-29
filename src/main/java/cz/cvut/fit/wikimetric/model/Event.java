@@ -5,7 +5,7 @@ import java.time.Instant;
 import java.util.Collection;
 
 @Entity
-public class Event implements IdAble<Long> { //TODO: consider a less ambiguous name (Program? Campaign?)
+public class Event implements IdAble<Long> {
 
     /* ATTRIBUTES */
 
