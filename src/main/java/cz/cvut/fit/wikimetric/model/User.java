@@ -14,10 +14,10 @@ public class User implements IdAble<Long> {
     @Id
     private Long id; // MediaWiki user_id user attribute, ideally
 
-    @Transient
+    //@Transient
     private String username;
 
-    @Transient
+    //@Transient
     private String email;
 
     @ManyToMany
