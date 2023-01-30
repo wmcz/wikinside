@@ -33,6 +33,11 @@ public class UserController {
         throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    @GetMapping("/users/{username}")
+    Collection<User> getByName(@PathVariable String username) {
+        return userService.findByUsername(username);
+    }
+
     @PutMapping("/users")
     User update(@RequestBody User user) {
         return userService

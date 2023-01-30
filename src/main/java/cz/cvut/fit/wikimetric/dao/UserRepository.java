@@ -8,4 +8,5 @@ import java.util.Collection;
 
 public interface UserRepository extends CrudRepository<User, Long> {
     Collection<User> findUsersByTagsContains(Collection<UserTag> tags);
+    Collection<User> findUsersByUsername(String username);
 }
