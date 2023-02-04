@@ -53,6 +53,11 @@ public class EventTagController {
 
     }
 
+    @GetMapping("/tags/event-tags/{name}")
+    Collection<EventTag> getByName(@PathVariable String name) {
+        return eventTagService.findByName(name);
+    }
+
     @PutMapping("/tags/event-tags")
     EventTag update(@RequestBody EventTag tag) {
         return eventTagService

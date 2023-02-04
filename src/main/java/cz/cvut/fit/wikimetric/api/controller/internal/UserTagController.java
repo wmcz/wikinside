@@ -53,6 +53,11 @@ public class UserTagController {
 
     }
 
+    @GetMapping("/tags/event-tags/{name}")
+    Collection<UserTag> getByName(@PathVariable String name) {
+        return userTagService.findByName(name);
+    }
+
     @PutMapping("/tags/user-tags")
     UserTag update(@RequestBody UserTag tag) {
         return userTagService

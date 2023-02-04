@@ -3,14 +3,13 @@ package cz.cvut.fit.wikimetric.business;
 import cz.cvut.fit.wikimetric.dao.UserRepository;
 import cz.cvut.fit.wikimetric.model.UserTag;
 import cz.cvut.fit.wikimetric.model.User;
-import org.springframework.data.repository.CrudRepository;
 
 import java.util.Collection;
 import java.util.Optional;
 
 
 public class UserService extends AbstractService<User, Long> {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     public UserService(UserRepository repository) {
         super(repository);
         this.userRepository = repository;
