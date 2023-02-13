@@ -15,10 +15,14 @@ import java.util.Collections;
 @RestController
 public class EventTagController {
 
-    private EventTagService eventTagService;
+    private final EventTagService eventTagService;
+
+    public EventTagController(EventTagService eventTagService) {
+        this.eventTagService = eventTagService;
+    }
 
     @PostMapping("/tags/event-tags")
-    EventTag create(@RequestBody EventTag tag) {
+    public EventTag create(@RequestBody EventTag tag) {
         return eventTagService
                 .create(tag)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tag already exists"));
@@ -26,14 +30,14 @@ public class EventTagController {
     }
 
     @GetMapping("tags/event-tags/{id}")
-    EventTag get(@PathVariable Long id) {
+    public EventTag get(@PathVariable Long id) {
         return eventTagService
                 .findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag not found"));
     }
 
     @GetMapping("tags/event-tags")
-    Collection<EventTag> getAll() {
+    public Collection<EventTag> getAll() {
         Collection<EventTag> result = new ArrayList<>();
         eventTagService
                 .findAll()
@@ -42,7 +46,7 @@ public class EventTagController {
     }
 
     @GetMapping("tags/event-tags/{id}/events")
-    Collection<Event> getEvents(@PathVariable Long id) {
+    public Collection<Event> getEvents(@PathVariable Long id) {
         return eventTagService
                 .getEventsWithTags(
                         Collections.singleton(
@@ -54,19 +58,19 @@ public class EventTagController {
     }
 
     @GetMapping("/tags/event-tags/{name}")
-    Collection<EventTag> getByName(@PathVariable String name) {
+    public Collection<EventTag> getByName(@PathVariable String name) {
         return eventTagService.findByName(name);
     }
 
     @PutMapping("/tags/event-tags")
-    EventTag update(@RequestBody EventTag tag) {
+    public EventTag update(@RequestBody EventTag tag) {
         return eventTagService
                 .update(tag)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event does not exist"));
     }
 
     @DeleteMapping("/tags/event-tags/{id}")
-    ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         eventTagService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

@@ -12,41 +12,45 @@ import java.util.Collection;
 @RestController
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/users")
-    User create(@RequestBody User user) {
+    public User create(@RequestBody User user) {
         return userService
                 .create(user)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists"));
     }
 
     @GetMapping("/users/{id}")
-    User get(@PathVariable Long id) {
+    public User get(@PathVariable Long id) {
         return userService
                         .findById(id)
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }
 
     @GetMapping("/users")
-    Collection<User> getMany() { //TODO: filters
+    public Collection<User> getMany() { //TODO: filters
         throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
     }
 
     @GetMapping("/users/{username}")
-    Collection<User> getByName(@PathVariable String username) {
+    public Collection<User> getByName(@PathVariable String username) {
         return userService.findByUsername(username);
     }
 
     @PutMapping("/users")
-    User update(@RequestBody User user) {
+    public User update(@RequestBody User user) {
         return userService
                         .update(user)
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist"));
     }
 
     @DeleteMapping("/users/{id}")
-    ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         userService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

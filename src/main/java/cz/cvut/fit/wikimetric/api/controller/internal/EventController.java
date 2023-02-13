@@ -11,8 +11,11 @@ import java.util.Collection;
 
 @RestController
 public class EventController {
+    private final EventService eventService;
 
-    private EventService eventService;
+    public EventController(EventService eventService) {
+        this.eventService = eventService;
+    }
 
     @PostMapping("/events")
     Event create(@RequestBody Event event) {

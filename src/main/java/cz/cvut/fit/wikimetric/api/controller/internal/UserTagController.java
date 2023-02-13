@@ -15,10 +15,14 @@ import java.util.Collections;
 @RestController
 public class UserTagController {
 
-    private UserTagService userTagService;
+    private final UserTagService userTagService;
+
+    public UserTagController(UserTagService userTagService) {
+        this.userTagService = userTagService;
+    }
 
     @PostMapping("/tags/user-tags")
-    UserTag create(@RequestBody UserTag tag) {
+    public UserTag create(@RequestBody UserTag tag) {
         return userTagService
                 .create(tag)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tag already exists"));
@@ -26,14 +30,14 @@ public class UserTagController {
     }
 
     @GetMapping("tags/user-tags/{id}")
-    UserTag get(@PathVariable Long id) {
+    public UserTag get(@PathVariable Long id) {
         return userTagService
                 .findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag not found"));
     }
 
     @GetMapping("tags/user-tags")
-    Collection<UserTag> getAll() {
+    public Collection<UserTag> getAll() {
         Collection<UserTag> result = new ArrayList<>();
         userTagService
                 .findAll()
@@ -42,7 +46,7 @@ public class UserTagController {
     }
 
     @GetMapping("tags/user-tags/{id}/users")
-    Collection<User> getUsers(@PathVariable Long id) {
+    public Collection<User> getUsers(@PathVariable Long id) {
         return userTagService
                 .getUsersWithTags(
                         Collections.singleton(
@@ -54,19 +58,19 @@ public class UserTagController {
     }
 
     @GetMapping("/tags/event-tags/{name}")
-    Collection<UserTag> getByName(@PathVariable String name) {
+    public Collection<UserTag> getByName(@PathVariable String name) {
         return userTagService.findByName(name);
     }
 
     @PutMapping("/tags/user-tags")
-    UserTag update(@RequestBody UserTag tag) {
+    public UserTag update(@RequestBody UserTag tag) {
         return userTagService
                 .update(tag)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist"));
     }
 
     @DeleteMapping("/tags/user-tags/{id}")
-    ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         userTagService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
