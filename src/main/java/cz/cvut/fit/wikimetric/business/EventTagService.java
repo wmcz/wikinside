@@ -28,9 +28,9 @@ public class EventTagService extends AbstractService<EventTag, Long> {
         return res;
     }
 
-    public Collection<Event> getEventsWithTags(Collection<EventTag> tags) {
-        Collection<Event> result = eventRepository.findEventsByTagsContains(tags);
-        tags.forEach(tag -> result.addAll(getEventsWithTags(tag.getChildren())));
+    public Collection<Event> getEventsWithTag(EventTag tag) {
+        Collection<Event> result = eventRepository.findEventsByTag(tag);
+        tag.getChildren().forEach(child -> result.addAll(getEventsWithTag(child)));
         return result;
     }
 

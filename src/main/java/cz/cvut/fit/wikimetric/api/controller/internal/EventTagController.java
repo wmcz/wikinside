@@ -10,7 +10,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 @RestController
 public class EventTagController {
@@ -48,17 +47,16 @@ public class EventTagController {
     @GetMapping("tags/event-tags/{id}/events")
     public Collection<Event> getEvents(@PathVariable Long id) {
         return eventTagService
-                .getEventsWithTags(
-                        Collections.singleton(
-                                eventTagService
-                                        .findById(id)
-                                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tag does not exist"))));
+                .getEventsWithTag(
+                        eventTagService
+                                .findById(id)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tag does not exist")));
 
 
     }
 
     @GetMapping("/tags/event-tags/{name}")
-    public Collection<EventTag> getByName(@PathVariable String name) {
+    public Collection<EventTag> getEventTagsByName(@PathVariable String name) {
         return eventTagService.findByName(name);
     }
 

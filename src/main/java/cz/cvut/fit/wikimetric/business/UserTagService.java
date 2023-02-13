@@ -28,9 +28,9 @@ public class UserTagService extends AbstractService<UserTag, Long> {
         return res;
     }
 
-    public Collection<User> getUsersWithTags(Collection<UserTag> tags) {
-        Collection<User> result = userRepository.findUsersByTagsContains(tags);
-        tags.forEach(tag -> result.addAll(getUsersWithTags(tag.getChildren())));
+    public Collection<User> getUsersWithTag(UserTag tag) {
+        Collection<User> result = userRepository.findUsersByTag(tag);
+        tag.getChildren().forEach(child -> result.addAll(getUsersWithTag(child)));
         return result;
     }
 
