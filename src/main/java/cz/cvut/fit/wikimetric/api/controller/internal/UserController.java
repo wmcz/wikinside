@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @RestController
@@ -34,7 +35,9 @@ public class UserController {
 
     @GetMapping("/users")
     public Collection<User> getMany() { //TODO: filters
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
+        Collection<User> result = new ArrayList<>();
+        userService.findAll().forEach(result::add);
+        return result;
     }
 
     @GetMapping("/users/{username}")

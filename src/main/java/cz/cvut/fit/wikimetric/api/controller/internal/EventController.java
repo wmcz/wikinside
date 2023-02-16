@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @RestController
@@ -32,8 +33,10 @@ public class EventController {
     }
 
     @GetMapping("/events")
-    Event getMany() { //TODO: filters
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
+    Collection<Event> getMany() {
+        Collection<Event> result = new ArrayList<>();
+        eventService.findAll().forEach(result::add);
+        return result;
     }
 
     @GetMapping("/events/{name}")
