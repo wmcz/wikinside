@@ -9,6 +9,13 @@ import java.util.Collection;
 @Entity
 public class EventTag extends Tag<Event> {
 
+    public EventTag(Long id, String name, boolean assignable, Collection<Event> tagged, EventTag parent, Collection<EventTag> children) {
+        super(id, name, assignable);
+        this.tagged = tagged;
+        this.parent = parent;
+        this.children = children;
+    }
+
     public EventTag(String name, boolean assignable) {
         super(name, assignable);
     }

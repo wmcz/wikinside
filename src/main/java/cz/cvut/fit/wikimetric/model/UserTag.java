@@ -6,6 +6,13 @@ import java.util.Collection;
 @Entity
 public class UserTag extends Tag<User> {
 
+    public UserTag(Long id, String name, boolean assignable, Collection<User> tagged, UserTag parent, Collection<UserTag> children) {
+        super(id, name, assignable);
+        this.tagged = tagged;
+        this.parent = parent;
+        this.children = children;
+    }
+
     public UserTag(String name, boolean assignable) {
         super(name, assignable);
     }

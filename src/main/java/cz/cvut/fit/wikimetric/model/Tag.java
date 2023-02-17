@@ -18,6 +18,11 @@ public abstract class Tag<E> implements IdAble<Long> {
 
     private final boolean assignable;
 
+    protected Tag(Long id, String name, boolean assignable) {
+        this.id = id;
+        this.name = name;
+        this.assignable = assignable;
+    }
 
     protected Tag(String name, boolean assignable) {
         this.name = name;

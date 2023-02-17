@@ -37,7 +37,8 @@ public class Event implements IdAble<Long> {
         this.name = name;
     }
 
-    public Event(Collection<EventTag> tags, String name, Instant startDate, Instant endDate, Collection<User> participants) {
+    public Event(Long id, Collection<EventTag> tags, String name, Instant startDate, Instant endDate, Collection<User> participants) {
+        this.id = id;
         this.tags = tags;
         this.name = name;
         this.startDate = startDate;
