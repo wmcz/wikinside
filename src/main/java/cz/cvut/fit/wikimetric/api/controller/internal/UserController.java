@@ -40,7 +40,7 @@ public class UserController {
         return result;
     }
 
-    @GetMapping("/users/{username}")
+    @GetMapping("/users/username/{username}")
     public Collection<User> getByName(@PathVariable String username) {
         return userService.findByUsername(username);
     }

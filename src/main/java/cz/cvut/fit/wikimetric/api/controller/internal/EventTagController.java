@@ -55,7 +55,7 @@ public class EventTagController {
 
     }
 
-    @GetMapping("/tags/event-tags/{name}")
+    @GetMapping("/tags/event-tags/name/{name}")
     public Collection<EventTag> getEventTagsByName(@PathVariable String name) {
         return eventTagService.findByName(name);
     }

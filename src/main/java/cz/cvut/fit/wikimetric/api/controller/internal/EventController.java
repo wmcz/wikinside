@@ -39,7 +39,7 @@ public class EventController {
         return result;
     }
 
-    @GetMapping("/events/{name}")
+    @GetMapping("/events/name/{name}")
     Collection<Event> getByName(@PathVariable String name) {
         return eventService.findByName(name);
     }

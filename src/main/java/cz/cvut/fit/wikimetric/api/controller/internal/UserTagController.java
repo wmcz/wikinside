@@ -55,7 +55,7 @@ public class UserTagController {
 
     }
 
-    @GetMapping("/tags/user-tags/{name}")
+    @GetMapping("/tags/user-tags/name/{name}")
     public Collection<UserTag> getUserTagsByName(@PathVariable String name) {
         return userTagService.findByName(name);
     }
