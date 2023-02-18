@@ -1,8 +1,10 @@
 package cz.cvut.fit.wikimetric.api.controller.internal;
 
+import cz.cvut.fit.wikimetric.api.dto.EventDto;
+import cz.cvut.fit.wikimetric.api.dto.TagDto;
+import cz.cvut.fit.wikimetric.api.dto.converter.EventConverter;
+import cz.cvut.fit.wikimetric.api.dto.converter.TagConverter;
 import cz.cvut.fit.wikimetric.business.EventTagService;
-import cz.cvut.fit.wikimetric.model.Event;
-import cz.cvut.fit.wikimetric.model.EventTag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,56 +17,61 @@ import java.util.Collection;
 public class EventTagController {
 
     private final EventTagService eventTagService;
+    private final TagConverter tagConverter;
+    private final EventConverter eventConverter;
 
-    public EventTagController(EventTagService eventTagService) {
+    public EventTagController(EventTagService eventTagService, TagConverter tagConverter, EventConverter eventConverter) {
         this.eventTagService = eventTagService;
+        this.tagConverter = tagConverter;
+        this.eventConverter = eventConverter;
     }
 
     @PostMapping("/tags/event-tags")
-    public EventTag create(@RequestBody EventTag tag) {
-        return eventTagService
-                .create(tag)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tag already exists"));
+    public TagDto create(@RequestBody TagDto tag) {
+        return tagConverter.toDto(
+                eventTagService
+                        .create(tagConverter.toEventTag(tag))
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tag already exists")));
 
     }
 
     @GetMapping("tags/event-tags/{id}")
-    public EventTag get(@PathVariable Long id) {
-        return eventTagService
+    public TagDto get(@PathVariable Long id) {
+        return tagConverter.toDto(eventTagService
                 .findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag not found")));
     }
 
     @GetMapping("tags/event-tags")
-    public Collection<EventTag> getAll() {
-        Collection<EventTag> result = new ArrayList<>();
-        eventTagService
-                .findAll()
-                .forEach(result::add);
+    public Collection<TagDto> getAll() {
+        Collection<TagDto> result = new ArrayList<>();
+        eventTagService.findAll().forEach(t -> result.add(tagConverter.toDto(t)));
         return result;
     }
 
     @GetMapping("tags/event-tags/{id}/events")
-    public Collection<Event> getEvents(@PathVariable Long id) {
-        return eventTagService
-                .getEventsWithTag(
-                        eventTagService
-                                .findById(id)
-                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tag does not exist")));
+    public Collection<EventDto> getEvents(@PathVariable Long id) {
+        return eventConverter.toDto(
+                eventTagService
+                        .getEventsWithTag(
+                                eventTagService
+                                        .findById(id)
+                                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tag does not exist"))));
 
 
     }
 
     @GetMapping("/tags/event-tags/name/{name}")
-    public Collection<EventTag> getEventTagsByName(@PathVariable String name) {
-        return eventTagService.findByName(name);
+    public Collection<TagDto> getEventTagsByName(@PathVariable String name) {
+        return tagConverter.toDto(eventTagService.findByName(name));
     }
 
     @PutMapping("/tags/event-tags")
-    public EventTag update(@RequestBody EventTag tag) {
-        return eventTagService
-                .update(tag)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event does not exist"));
+    public TagDto update(@RequestBody TagDto tag) {
+        return tagConverter.toDto(
+                eventTagService
+                        .update(tagConverter.toEventTag(tag))
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event does not exist")));
     }
 
     @DeleteMapping("/tags/event-tags/{id}")

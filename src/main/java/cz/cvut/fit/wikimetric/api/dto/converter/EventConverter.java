@@ -6,6 +6,8 @@ import cz.cvut.fit.wikimetric.business.UserService;
 import cz.cvut.fit.wikimetric.model.Event;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+
 @Component
 public class EventConverter {
 
@@ -33,5 +35,13 @@ public class EventConverter {
                          dto.startDate(),
                          dto.endDate(),
                          ConverterUtils.getElems(dto.userIds(), userService));
+    }
+
+    public Collection<EventDto> toDto(Collection<Event> events) {
+        return events.stream().map(this::toDto).toList();
+    }
+
+    public Collection<Event> fromDto(Collection<EventDto> dtos) {
+        return dtos.stream().map(this::fromDto).toList();
     }
 }

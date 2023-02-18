@@ -5,6 +5,8 @@ import cz.cvut.fit.wikimetric.business.*;
 import cz.cvut.fit.wikimetric.model.*;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+
 @Component
 public class TagConverter {
     private final UserTagService userTagService;
@@ -19,7 +21,7 @@ public class TagConverter {
         this.eventTagService = eventTagService;
     }
 
-    public TagDto toDto(Tag<IdAble<Long>> tag) {
+    public <T extends Tag<S>, S extends IdAble<Long>> TagDto toDto(T tag) {
 
         return new TagDto(tag.getName(),
                           tag.getId(),
@@ -45,5 +47,9 @@ public class TagConverter {
                             ConverterUtils.getElems(dto.elementIds(), eventService),
                             eventTagService.findById(dto.parentId()).orElse(null),
                             ConverterUtils.getElems(dto.childrenIds(), eventTagService));
+    }
+
+    public <T extends Tag<S>, S extends IdAble<Long>> Collection<TagDto> toDto(Collection<T> tags) {
+        return tags.stream().map(this::toDto).toList();
     }
 }

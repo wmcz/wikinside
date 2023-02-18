@@ -6,6 +6,8 @@ import cz.cvut.fit.wikimetric.business.UserTagService;
 import cz.cvut.fit.wikimetric.model.User;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+
 @Component
 public class UserConverter {
 
@@ -31,5 +33,13 @@ public class UserConverter {
                         dto.email(),
                         ConverterUtils.getElems(dto.tagIds(), userTagService),
                         ConverterUtils.getElems(dto.tagIds(), eventService));
+    }
+
+    public Collection<UserDto> toDto(Collection<User> users) {
+        return users.stream().map(this::toDto).toList();
+    }
+
+    public Collection<User> fromDto(Collection<UserDto> dtos) {
+        return dtos.stream().map(this::fromDto).toList();
     }
 }
