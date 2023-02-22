@@ -52,6 +52,7 @@ public class UserTagController {
 
     @GetMapping("tags/user-tags/{id}/users")
     public Collection<UserDto> getUsers(@PathVariable Long id) {
+        //includes children tags' users
         return userConverter.toDto(
                 userTagService
                         .getUsersWithTag(

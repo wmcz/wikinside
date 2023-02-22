@@ -51,6 +51,7 @@ public class EventTagController {
 
     @GetMapping("tags/event-tags/{id}/events")
     public Collection<EventDto> getEvents(@PathVariable Long id) {
+        //includes children tags' events
         return eventConverter.toDto(
                 eventTagService
                         .getEventsWithTag(
