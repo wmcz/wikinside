@@ -38,13 +38,15 @@ public abstract class AbstractService<T extends IdAble<ID>, ID> {
     }
 
     public  <S extends T> Optional<S> create(S entity) {
-        if (repository.existsById(entity.getId())) return Optional.empty();
-        else                                       return Optional.of(repository.save(entity));
+        if (entity.getId() != null && repository.existsById(entity.getId()))
+             return Optional.empty();
+        else return Optional.of(repository.save(entity));
     }
 
     public <S extends T> Optional<S> update(S entity) {
-        if (repository.existsById(entity.getId())) return Optional.of(repository.save(entity));
-        else                                       return Optional.empty();
+        if (entity.getId() != null && repository.existsById(entity.getId()))
+             return Optional.of(repository.save(entity));
+        else return Optional.empty();
     }
 
 

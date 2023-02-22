@@ -1,9 +1,6 @@
 package cz.cvut.fit.wikimetric.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
@@ -12,7 +9,8 @@ public class User implements IdAble<Long> {
     /* ATTRIBUTES */
 
     @Id
-    private Long id; // MediaWiki user_id user attribute, ideally
+    @GeneratedValue  //TODO: temporarily
+    private Long id; // should be the MediaWiki user_id attribute, ideally
 
     //@Transient
     private String username;
