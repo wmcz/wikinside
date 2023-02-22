@@ -1,5 +1,7 @@
 package cz.cvut.fit.wikimetric.model;
 
+import org.springframework.lang.Nullable;
+
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -32,6 +34,7 @@ public class EventTag extends Tag<Event> {
     @ManyToMany(mappedBy = "tags")
     private Collection<Event> tagged;
 
+    @Nullable
     @ManyToOne
     private EventTag parent;
 

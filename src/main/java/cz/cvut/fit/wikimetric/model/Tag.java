@@ -1,5 +1,7 @@
 package cz.cvut.fit.wikimetric.model;
 
+import org.springframework.lang.Nullable;
+
 import javax.persistence.*;
 import java.util.Collection;
 
@@ -68,6 +70,6 @@ public abstract class Tag<E> implements IdAble<Long> {
 
     public abstract Tag<E> addChild(Tag<E> tag);
     public abstract Tag<E> removeChild(Tag<E> tag);
-    public abstract Tag<E> setParent(Tag<E> tag);
+    public abstract Tag<E> setParent(@Nullable Tag<E> tag);
 
 }

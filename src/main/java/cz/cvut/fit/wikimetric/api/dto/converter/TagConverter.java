@@ -26,7 +26,7 @@ public class TagConverter {
         return new TagDto(tag.getName(),
                           tag.getId(),
                           tag.isAssignable(),
-                          tag.getParent().getId(),
+                          tag.getParent() == null ? null : tag.getParent().getId(),
                           ConverterUtils.getIds(tag.getChildren()),
                           ConverterUtils.getIds(tag.getTagged()));
     }
@@ -36,7 +36,7 @@ public class TagConverter {
                            dto.name(),
                            dto.assignable(),
                            ConverterUtils.getElems(dto.elementIds(), userService),
-                           userTagService.findById(dto.parentId()).orElse(null),
+                           dto.parentId() == null ? null : userTagService.findById(dto.parentId()).orElse(null),
                            ConverterUtils.getElems(dto.childrenIds(), userTagService));
     }
 
@@ -45,7 +45,7 @@ public class TagConverter {
                             dto.name(),
                             dto.assignable(),
                             ConverterUtils.getElems(dto.elementIds(), eventService),
-                            eventTagService.findById(dto.parentId()).orElse(null),
+                            dto.parentId() == null ? null : eventTagService.findById(dto.parentId()).orElse(null),
                             ConverterUtils.getElems(dto.childrenIds(), eventTagService));
     }
 

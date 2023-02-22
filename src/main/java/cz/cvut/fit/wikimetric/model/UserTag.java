@@ -1,5 +1,7 @@
 package cz.cvut.fit.wikimetric.model;
 
+import org.springframework.lang.Nullable;
+
 import javax.persistence.*;
 import java.util.Collection;
 
@@ -29,6 +31,7 @@ public class UserTag extends Tag<User> {
     @ManyToMany(mappedBy = "tags")
     private Collection<User> tagged;
 
+    @Nullable
     @ManyToOne
     private UserTag parent;
 
