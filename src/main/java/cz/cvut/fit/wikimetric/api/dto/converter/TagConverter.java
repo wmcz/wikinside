@@ -6,6 +6,7 @@ import cz.cvut.fit.wikimetric.model.*;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 @Component
 public class TagConverter {
@@ -35,18 +36,18 @@ public class TagConverter {
         return new UserTag(dto.id(),
                            dto.name(),
                            dto.assignable(),
-                           ConverterUtils.getElems(dto.elementIds(), userService),
+                           userTagService.findById(dto.id()).map(UserTag::getTagged).orElse(new HashSet<>()),
                            dto.parentId() == null ? null : userTagService.findById(dto.parentId()).orElse(null),
-                           ConverterUtils.getElems(dto.childrenIds(), userTagService));
+                           userTagService.findById(dto.id()).map(UserTag::getChildren).orElse(new HashSet<>()));
     }
 
     public EventTag toEventTag(TagDto dto) {
         return new EventTag(dto.id(),
                             dto.name(),
                             dto.assignable(),
-                            ConverterUtils.getElems(dto.elementIds(), eventService),
+                            eventTagService.findById(dto.id()).map(EventTag::getTagged).orElse(new HashSet<>()),
                             dto.parentId() == null ? null : eventTagService.findById(dto.parentId()).orElse(null),
-                            ConverterUtils.getElems(dto.childrenIds(), eventTagService));
+                            eventTagService.findById(dto.id()).map(EventTag::getChildren).orElse(new HashSet<>()));
     }
 
     public <T extends Tag<S>, S extends IdAble<Long>> Collection<TagDto> toDto(Collection<T> tags) {

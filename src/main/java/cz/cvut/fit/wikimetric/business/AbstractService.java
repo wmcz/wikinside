@@ -3,7 +3,10 @@ package cz.cvut.fit.wikimetric.business;
 import cz.cvut.fit.wikimetric.model.IdAble;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.function.Function;
 
 
 public abstract class AbstractService<T extends IdAble<ID>, ID> {
@@ -13,8 +16,21 @@ public abstract class AbstractService<T extends IdAble<ID>, ID> {
         this.repository = repository;
     }
 
-
-
+    protected <E extends IdAble<ID>> Collection<E> updateNonOwningField(T elem,
+                                                                          Collection<ID> ids,
+                                                                          Function<E, E> updatingFunc,
+                                                                          CrudRepository<E, ID> eRepository,
+                                                                          CrudRepository<T, ID> tRepository,
+                                                                          Function<T, Collection<E>> fieldAccessFunc) {
+        ids.forEach(
+                id -> eRepository
+                        .findById(id)
+                        .ifPresent(eRepository.save(updatingFunc::apply)));
+        return tRepository
+                .findById(elem.getId())
+                .map(fieldAccessFunc)
+                .orElseThrow(NoSuchElementException::new);
+    }
     public long count() {
         return repository.count();
     }
