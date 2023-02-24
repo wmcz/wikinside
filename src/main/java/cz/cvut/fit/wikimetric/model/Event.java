@@ -112,4 +112,14 @@ public class Event implements IdAble<Long> {
         this.participants = eventParticipants;
         return this;
     }
+
+    public Event addParticipant(User participant) {
+        this.participants.add(participant);
+        return this;
+    }
+
+    public Event removeParticipant(User participant) {
+        this.participants.remove(participant);
+        return this;
+    }
 }
