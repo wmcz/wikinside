@@ -25,7 +25,7 @@ public abstract class AbstractService<T extends IdAble<ID>, ID> {
         ids.forEach(
                 id -> eRepository
                         .findById(id)
-                        .ifPresent(eRepository.save(updatingFunc::apply)));
+                        .ifPresent(e -> eRepository.save(updatingFunc.apply(e))));
         return tRepository
                 .findById(elem.getId())
                 .map(fieldAccessFunc)
