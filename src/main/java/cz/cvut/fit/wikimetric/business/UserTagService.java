@@ -74,4 +74,13 @@ public class UserTagService extends AbstractService<UserTag, Long> {
     public Collection<UserTag> removeChildren(UserTag tag, Collection<Long> childrenIds) {
         return updateChildren(tag, childrenIds, null);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        findById(id).ifPresent(t -> {
+            removeUsers   (t, t.getTagged()  .stream().map(User::getId)   .toList());
+            removeChildren(t, t.getChildren().stream().map(UserTag::getId).toList());
+        });
+        super.deleteById(id);
+    }
 }

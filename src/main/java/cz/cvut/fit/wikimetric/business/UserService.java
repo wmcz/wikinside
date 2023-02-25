@@ -35,4 +35,10 @@ public class UserService extends AbstractService<User, Long> {
     public Collection<Event> removeEvents(User user, Collection<Long> eventIds) {
         return updateEvents(user, eventIds, e -> e.removeParticipant(user));
     }
+
+    @Override
+    public void deleteById(Long id) {
+        findById(id).ifPresent(u -> removeEvents(u, u.getEvents().stream().map(Event::getId).toList()));
+        super.deleteById(id);
+    }
 }

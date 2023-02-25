@@ -3,9 +3,7 @@ package cz.cvut.fit.wikimetric.business;
 
 import cz.cvut.fit.wikimetric.dao.EventRepository;
 import cz.cvut.fit.wikimetric.dao.EventTagRepository;
-import cz.cvut.fit.wikimetric.model.Event;
-import cz.cvut.fit.wikimetric.model.EventTag;
-import cz.cvut.fit.wikimetric.model.IdAble;
+import cz.cvut.fit.wikimetric.model.*;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
@@ -72,5 +70,14 @@ public class EventTagService extends AbstractService<EventTag, Long> {
 
     public Collection<EventTag> removeChildren(EventTag tag, Collection<Long> childrenIds) {
         return updateChildren(tag, childrenIds, null);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        findById(id).ifPresent(t -> {
+            removeEvents  (t, t.getTagged()  .stream().map(Event::getId)   .toList());
+            removeChildren(t, t.getChildren().stream().map(EventTag::getId).toList());
+        });
+        super.deleteById(id);
     }
 }
