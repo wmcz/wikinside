@@ -10,6 +10,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -48,7 +49,7 @@ public class UserTagService extends AbstractService<UserTag, Long> {
     }
 
     public Collection<User> getUsersWithTag(UserTag tag) {
-        Collection<User> result = tag.getTagged();
+        Collection<User> result = new HashSet<>(tag.getTagged());
         tag.getChildren().forEach(child -> result.addAll(getUsersWithTag(child)));
         return result;
     }

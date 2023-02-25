@@ -10,6 +10,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -48,8 +49,7 @@ public class EventTagService extends AbstractService<EventTag, Long> {
     }
 
     public Collection<Event> getEventsWithTag(EventTag tag) {
-        Collection<Event> result = tag.getTagged();
-        tag.getChildren().forEach(child -> result.addAll(getEventsWithTag(child)));
+        Collection<Event> result = new HashSet<>(tag.getTagged());
         tag.getChildren().forEach(child -> result.addAll(getEventsWithTag(child)));
         return result;
     }
