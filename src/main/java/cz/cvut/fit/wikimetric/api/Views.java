@@ -1,6 +1,7 @@
 package cz.cvut.fit.wikimetric.api;
 
 public class Views {
-    public static class Outgoing {}
-    public static class Incoming extends Outgoing {}
+    public static class Incoming {}
+
+    public static class Outgoing extends Incoming {}
 }
