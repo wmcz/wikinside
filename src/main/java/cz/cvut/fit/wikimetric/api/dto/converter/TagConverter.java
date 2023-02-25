@@ -22,6 +22,11 @@ public class TagConverter {
         this.eventTagService = eventTagService;
     }
 
+    private <T extends Tag<? extends IdAble<Long>>, S extends AbstractService<T, Long>> T getParent(Long id, S service) {
+        if (id == null) return null;
+        else            return service.findById(id).orElse(null);
+    }
+
     public <T extends Tag<S>, S extends IdAble<Long>> TagDto toDto(T tag) {
 
         return new TagDto(tag.getName(),
@@ -33,20 +38,38 @@ public class TagConverter {
     }
 
     public UserTag toUserTag(TagDto dto) {
-        return new UserTag(dto.id(),
-                           dto.name(),
-                           dto.assignable(),
-                           userTagService.findById(dto.id()).map(UserTag::getTagged).orElse(new HashSet<>()),
-                           dto.parentId() == null ? null : userTagService.findById(dto.parentId()).orElse(null),
-                           userTagService.findById(dto.id()).map(UserTag::getChildren).orElse(new HashSet<>()));
+        if (dto.id() == null) {
+            return new UserTag(null,
+                               dto.name(),
+                               dto.assignable(),
+                               null,
+                               getParent(dto.parentId(), userTagService),
+                               null);
+        }
+        else return new UserTag(dto.id(),
+                                dto.name(),
+                                dto.assignable(),
+                                userTagService.findById(dto.id()).map(UserTag::getTagged).orElse(new HashSet<>()),
+                                getParent(dto.parentId(), userTagService),
+                                userTagService.findById(dto.id()).map(UserTag::getChildren).orElse(new HashSet<>()));
     }
 
+
+
     public EventTag toEventTag(TagDto dto) {
-        return new EventTag(dto.id(),
+        if (dto.id() == null) {
+            return new EventTag(null,
+                    dto.name(),
+                    dto.assignable(),
+                    null,
+                    getParent(dto.parentId(), eventTagService),
+                    null);
+        }
+        else return new EventTag(dto.id(),
                             dto.name(),
                             dto.assignable(),
                             eventTagService.findById(dto.id()).map(EventTag::getTagged).orElse(new HashSet<>()),
-                            dto.parentId() == null ? null : eventTagService.findById(dto.parentId()).orElse(null),
+                            getParent(dto.parentId(), eventTagService),
                             eventTagService.findById(dto.id()).map(EventTag::getChildren).orElse(new HashSet<>()));
     }
 

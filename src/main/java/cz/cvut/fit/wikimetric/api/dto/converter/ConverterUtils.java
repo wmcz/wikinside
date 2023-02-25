@@ -8,6 +8,8 @@ import java.util.Collection;
 
 public class ConverterUtils {
     public static <T extends IdAble<Long>> Collection<Long> getIds(Collection<T> elems) {
+        if (elems == null) return new ArrayList<>();
+
         Collection<Long> ids = new ArrayList<>(elems.size());
         elems.forEach(e -> ids.add(e.getId()));
         return ids;
