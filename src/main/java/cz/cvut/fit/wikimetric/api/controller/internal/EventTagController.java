@@ -37,9 +37,9 @@ public class EventTagController {
         this.eventConverter = eventConverter;
     }
 
-    @JsonView(Views.Incoming.class)
+    @JsonView(Views.Outgoing.class)
     @PostMapping("/tags/event-tags")
-    public TagDto create(@RequestBody TagDto tag) {
+    public TagDto create(@JsonView(Views.Incoming.class) @RequestBody TagDto tag) {
         return tagConverter.toDto(
                 eventTagService
                         .create(tagConverter.toEventTag(tag))
@@ -97,7 +97,7 @@ public class EventTagController {
         }
     }
 
-    @DeleteMapping("tags/event-tags/{id}/event")
+    @DeleteMapping("tags/event-tags/{id}/events")
     public Collection<EventDto> removeEvents(@PathVariable Long id, @RequestBody Collection<Long> eventIds) {
         try {
             return eventConverter.toDto(eventTagService.removeEvents(

@@ -37,9 +37,9 @@ public class UserTagController {
         return children;
     }
 
-    @JsonView(Views.Incoming.class)
+    @JsonView(Views.Outgoing.class)
     @PostMapping("/tags/user-tags")
-    public TagDto create(@RequestBody TagDto tag) {
+    public TagDto create(@JsonView(Views.Incoming.class) @RequestBody TagDto tag) {
         return tagConverter.toDto(
                 userTagService
                         .create(tagConverter.toUserTag(tag))
