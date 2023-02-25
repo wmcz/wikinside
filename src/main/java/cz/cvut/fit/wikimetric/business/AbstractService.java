@@ -1,6 +1,7 @@
 package cz.cvut.fit.wikimetric.business;
 
 import cz.cvut.fit.wikimetric.model.IdAble;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Collection;
@@ -56,7 +57,13 @@ public abstract class AbstractService<T extends IdAble<ID>, ID> {
     public  <S extends T> Optional<S> create(S entity) {
         if (entity.getId() != null && repository.existsById(entity.getId()))
              return Optional.empty();
-        else return Optional.of(repository.save(entity));
+        else {
+            try {
+                return Optional.of(repository.save(entity));
+            } catch (DataIntegrityViolationException ignored) {
+                return Optional.empty();
+            }
+        }
     }
 
     public <S extends T> Optional<S> update(S entity) {
