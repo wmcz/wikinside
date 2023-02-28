@@ -1,7 +1,5 @@
 package cz.cvut.fit.wikimetric.api.controller.internal;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import cz.cvut.fit.wikimetric.api.Views;
 import cz.cvut.fit.wikimetric.api.dto.TagDto;
 import cz.cvut.fit.wikimetric.api.dto.UserDto;
 import cz.cvut.fit.wikimetric.api.dto.converter.TagConverter;
@@ -37,9 +35,8 @@ public class UserTagController {
         return children;
     }
 
-    @JsonView(Views.Outgoing.class)
     @PostMapping("/tags/user-tags")
-    public TagDto create(@JsonView(Views.Incoming.class) @RequestBody TagDto tag) {
+    public TagDto create(@RequestBody TagDto tag) {
         return tagConverter.toDto(
                 userTagService
                         .create(tagConverter.toUserTag(tag))
@@ -47,7 +44,6 @@ public class UserTagController {
 
     }
 
-    @JsonView(Views.Outgoing.class)
     @GetMapping("tags/user-tags/{id}")
     public TagDto get(@PathVariable Long id) {
         return tagConverter.toDto(
@@ -56,7 +52,6 @@ public class UserTagController {
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag not found")));
     }
 
-    @JsonView(Views.Outgoing.class)
     @GetMapping("tags/user-tags")
     public Collection<TagDto> getAll() {
         Collection<TagDto> result = new ArrayList<>();
@@ -105,7 +100,6 @@ public class UserTagController {
 
     }
 
-    @JsonView(Views.Outgoing.class)
     @GetMapping("tags/user-tags/{id}/children")
     public Collection<TagDto> getChildren(@PathVariable Long id, @RequestParam(defaultValue = "false") Boolean recursive) {
         Collection<UserTag> children = userTagService
@@ -118,7 +112,6 @@ public class UserTagController {
         return tagConverter.toDto(children);
     }
 
-    @JsonView(Views.Outgoing.class)
     @PostMapping("tags/user-tags/{id}/children")
     public Collection<TagDto> addChildren(@PathVariable Long id, @RequestBody Collection<Long> childrenIds) {
         try {
@@ -135,7 +128,6 @@ public class UserTagController {
 
     }
 
-    @JsonView(Views.Outgoing.class)
     @DeleteMapping("tags/user-tags/{id}/children")
     public Collection<TagDto> removeChildren(@PathVariable Long id, @RequestBody Collection<Long> childrenIds) {
         try {
@@ -152,15 +144,13 @@ public class UserTagController {
 
     }
 
-    @JsonView(Views.Outgoing.class)
     @GetMapping("/tags/user-tags/name/{name}")
     public Collection<TagDto> getUserTagsByName(@PathVariable String name) {
         return tagConverter.toDto(userTagService.findByName(name));
     }
 
-    @JsonView(Views.Outgoing.class)
     @PutMapping("/tags/user-tags")
-    public TagDto update(@JsonView(Views.Incoming.class) @RequestBody TagDto tag) {
+    public TagDto update(@RequestBody TagDto tag) {
         return tagConverter.toDto(
                 userTagService
                         .update(tagConverter.toUserTag(tag))

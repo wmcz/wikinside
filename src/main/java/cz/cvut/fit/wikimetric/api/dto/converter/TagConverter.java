@@ -6,7 +6,6 @@ import cz.cvut.fit.wikimetric.model.*;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 @Component
 public class TagConverter {
@@ -38,39 +37,23 @@ public class TagConverter {
     }
 
     public UserTag toUserTag(TagDto dto) {
-        if (dto.id() == null) {
-            return new UserTag(null,
-                               dto.name(),
-                               dto.assignable(),
-                               null,
-                               getParent(dto.parentId(), userTagService),
-                               null);
-        }
-        else return new UserTag(dto.id(),
-                                dto.name(),
-                                dto.assignable(),
-                                userTagService.findById(dto.id()).map(UserTag::getTagged).orElse(new HashSet<>()),
-                                getParent(dto.parentId(), userTagService),
-                                userTagService.findById(dto.id()).map(UserTag::getChildren).orElse(new HashSet<>()));
+        return new UserTag(dto.id(),
+                           dto.name(),
+                           dto.assignable(),
+                           ConverterUtils.getElems(dto.elementIds(), userService),
+                           getParent(dto.parentId(), userTagService),
+                           ConverterUtils.getElems(dto.childrenIds(), userTagService));
     }
 
 
 
     public EventTag toEventTag(TagDto dto) {
-        if (dto.id() == null) {
-            return new EventTag(null,
-                    dto.name(),
-                    dto.assignable(),
-                    null,
-                    getParent(dto.parentId(), eventTagService),
-                    null);
-        }
-        else return new EventTag(dto.id(),
+        return new EventTag(dto.id(),
                             dto.name(),
                             dto.assignable(),
-                            eventTagService.findById(dto.id()).map(EventTag::getTagged).orElse(new HashSet<>()),
+                            ConverterUtils.getElems(dto.elementIds(), eventService),
                             getParent(dto.parentId(), eventTagService),
-                            eventTagService.findById(dto.id()).map(EventTag::getChildren).orElse(new HashSet<>()));
+                            ConverterUtils.getElems(dto.childrenIds(), eventTagService));
     }
 
     public <T extends Tag<S>, S extends IdAble<Long>> Collection<TagDto> toDto(Collection<T> tags) {
