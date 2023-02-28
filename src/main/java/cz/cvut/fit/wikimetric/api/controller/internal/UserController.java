@@ -1,7 +1,5 @@
 package cz.cvut.fit.wikimetric.api.controller.internal;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import cz.cvut.fit.wikimetric.api.Views;
 import cz.cvut.fit.wikimetric.api.dto.EventDto;
 import cz.cvut.fit.wikimetric.api.dto.UserDto;
 import cz.cvut.fit.wikimetric.api.dto.converter.EventConverter;
@@ -29,16 +27,14 @@ public class UserController {
         this.eventConverter = eventConverter;
     }
 
-    @JsonView(Views.Outgoing.class)
     @PostMapping("/users")
-    public UserDto create(@JsonView(Views.Incoming.class) @RequestBody UserDto user) {
+    public UserDto create(@RequestBody UserDto user) {
         return userConverter.toDto(
                 userService
                         .create(userConverter.fromDto(user))
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists")));
     }
 
-    @JsonView(Views.Outgoing.class)
     @GetMapping("/users/{id}")
     public UserDto get(@PathVariable Long id) {
         return userConverter.toDto(
@@ -47,7 +43,6 @@ public class UserController {
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")));
     }
 
-    @JsonView(Views.Outgoing.class)
     @GetMapping("/users")
     public Collection<UserDto> getMany() {
         Collection<UserDto> result = new ArrayList<>();
@@ -55,15 +50,13 @@ public class UserController {
         return result;
     }
 
-    @JsonView(Views.Outgoing.class)
     @GetMapping("/users/username/{username}")
     public Collection<UserDto> getByName(@PathVariable String username) {
         return userConverter.toDto(userService.findByUsername(username));
     }
 
-    @JsonView(Views.Outgoing.class)
     @PutMapping("/users")
-    public UserDto update(@JsonView(Views.Incoming.class) @RequestBody UserDto user) {
+    public UserDto update(@RequestBody UserDto user) {
         return userConverter.toDto(
                 userService
                         .update(userConverter.fromDto(user))

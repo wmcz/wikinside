@@ -7,6 +7,7 @@ import cz.cvut.fit.wikimetric.model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -20,8 +21,12 @@ public class UserService extends AbstractService<User, Long> {
         this.eventRepository = eventRepository;
     }
 
-    private Collection<Event> updateEvents(User user, Collection<Long> eventIds, Function<Event, Event> function) {
-        return updateNonOwningField(user, eventIds, function, eventRepository, userRepository, User::getEvents);
+    private Collection<Event> applyEvents(User user, Collection<Long> eventIds, Function<Event, Event> function) {
+        return applyToNonOwningField(user, eventIds, function, eventRepository, userRepository, User::getEvents);
+    }
+
+    private void updateEvents(User user, Collection<Event> updated) {
+        updateNonOwningField(user, updated, User::getEvents, this::addEvents, this::removeEvents);
     }
 
     public Collection<User> findByUsername(String username) {
@@ -29,16 +34,37 @@ public class UserService extends AbstractService<User, Long> {
     }
 
     public Collection<Event> addEvents(User user, Collection<Long> eventIds) {
-        return updateEvents(user, eventIds, e -> e.addParticipant(user));
+        return applyEvents(user, eventIds, e -> e.addParticipant(user));
     }
 
     public Collection<Event> removeEvents(User user, Collection<Long> eventIds) {
-        return updateEvents(user, eventIds, e -> e.removeParticipant(user));
+        return applyEvents(user, eventIds, e -> e.removeParticipant(user));
     }
 
     @Override
     public void deleteById(Long id) {
-        findById(id).ifPresent(u -> removeEvents(u, u.getEvents().stream().map(Event::getId).toList()));
+        findById(id).ifPresent(u -> removeEvents(u, toIds(u.getEvents())));
         super.deleteById(id);
+    }
+
+    @Override
+    public <S extends User> Optional<S> create(S user) {
+        Optional<S> res = super.create(user);
+        if (res.isPresent()) {
+            addEvents(res.get(), toIds(user.getEvents()));
+            return update(res.get());
+
+        } else return res;
+    }
+
+    @Override
+    public <S extends User> Optional<S> update(S user) {
+        Optional<User> current = findById(user.getId());
+
+        if (current.isEmpty()) return Optional.empty();
+        else {
+            updateEvents(current.get(), user.getEvents());
+            return super.update(user);
+        }
     }
 }

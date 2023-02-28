@@ -5,8 +5,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 
@@ -17,12 +19,12 @@ public abstract class AbstractService<T extends IdAble<ID>, ID> {
         this.repository = repository;
     }
 
-    protected <E extends IdAble<ID>> Collection<E> updateNonOwningField(T elem,
-                                                                          Collection<ID> ids,
-                                                                          Function<E, E> updatingFunc,
-                                                                          CrudRepository<E, ID> eRepository,
-                                                                          CrudRepository<T, ID> tRepository,
-                                                                          Function<T, Collection<E>> fieldAccessFunc) {
+    protected <E extends IdAble<ID>> Collection<E> applyToNonOwningField(T elem,
+                                                                         Collection<ID> ids,
+                                                                         Function<E, E> updatingFunc,
+                                                                         CrudRepository<E, ID> eRepository,
+                                                                         CrudRepository<T, ID> tRepository,
+                                                                         Function<T, Collection<E>> fieldAccessFunc) {
         ids.forEach(
                 id -> eRepository
                         .findById(id)
@@ -31,6 +33,28 @@ public abstract class AbstractService<T extends IdAble<ID>, ID> {
                 .findById(elem.getId())
                 .map(fieldAccessFunc)
                 .orElseThrow(NoSuchElementException::new);
+    }
+
+    protected <E extends IdAble<ID>> void updateNonOwningField(T elem,
+                                                               Collection<E> updated,
+                                                               Function<T, Collection<E>> fieldAccessFunc,
+                                                               BiFunction<T, Collection<ID>, ?> addingFunc,
+                                                               BiFunction<T, Collection<ID>, ?> removingFunc) {
+
+        Collection<E> current = fieldAccessFunc.apply(elem);
+
+        Collection<E> added = new HashSet<>(updated);
+        Collection<E> removed = new HashSet<>(current);
+
+        added.removeAll(current);
+        removed.removeAll(updated);
+
+        addingFunc.apply(elem, toIds(added));
+        removingFunc.apply(elem, toIds(removed));
+    }
+
+    protected <E extends IdAble<ID>> Collection<ID> toIds(Collection<E> elems) {
+        return elems.stream().map(E::getId).toList();
     }
     public long count() {
         return repository.count();

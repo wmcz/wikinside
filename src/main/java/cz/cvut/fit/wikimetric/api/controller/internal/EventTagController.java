@@ -1,7 +1,5 @@
 package cz.cvut.fit.wikimetric.api.controller.internal;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import cz.cvut.fit.wikimetric.api.Views;
 import cz.cvut.fit.wikimetric.api.dto.EventDto;
 import cz.cvut.fit.wikimetric.api.dto.TagDto;
 import cz.cvut.fit.wikimetric.api.dto.converter.EventConverter;
@@ -37,9 +35,9 @@ public class EventTagController {
         this.eventConverter = eventConverter;
     }
 
-    @JsonView(Views.Outgoing.class)
+
     @PostMapping("/tags/event-tags")
-    public TagDto create(@JsonView(Views.Incoming.class) @RequestBody TagDto tag) {
+    public TagDto create(@RequestBody TagDto tag) {
         return tagConverter.toDto(
                 eventTagService
                         .create(tagConverter.toEventTag(tag))
@@ -47,7 +45,6 @@ public class EventTagController {
 
     }
 
-    @JsonView(Views.Outgoing.class)
     @GetMapping("tags/event-tags/{id}")
     public TagDto get(@PathVariable Long id) {
         return tagConverter.toDto(eventTagService
@@ -55,7 +52,6 @@ public class EventTagController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag not found")));
     }
 
-    @JsonView(Views.Outgoing.class)
     @GetMapping("tags/event-tags")
     public Collection<TagDto> getAll() {
         Collection<TagDto> result = new ArrayList<>();
@@ -78,7 +74,6 @@ public class EventTagController {
                         .getTagged());
     }
 
-    @JsonView(Views.Outgoing.class)
     @GetMapping("/tags/event-tags/name/{name}")
     public Collection<TagDto> getEventTagsByName(@PathVariable String name) {
         return tagConverter.toDto(eventTagService.findByName(name));
@@ -111,7 +106,6 @@ public class EventTagController {
 
     }
 
-    @JsonView(Views.Outgoing.class)
     @GetMapping("tags/event-tags/{id}/children")
     public Collection<TagDto> getChildren(@PathVariable Long id, @RequestParam(defaultValue = "false") Boolean recursive) {
         Collection<EventTag> children = eventTagService
@@ -124,7 +118,6 @@ public class EventTagController {
         return tagConverter.toDto(children);
     }
 
-    @JsonView(Views.Outgoing.class)
     @PostMapping("tags/event-tags/{id}/children")
     public Collection<TagDto> addChildren(@PathVariable Long id, @RequestBody Collection<Long> childrenIds) {
         try {
@@ -141,7 +134,6 @@ public class EventTagController {
 
     }
 
-    @JsonView(Views.Outgoing.class)
     @DeleteMapping("tags/event-tags/{id}/children")
     public Collection<TagDto> removeChildren(@PathVariable Long id, @RequestBody Collection<Long> childrenIds) {
         try {
@@ -158,9 +150,8 @@ public class EventTagController {
 
     }
 
-    @JsonView(Views.Outgoing.class)
     @PutMapping("/tags/event-tags")
-    public TagDto update(@JsonView(Views.Incoming.class) @RequestBody TagDto tag) {
+    public TagDto update(@RequestBody TagDto tag) {
         return tagConverter.toDto(
                 eventTagService
                         .update(tagConverter.toEventTag(tag))
