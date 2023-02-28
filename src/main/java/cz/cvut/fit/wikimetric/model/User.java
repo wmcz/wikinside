@@ -74,20 +74,24 @@ public class User implements IdAble<Long> {
 
     /* SETTERS */
 
-    public void setUsername(String username) {
+    public User setUsername(String username) {
         this.username = username;
+        return this;
     }
 
-    public void setEmail(String email) {
+    public User setEmail(String email) {
         this.email = email;
+        return this;
     }
 
-    public void setTags(Collection<UserTag> tags) {
+    public User setTags(Collection<UserTag> tags) {
         this.tags = tags;
+        return this;
     }
 
-    public void setEvents(Collection<Event> events) {
+    public User setEvents(Collection<Event> events) {
         this.events = events;
+        return this;
     }
 
     public User addTag(UserTag tag) {
