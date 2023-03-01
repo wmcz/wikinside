@@ -1,4 +1,4 @@
-package cz.wikimedia.stats.api.controller.internal;
+package cz.wikimedia.stats.api.data.controller;
 
 import cz.wikimedia.stats.api.dto.EventDto;
 import cz.wikimedia.stats.api.dto.UserDto;

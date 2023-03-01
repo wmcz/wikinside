@@ -1,11 +1,11 @@
-package cz.wikimedia.stats.api.controller.internal;
+package cz.wikimedia.stats.api.data.controller;
 
-import cz.wikimedia.stats.api.dto.EventDto;
 import cz.wikimedia.stats.api.dto.TagDto;
-import cz.wikimedia.stats.api.dto.converter.EventConverter;
+import cz.wikimedia.stats.api.dto.UserDto;
 import cz.wikimedia.stats.api.dto.converter.TagConverter;
-import cz.wikimedia.stats.business.EventTagService;
-import cz.wikimedia.stats.model.EventTag;
+import cz.wikimedia.stats.api.dto.converter.UserConverter;
+import cz.wikimedia.stats.business.UserTagService;
+import cz.wikimedia.stats.model.UserTag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,98 +17,92 @@ import java.util.HashSet;
 import java.util.NoSuchElementException;
 
 @RestController
-public class EventTagController {
+public class UserTagController {
 
-    private Collection<EventTag> getChildrenInner(Long id) {
-        Collection<EventTag> children = eventTagService.findById(id).map(EventTag::getChildren).orElse(new HashSet<>());
+    private final UserTagService userTagService;
+    private final TagConverter tagConverter;
+    private final UserConverter userConverter;
+
+    public UserTagController(UserTagService userTagService, TagConverter tagConverter, UserConverter userConverter) {
+        this.userTagService = userTagService;
+        this.tagConverter = tagConverter;
+        this.userConverter = userConverter;
+    }
+
+    private Collection<UserTag> getChildrenInner(Long id) {
+        Collection<UserTag> children = userTagService.findById(id).map(UserTag::getChildren).orElse(new HashSet<>());
         children.forEach(c -> children.addAll(getChildrenInner(c.getId())));
         return children;
     }
 
-    private final EventTagService eventTagService;
-    private final TagConverter tagConverter;
-    private final EventConverter eventConverter;
-
-    public EventTagController(EventTagService eventTagService, TagConverter tagConverter, EventConverter eventConverter) {
-        this.eventTagService = eventTagService;
-        this.tagConverter = tagConverter;
-        this.eventConverter = eventConverter;
-    }
-
-
-    @PostMapping("/tags/event-tags")
+    @PostMapping("/tags/user-tags")
     public TagDto create(@RequestBody TagDto tag) {
         return tagConverter.toDto(
-                eventTagService
-                        .create(tagConverter.toEventTag(tag))
+                userTagService
+                        .create(tagConverter.toUserTag(tag))
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tag already exists")));
 
     }
 
-    @GetMapping("tags/event-tags/{id}")
+    @GetMapping("tags/user-tags/{id}")
     public TagDto get(@PathVariable Long id) {
-        return tagConverter.toDto(eventTagService
-                .findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag not found")));
+        return tagConverter.toDto(
+                userTagService
+                        .findById(id)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag not found")));
     }
 
-    @GetMapping("tags/event-tags")
+    @GetMapping("tags/user-tags")
     public Collection<TagDto> getAll() {
         Collection<TagDto> result = new ArrayList<>();
-        eventTagService.findAll().forEach(t -> result.add(tagConverter.toDto(t)));
+        userTagService.findAll().forEach(t -> result.add(tagConverter.toDto(t)));
         return result;
     }
 
-    @GetMapping("tags/event-tags/{id}/events")
-    public Collection<EventDto> getEvents(@PathVariable Long id, @RequestParam(defaultValue = "false") Boolean withChildren) {
-        if (withChildren) return eventConverter.toDto(
-                eventTagService
-                        .getEventsWithTag(
-                                eventTagService
-                                        .findById(id)
-                                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag does not exist"))));
-        else return eventConverter.toDto(
-                eventTagService
+    @GetMapping("tags/user-tags/{id}/users")
+    public Collection<UserDto> getUsers(@PathVariable Long id, @RequestParam(defaultValue = "false") Boolean withChildren) {
+        if (withChildren) return userConverter.toDto(
+                userTagService.getUsersWithTag(
+                        userTagService
+                                .findById(id)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag does not exist"))));
+        else return userConverter.toDto(
+                userTagService
                         .findById(id)
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag does not exist"))
                         .getTagged());
     }
 
-    @GetMapping("/tags/event-tags/name/{name}")
-    public Collection<TagDto> getEventTagsByName(@PathVariable String name) {
-        return tagConverter.toDto(eventTagService.findByName(name));
-    }
-
-    @PostMapping("tags/event-tags/{id}/events")
-    public Collection<EventDto> addEvents(@PathVariable Long id, @RequestBody Collection<Long> eventIds) {
+    @PostMapping("tags/user-tags/{id}/users")
+    public Collection<UserDto> addUsers(@PathVariable Long id, @RequestBody Collection<Long> userIds) {
         try {
-            return eventConverter.toDto(eventTagService.addEvents(
-                    eventTagService
+            return userConverter.toDto(userTagService.addUsers(
+                    userTagService
                             .findById(id)
                             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag does not exist")),
-                    eventIds));
+                    userIds));
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag does not exist");
         }
     }
 
-    @DeleteMapping("tags/event-tags/{id}/events")
-    public Collection<EventDto> removeEvents(@PathVariable Long id, @RequestBody Collection<Long> eventIds) {
+    @DeleteMapping("tags/user-tags/{id}/users")
+    public Collection<UserDto> removeUsers(@PathVariable Long id, @RequestBody Collection<Long> userIds) {
         try {
-            return eventConverter.toDto(eventTagService.removeEvents(
-                    eventTagService
+            return userConverter.toDto(userTagService.removeUsers(
+                    userTagService
                             .findById(id)
                             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag does not exist")),
-                    eventIds));
+                    userIds));
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag does not exist");
         }
 
     }
 
-    @GetMapping("tags/event-tags/{id}/children")
+    @GetMapping("tags/user-tags/{id}/children")
     public Collection<TagDto> getChildren(@PathVariable Long id, @RequestParam(defaultValue = "false") Boolean recursive) {
-        Collection<EventTag> children = eventTagService
+        Collection<UserTag> children = userTagService
                 .findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag does not exist"))
                 .getChildren();
@@ -118,12 +112,12 @@ public class EventTagController {
         return tagConverter.toDto(children);
     }
 
-    @PostMapping("tags/event-tags/{id}/children")
+    @PostMapping("tags/user-tags/{id}/children")
     public Collection<TagDto> addChildren(@PathVariable Long id, @RequestBody Collection<Long> childrenIds) {
         try {
             return tagConverter.toDto(
-                    eventTagService.addChildren(
-                            eventTagService
+                    userTagService.addChildren(
+                            userTagService
                                     .findById(id)
                                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag does not exist")),
                             childrenIds));
@@ -134,12 +128,12 @@ public class EventTagController {
 
     }
 
-    @DeleteMapping("tags/event-tags/{id}/children")
+    @DeleteMapping("tags/user-tags/{id}/children")
     public Collection<TagDto> removeChildren(@PathVariable Long id, @RequestBody Collection<Long> childrenIds) {
         try {
             return tagConverter.toDto(
-                    eventTagService.removeChildren(
-                            eventTagService
+                    userTagService.removeChildren(
+                            userTagService
                                     .findById(id)
                                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag does not exist")),
                             childrenIds));
@@ -150,17 +144,22 @@ public class EventTagController {
 
     }
 
-    @PutMapping("/tags/event-tags")
-    public TagDto update(@RequestBody TagDto tag) {
-        return tagConverter.toDto(
-                eventTagService
-                        .update(tagConverter.toEventTag(tag))
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event does not exist")));
+    @GetMapping("/tags/user-tags/name/{name}")
+    public Collection<TagDto> getUserTagsByName(@PathVariable String name) {
+        return tagConverter.toDto(userTagService.findByName(name));
     }
 
-    @DeleteMapping("/tags/event-tags/{id}")
+    @PutMapping("/tags/user-tags")
+    public TagDto update(@RequestBody TagDto tag) {
+        return tagConverter.toDto(
+                userTagService
+                        .update(tagConverter.toUserTag(tag))
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist")));
+    }
+
+    @DeleteMapping("/tags/user-tags/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        eventTagService.deleteById(id);
+        userTagService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }
