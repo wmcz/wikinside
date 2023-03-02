@@ -1,4 +1,4 @@
-package cz.wikimedia.stats.business;
+package cz.wikimedia.stats.business.internal;
 
 import cz.wikimedia.stats.model.IdAble;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -12,10 +12,10 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 
-public abstract class AbstractService<T extends IdAble<ID>, ID> {
+public abstract class InternalService<T extends IdAble<ID>, ID> {
     protected final CrudRepository<T, ID> repository;
 
-    public AbstractService(CrudRepository<T, ID> repository) {
+    public InternalService(CrudRepository<T, ID> repository) {
         this.repository = repository;
     }
 

@@ -1,6 +1,6 @@
-package cz.wikimedia.stats.api.dto.converter;
+package cz.wikimedia.stats.api.controller.dto.converter;
 
-import cz.wikimedia.stats.business.AbstractService;
+import cz.wikimedia.stats.business.internal.InternalService;
 import cz.wikimedia.stats.model.IdAble;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class ConverterUtils {
         return ids;
     }
 
-    public static <T extends IdAble<Long>, S extends AbstractService<T, Long>>
+    public static <T extends IdAble<Long>, S extends InternalService<T, Long>>
     Collection<T> getElems(Collection<Long> ids, S service) {
         Collection<T> elems = new ArrayList<>(ids.size());
         ids.forEach(id -> service.findById(id).ifPresent(elems::add));

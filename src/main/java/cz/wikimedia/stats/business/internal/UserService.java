@@ -1,5 +1,6 @@
-package cz.wikimedia.stats.business;
+package cz.wikimedia.stats.business.internal;
 
+import cz.wikimedia.stats.business.external.WmUserService;
 import cz.wikimedia.stats.dao.EventRepository;
 import cz.wikimedia.stats.dao.UserRepository;
 import cz.wikimedia.stats.model.Event;
@@ -11,14 +12,16 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Service
-public class UserService extends AbstractService<User, Long> {
+public class UserService extends InternalService<User, Long> {
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
+    private final WmUserService wmUserService;
 
-    public UserService(UserRepository repository, EventRepository eventRepository) {
+    public UserService(UserRepository repository, EventRepository eventRepository, WmUserService wmUserService) {
         super(repository);
         this.userRepository = repository;
         this.eventRepository = eventRepository;
+        this.wmUserService = wmUserService;
     }
 
     private Collection<Event> applyEvents(User user, Collection<Long> eventIds, Function<Event, Event> function) {
@@ -29,8 +32,8 @@ public class UserService extends AbstractService<User, Long> {
         updateNonOwningField(user, updated, User::getEvents, this::addEvents, this::removeEvents);
     }
 
-    public Collection<User> findByUsername(String username) {
-        return userRepository.findUsersByUsername(username);
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findById(wmUserService.getId(username));
     }
 
     public Collection<Event> addEvents(User user, Collection<Long> eventIds) {
@@ -39,6 +42,12 @@ public class UserService extends AbstractService<User, Long> {
 
     public Collection<Event> removeEvents(User user, Collection<Long> eventIds) {
         return applyEvents(user, eventIds, e -> e.removeParticipant(user));
+    }
+
+    public <S extends User> Optional<S> createFromGlobalUser(S user) {
+        if (user.getId() == null)
+            user.setId(wmUserService.getId(user.getUsername()));
+        return create(user);
     }
 
     @Override

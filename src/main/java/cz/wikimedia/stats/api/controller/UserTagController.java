@@ -1,10 +1,10 @@
-package cz.wikimedia.stats.api.data.controller;
+package cz.wikimedia.stats.api.controller;
 
-import cz.wikimedia.stats.api.dto.TagDto;
-import cz.wikimedia.stats.api.dto.UserDto;
-import cz.wikimedia.stats.api.dto.converter.TagConverter;
-import cz.wikimedia.stats.api.dto.converter.UserConverter;
-import cz.wikimedia.stats.business.UserTagService;
+import cz.wikimedia.stats.api.controller.dto.TagDto;
+import cz.wikimedia.stats.api.controller.dto.UserDto;
+import cz.wikimedia.stats.api.controller.dto.converter.TagConverter;
+import cz.wikimedia.stats.api.controller.dto.converter.UserConverter;
+import cz.wikimedia.stats.business.internal.UserTagService;
 import cz.wikimedia.stats.model.UserTag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

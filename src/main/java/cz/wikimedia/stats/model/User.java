@@ -9,11 +9,10 @@ public class User implements IdAble<Long> {
     /* ATTRIBUTES */
 
     @Id
-    @GeneratedValue  //TODO: temporarily
-    private Long id; // should be the MediaWiki user_id attribute, ideally
+    private Long id; // Mediawiki guiuser id attribute
 
-    //@Transient
-    private String username;
+    @Transient
+    private String username; // need to fetch to ensure it is up-to-date
 
     //@Transient
     private String email;
@@ -104,5 +103,8 @@ public class User implements IdAble<Long> {
         return this;
     }
 
-
+    public User setId(Long id) {
+        this.id = id;
+        return this;
+    }
 }

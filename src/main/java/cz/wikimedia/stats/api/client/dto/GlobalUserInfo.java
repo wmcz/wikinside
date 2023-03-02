@@ -1,4 +1,4 @@
-package cz.wikimedia.stats.api.data.client.dto;
+package cz.wikimedia.stats.api.client.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

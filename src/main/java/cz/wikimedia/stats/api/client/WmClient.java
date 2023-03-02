@@ -1,7 +1,7 @@
-package cz.wikimedia.stats.api.data.client;
+package cz.wikimedia.stats.api.client;
 
-import cz.wikimedia.stats.api.data.client.dto.BatchResponse;
-import cz.wikimedia.stats.api.data.client.dto.GlobalUserInfo;
+import cz.wikimedia.stats.api.client.dto.BatchResponse;
+import cz.wikimedia.stats.api.client.dto.GUInfoQuery;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -13,38 +13,37 @@ public abstract class WmClient {
         this.client = WebClient
                 .builder()
                 .defaultHeader("User-Agent", properties.getName() + "/" + properties.getVersion() + " (" + properties.get("contact") + ")")
-                .baseUrl(projectUrl + "/w/api.php")
+                .baseUrl("https://" + projectUrl + "/w/api.php")
                 .build();
-
     }
 
-    public BatchResponse<GlobalUserInfo> getGlobalUserInfo(String username) {
+    public BatchResponse<GUInfoQuery> getGlobalUserInfo(String username) {
         return client.get()
                 .uri(uriBuilder -> uriBuilder
                         .queryParam("action", "query")
                         .queryParam("format", "json")
-                        .queryParam("meta", "globalUserInfo")
-                        .queryParam("formatVersion", 2)
-                        .queryParam("guiUser", username)
-                        .queryParam("maxLag", 1)
+                        .queryParam("meta", "globaluserinfo")
+                        .queryParam("formatversion", 2)
+                        .queryParam("guiuser", username)
+                        .queryParam("maxlag", 1)
                         .build())
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<BatchResponse<GlobalUserInfo>>() {})
+                .bodyToMono(new ParameterizedTypeReference<BatchResponse<GUInfoQuery>>() {})
                 .block();
     }
 
-    public BatchResponse<GlobalUserInfo> getGlobalUserInfo(Long globalUserId) {
+    public BatchResponse<GUInfoQuery> getGlobalUserInfo(Long globalUserId) {
         return client.get()
                 .uri(uriBuilder -> uriBuilder
                         .queryParam("action", "query")
                         .queryParam("format", "json")
-                        .queryParam("meta", "globalUserInfo")
-                        .queryParam("formatVersion", 2)
+                        .queryParam("meta", "globaluserinfo")
+                        .queryParam("formatversion", 2)
                         .queryParam("guiid", globalUserId)
-                        .queryParam("maxLag", 1)
+                        .queryParam("maxlag", 1)
                         .build())
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<BatchResponse<GlobalUserInfo>>() {})
+                .bodyToMono(new ParameterizedTypeReference<BatchResponse<GUInfoQuery>>() {})
                 .block();
     }
 }

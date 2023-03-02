@@ -1,4 +1,4 @@
-package cz.wikimedia.stats.business;
+package cz.wikimedia.stats.business.internal;
 
 
 import cz.wikimedia.stats.dao.UserRepository;
@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Service
-public class UserTagService extends AbstractService<UserTag, Long> {
+public class UserTagService extends InternalService<UserTag, Long> {
 
     private final UserRepository userRepository;
     private final UserTagRepository userTagRepository;

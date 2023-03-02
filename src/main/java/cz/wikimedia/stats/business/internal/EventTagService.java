@@ -1,4 +1,4 @@
-package cz.wikimedia.stats.business;
+package cz.wikimedia.stats.business.internal;
 
 
 import cz.wikimedia.stats.dao.EventRepository;
@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Service
-public class EventTagService extends AbstractService<EventTag, Long> {
+public class EventTagService extends InternalService<EventTag, Long> {
 
     private final EventRepository eventRepository;
     private final EventTagRepository eventTagRepository;

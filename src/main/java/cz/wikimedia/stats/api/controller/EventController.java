@@ -1,8 +1,8 @@
-package cz.wikimedia.stats.api.data.controller;
+package cz.wikimedia.stats.api.controller;
 
-import cz.wikimedia.stats.api.dto.EventDto;
-import cz.wikimedia.stats.api.dto.converter.EventConverter;
-import cz.wikimedia.stats.business.EventService;
+import cz.wikimedia.stats.api.controller.dto.EventDto;
+import cz.wikimedia.stats.api.controller.dto.converter.EventConverter;
+import cz.wikimedia.stats.business.internal.EventService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

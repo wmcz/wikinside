@@ -1,10 +1,10 @@
-package cz.wikimedia.stats.api.data.controller;
+package cz.wikimedia.stats.api.controller;
 
-import cz.wikimedia.stats.api.dto.EventDto;
-import cz.wikimedia.stats.api.dto.UserDto;
-import cz.wikimedia.stats.api.dto.converter.EventConverter;
-import cz.wikimedia.stats.api.dto.converter.UserConverter;
-import cz.wikimedia.stats.business.UserService;
+import cz.wikimedia.stats.api.controller.dto.EventDto;
+import cz.wikimedia.stats.api.controller.dto.UserDto;
+import cz.wikimedia.stats.api.controller.dto.converter.EventConverter;
+import cz.wikimedia.stats.api.controller.dto.converter.UserConverter;
+import cz.wikimedia.stats.business.internal.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +31,7 @@ public class UserController {
     public UserDto create(@RequestBody UserDto user) {
         return userConverter.toDto(
                 userService
-                        .create(userConverter.fromDto(user))
+                        .createFromGlobalUser(userConverter.fromDto(user))
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists")));
     }
 
@@ -51,8 +51,11 @@ public class UserController {
     }
 
     @GetMapping("/users/username/{username}")
-    public Collection<UserDto> getByName(@PathVariable String username) {
-        return userConverter.toDto(userService.findByUsername(username));
+    public UserDto getByName(@PathVariable String username) {
+        return userConverter.toDto(
+                userService
+                        .findByUsername(username)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist")));
     }
 
     @PutMapping("/users")

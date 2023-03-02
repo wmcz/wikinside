@@ -1,4 +1,4 @@
-package cz.wikimedia.stats.api.dto;
+package cz.wikimedia.stats.api.controller.dto;
 
 import java.time.Instant;
 import java.util.Collection;

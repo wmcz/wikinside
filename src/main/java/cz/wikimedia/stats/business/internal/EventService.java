@@ -1,4 +1,4 @@
-package cz.wikimedia.stats.business;
+package cz.wikimedia.stats.business.internal;
 
 import cz.wikimedia.stats.dao.EventRepository;
 import cz.wikimedia.stats.model.Event;
@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Service
-public class EventService extends AbstractService<Event, Long> {
+public class EventService extends InternalService<Event, Long> {
     private final EventRepository eventRepository;
 
     public EventService(EventRepository repository) {

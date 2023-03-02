@@ -1,7 +1,7 @@
-package cz.wikimedia.stats.api.dto.converter;
+package cz.wikimedia.stats.api.controller.dto.converter;
 
-import cz.wikimedia.stats.api.dto.TagDto;
-import cz.wikimedia.stats.business.*;
+import cz.wikimedia.stats.api.controller.dto.TagDto;
+import cz.wikimedia.stats.business.internal.*;
 import cz.wikimedia.stats.model.EventTag;
 import cz.wikimedia.stats.model.IdAble;
 import cz.wikimedia.stats.model.Tag;
@@ -24,7 +24,7 @@ public class TagConverter {
         this.eventTagService = eventTagService;
     }
 
-    private <T extends Tag<? extends IdAble<Long>>, S extends AbstractService<T, Long>> T getParent(Long id, S service) {
+    private <T extends Tag<? extends IdAble<Long>>, S extends InternalService<T, Long>> T getParent(Long id, S service) {
         if (id == null) return null;
         else            return service.findById(id).orElse(null);
     }
