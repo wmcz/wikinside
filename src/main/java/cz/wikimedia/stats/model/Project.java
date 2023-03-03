@@ -11,10 +11,26 @@ public class Project implements IdAble<Long> {
     private Long id;
 
     private String name;
-    private String language;
+    private String path;
+
+    protected Project() {}
+
+    public Project(Long id, String name, String path) {
+        this.id = id;
+        this.name = name;
+        this.path = path;
+    }
 
     @Override
     public Long getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPath() {
+        return path;
     }
 }

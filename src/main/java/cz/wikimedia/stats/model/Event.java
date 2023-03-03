@@ -25,6 +25,9 @@ public class Event implements IdAble<Long> {
     @ManyToMany
     private Collection<User> participants;
 
+    @ManyToMany
+    private Collection<Project> projects;
+
     @Transient
     private EventImpact impact;
 
@@ -37,13 +40,14 @@ public class Event implements IdAble<Long> {
         this.name = name;
     }
 
-    public Event(Long id, Collection<EventTag> tags, String name, Instant startDate, Instant endDate, Collection<User> participants) {
+    public Event(Long id, Collection<EventTag> tags, String name, Instant startDate, Instant endDate, Collection<User> participants, Collection<Project> projects) {
         this.id = id;
         this.tags = tags;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
         this.participants = participants;
+        this.projects = projects;
     }
 
     public Long getId() {
@@ -73,6 +77,10 @@ public class Event implements IdAble<Long> {
 
     public Collection<User> getParticipants() {
         return participants;
+    }
+
+    public Collection<Project> getProjects() {
+        return projects;
     }
 
 

@@ -8,4 +8,5 @@ public record EventDto(Long id,
                        String name,
                        Instant startDate,
                        Instant endDate,
-                       Collection<Long> userIds) {}
+                       Collection<Long> userIds,
+                       Collection<Long> projectIds) {}

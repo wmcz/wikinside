@@ -11,6 +11,8 @@ public class Revision {
     @GeneratedValue
     private Long id;
 
+    private Long revId; // is not unique across projects
+
     @ManyToOne
     private User user;
 
