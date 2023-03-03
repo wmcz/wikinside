@@ -6,7 +6,7 @@ import org.springframework.boot.info.BuildProperties;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.reactive.function.client.WebClient;
 
-public abstract class WmClient {
+public class WmClient {
     private final WebClient client;
 
     public WmClient(String projectUrl, BuildProperties properties) {
