@@ -52,7 +52,7 @@ public class ProjectController {
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project does not exist")));
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/projects/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         projectService.deleteById(id);
         return ResponseEntity.noContent().build();
