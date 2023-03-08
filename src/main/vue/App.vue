@@ -1,6 +1,9 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -13,6 +16,7 @@ import TheWelcome from './components/TheWelcome.vue'
   </header>
 
   <main>
+    <p> {{ t('message1') }} </p>
     <TheWelcome />
   </main>
 </template>
