@@ -1,3 +1,6 @@
 {
-    "message1": "Message1"
+    "user": {
+        "tags": "Tags",
+        "participates": "Events"
+    }
 }

@@ -16,7 +16,7 @@ const { t } = useI18n()
   </header>
 
   <main>
-    <p> {{ t('message1') }} </p>
+    <User name="User" :id="123456789" :tagIds="[4,5,6,7,8,9]" :eventIds="[20,21,22]" />
     <TheWelcome />
   </main>
 </template>

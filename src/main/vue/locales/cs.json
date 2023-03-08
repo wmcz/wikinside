@@ -1,3 +1,6 @@
 {
-    "message1": "Zpráva1"
+    "user": {
+        "tags": "Tagy",
+        "participates": "Akce"
+    }
 }
