@@ -1,6 +1,7 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
+import User from './components/User.vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
