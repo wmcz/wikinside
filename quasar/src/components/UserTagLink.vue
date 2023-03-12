@@ -3,12 +3,10 @@
 
   <q-item-section top>
     <q-item-label lines="1">
-      <span class="text-h6 q-pr-xs">{{ username }}</span>
-      <span class="text-caption">{{ id }}</span>
-
+      <span class="text-h6 q-pr-xs">{{ name }}</span>
     </q-item-label>
     <q-item-label caption lines="1">
-      Tags: a b c
+      {{ users.length }} users
     </q-item-label>
   </q-item-section>
   <q-item-section top side>
@@ -21,15 +19,15 @@
 
 <script>
 export default {
-  name: "UserLink",
+  name: "TagLink",
   props: {
-    username: {
+    name: {
       type: String,
       required: true
     },
 
-    id: {
-      type: Number,
+    users: {
+      type: Array,
       required: true
     }
   }

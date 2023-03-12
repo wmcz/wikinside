@@ -1,9 +1,16 @@
 <template>
   <q-page class="flex flex-center">
-    <q-list bordered class="rounded-borders" style="max-width: 600px">
-      <q-item-label header>User</q-item-label>
-      <UserLink />
+    <div class="q-gutter-md">
+    <q-list top bordered class="rounded-borders" style="max-width: 600px">
+      <q-item-label header>Users</q-item-label>
+        <UserLink v-for="user in userdata" :key="user.username" v-bind="user"/>
+        <template #fallback>
+          Loading...
+        </template>
     </q-list>
+
+    <q-btn bottom to="/user/new" color="primary">Add</q-btn>
+    </div>
   </q-page>
 </template>
 
@@ -14,12 +21,18 @@ import { api } from 'boot/axios'
 
 
 export default defineComponent({
+  data() {
+    return {
+      userdata: []
+    }
+        },
   name: 'UsersPage',
   components: {
     UserLink
   },
-  setup() {
-    api.get('/users').then((response) => console.log(response.data))
+  mounted() {
+    api.get('/users').then((response) => {
+      this.userdata = response.data.map(function(item) {return {username: item.username, id: item.id}})})
   }
 
 })

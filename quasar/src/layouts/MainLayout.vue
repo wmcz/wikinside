@@ -41,7 +41,9 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <Suspense>
+        <router-view />
+      </Suspense>
     </q-page-container>
   </q-layout>
 </template>
@@ -58,9 +60,14 @@ const linksList = [
     link: "/"
   },
   {
-    title: 'User',
+    title: 'Users',
     icon: 'perm_identity',
     link: '/user'
+  },
+  {
+    title: 'User tags',
+    icon: 'sell',
+    link: '/user/tag'
   },
 
 ]
