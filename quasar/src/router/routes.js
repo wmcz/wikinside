@@ -9,6 +9,8 @@ const routes = [
       { path: '/user/new',     component: () => import('pages/UsersNewPage.vue') },
       { path: '/user/tag',     component: () => import('pages/UserTagsPage.vue') },
       { path: '/event',        component: () => import('pages/EventsPage.vue') },
+      { path: '/event/tag',    component: () => import('pages/EventTagsPage.vue') },
+
     ]
   },
 

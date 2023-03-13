@@ -74,6 +74,11 @@ const linksList = [
     icon: 'fact_check',
     link: '/event'
   },
+  {
+    title: 'Event tags',
+    icon: 'sell',
+    link: '/event/tag'
+  },
 ]
 
 export default defineComponent({

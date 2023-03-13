@@ -6,7 +6,7 @@
       <span class="text-h6 q-pr-xs">{{ name }}</span>
     </q-item-label>
     <q-item-label caption lines="1">
-      {{ users.length }} users
+      {{ elems.length }} {{ elemname }}
     </q-item-label>
   </q-item-section>
   <q-item-section top side>
@@ -26,9 +26,14 @@ export default {
       required: true
     },
 
-    users: {
+    elems: {
       type: Array,
       required: true
+    },
+
+    elemname: {
+      type: String,
+      required: true,
     }
   }
 }
