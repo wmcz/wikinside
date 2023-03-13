@@ -8,6 +8,7 @@ const routes = [
       { path: '/user',         component: () => import('pages/UsersPage.vue') },
       { path: '/user/new',     component: () => import('pages/UsersNewPage.vue') },
       { path: '/user/tag',     component: () => import('pages/UserTagsPage.vue') },
+      { path: '/user/tag/new', component: () => import('pages/UserTagNewPage.vue') },
       { path: '/event',        component: () => import('pages/EventsPage.vue') },
       { path: '/event/new',    component: () => import('pages/EventsNewPage.vue') },
       { path: '/event/tag',    component: () => import('pages/EventTagsPage.vue') },
