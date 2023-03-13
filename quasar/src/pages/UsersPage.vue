@@ -4,9 +4,6 @@
     <q-list top bordered class="rounded-borders" style="max-width: 600px">
       <q-item-label header>Users</q-item-label>
         <UserLink v-for="user in userdata" :key="user.username" v-bind="user"/>
-        <template #fallback>
-          Loading...
-        </template>
     </q-list>
 
     <q-btn bottom to="/user/new" color="primary">Add</q-btn>

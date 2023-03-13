@@ -61,7 +61,7 @@ const linksList = [
   },
   {
     title: 'Users',
-    icon: 'perm_identity',
+    icon: 'person',
     link: '/user'
   },
   {
@@ -69,7 +69,16 @@ const linksList = [
     icon: 'sell',
     link: '/user/tag'
   },
-
+  {
+    title: 'Events',
+    icon: 'fact_check',
+    link: '/event'
+  },
+  {
+    title: 'Event tags',
+    icon: 'sell',
+    link: '/event/tag'
+  },
 ]
 
 export default defineComponent({

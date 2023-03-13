@@ -2,7 +2,7 @@
   <q-page class="flex flex-center">
     <div class="q-gutter-md">
     <q-list top bordered class="rounded-borders" style="min-width: 600px">
-      <q-item-label header>User tags</q-item-label>
+      <q-item-label header>Event tags</q-item-label>
       <q-input class="q-pa-md" ref="filterRef" v-model="filter" label="Filter">
         <template v-slot:append>
           <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
@@ -15,12 +15,12 @@
           :filter-method="node => node.name.toLowerCase().includes(filter.toLowerCase())"
         >
           <template v-slot:default-header="prop">
-            <TagLink :elems="[...prop.node.users]" :name="prop.node.name" elemname="users"/>
+            <TagLink :elems="[...prop.node.events]" :name="prop.node.name" elemname="events"/>
           </template>-->
         </q-tree>
       </q-list>
 
-    <q-btn bottom to="/user/tag/new" color="primary">Add</q-btn>
+    <q-btn bottom to="/event/tag/new" color="primary">Add</q-btn>
     </div>
   </q-page>
 </template>
@@ -54,15 +54,15 @@ export default defineComponent({
       filterRef: ref(null)
     }
         },
-  name: 'UserTagsPage',
+  name: 'EventTagsPage',
   components: {
     TagLink
   },
   mounted() {
-    api.get('/tags/user-tags').then((response) => {
+    api.get('/tags/event-tags').then((response) => {
       this.tree = this.treeify(response.data.map(function(item) {return {name: item.name,
                                                                          id: item.id,
-                                                                         users: new Set(item.elementIds),
+                                                                         events: new Set(item.elementIds),
                                                                          children: [],
                                                                          childrenIds: item.childrenIds,
                                                                          parentId: item.parentId}}))})
