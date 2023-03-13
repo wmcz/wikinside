@@ -11,7 +11,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 
 @Service
 public class WmRevisionService {
@@ -24,20 +23,9 @@ public class WmRevisionService {
         this.userContribConverter = userContribConverter;
     }
 
-    private String collectNames(Collection<String> usernames) {
-        if (usernames.isEmpty()) return "";
-
-        Iterator<String> iter = usernames.iterator();
-        StringBuilder res = new StringBuilder(iter.next());
-        while (iter.hasNext())
-            res.append('|')
-               .append(iter.next());
-        return res.toString();
-    }
-
     public Collection<Revision> getUserContribs(Collection<String> usernames, Instant start, Instant end, Project project) {
         WmClient client = wmClientService.getClient(project);
-        String names = collectNames(usernames);
+        String names = ClientUtils.collectNames(usernames);
 
         var response = client.getUserContribs(names, start, end);
         Collection<UserContrib> contribs = new ArrayList<>(response.query().contents());
