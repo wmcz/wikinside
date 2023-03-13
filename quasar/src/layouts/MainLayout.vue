@@ -12,10 +12,10 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          WMCZ Stats App
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div>0.2a</div>
       </q-toolbar>
       <div>
         <div class="text-subtitle1 q-pa-sm" >{{ today }}</div>
