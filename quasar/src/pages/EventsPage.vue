@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-center">
     <div class="q-gutter-md">
-    <q-list top bordered class="rounded-borders" style="max-width: 600px">
+    <q-list top bordered class="rounded-borders" style="min-width: 600px">
       <q-item-label header>Events</q-item-label>
         <EventLink v-for="event in eventdata" :key="event.name" v-bind="event"/>
         <template #fallback>

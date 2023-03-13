@@ -9,7 +9,7 @@
 
       <q-btn color="primary" type="submit">Submit</q-btn>
     </q-form>
-    <q-list bottom bordered class="rounded-borders" style="max-width: 600px">
+    <q-list bottom bordered class="rounded-borders" style="min-width: 600px">
       <TagLink v-for="tag in tagdata" :key="tag.name" elemname="users" v-bind="tag" :elems="tag.elementIds"/>
     </q-list>
     </div>

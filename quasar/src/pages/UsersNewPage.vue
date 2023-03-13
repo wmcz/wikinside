@@ -10,7 +10,7 @@
 
       <q-btn color="primary" type="submit">Submit</q-btn>
     </q-form>
-    <q-list bottom bordered class="rounded-borders" style="max-width: 600px">
+    <q-list bottom bordered class="rounded-borders" style="min-width: 600px">
       <UserLink v-for="user in userdata" :key="user.username" v-bind="user"/>
     </q-list>
     </div>
