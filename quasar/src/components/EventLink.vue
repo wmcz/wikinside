@@ -1,0 +1,31 @@
+<template>
+<q-item>
+
+  <q-item-section top>
+    <q-item-label lines="1">
+      <span class="text-h6 q-pr-xs">{{ name }}</span>
+
+    </q-item-label>
+    <q-item-label caption lines="1">
+      Tags: a b c
+    </q-item-label>
+  </q-item-section>
+  <q-item-section top side>
+    <div class="text-grey-8 q-gutter-xs">
+      <q-btn class="gt-xs" size="12px" flat dense round icon="delete" />
+    </div>
+  </q-item-section>
+</q-item>
+</template>
+
+<script>
+export default {
+  name: "EventLink",
+  props: {
+    name: {
+      type: String,
+      required: true
+    },
+  }
+}
+</script>
