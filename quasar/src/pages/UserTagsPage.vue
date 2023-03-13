@@ -1,20 +1,24 @@
 <template>
   <q-page class="flex flex-center">
     <div class="q-gutter-md">
-    <q-list top bordered class="rounded-borders" style="max-width: 600px">
+    <q-list top bordered class="rounded-borders" style="min-width: 600px">
       <q-item-label header>User tags</q-item-label>
+      <q-input class="q-pa-md" ref="filterRef" v-model="filter" label="Filter">
+        <template v-slot:append>
+          <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
+        </template>
+      </q-input>
         <q-tree
           :nodes="tree"
           node-key="id"
+          :filter="filter"
+          :filter-method="node => node.name.toLowerCase().includes(filter.toLowerCase())"
         >
           <template v-slot:default-header="prop">
             <UserTagLink :users="[...prop.node.users]" :name="prop.node.name"/>
           </template>-->
         </q-tree>
-        <template #fallback>
-          Loading...
-        </template>
-    </q-list>
+      </q-list>
 
     <q-btn bottom to="/user/tag/new" color="primary">Add</q-btn>
     </div>
@@ -22,7 +26,7 @@
 </template>
 
 <script>
-import {defineComponent} from 'vue'
+import {defineComponent, ref} from 'vue'
 import UserTagLink from "components/UserTagLink.vue";
 import { api } from 'boot/axios'
 
@@ -45,7 +49,9 @@ function pluckChildren(elem, array) {
 export default defineComponent({
   data() {
     return {
-      tree: []
+      tree: [],
+      filter: ref(''),
+      filterRef: ref(null)
     }
         },
   name: 'UserTagsPage',
@@ -71,6 +77,10 @@ export default defineComponent({
         res.push(tag)
       }
       return res
+    },
+    resetFilter: function() {
+      filter.value = ''
+      filterRef.value.focus()
     }
   }
 
