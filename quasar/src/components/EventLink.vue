@@ -12,7 +12,7 @@
   </q-item-section>
   <q-item-section top side>
     <div class="text-grey-8 q-gutter-xs">
-      <q-btn class="gt-xs" size="12px" flat dense round icon="delete" />
+      <q-btn class="gt-xs" size="12px" flat dense round icon="delete" @click.stop="$emit('deleteEvent', id)"/>
     </div>
   </q-item-section>
 </q-item>
@@ -26,6 +26,10 @@ export default {
       type: String,
       required: true
     },
+    id: {
+      type: Number,
+      required: true
+    }
   }
 }
 </script>

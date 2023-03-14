@@ -15,7 +15,7 @@
           :filter-method="node => node.name.toLowerCase().includes(filter.toLowerCase())"
         >
           <template v-slot:default-header="prop">
-            <TagLink :elems="[...prop.node.events]" :name="prop.node.name" elemname="events"/>
+            <TagLink :elems="[...prop.node.events]" :name="prop.node.name" :id="prop.node.id" elemname="events" @deleteTag="(id) => deleteTag(id)"/>
           </template>-->
         </q-tree>
       </q-list>
@@ -29,6 +29,17 @@
 import {defineComponent, ref} from 'vue'
 import TagLink from "components/TagLink.vue";
 import { api } from 'boot/axios'
+
+function deleteNode(id, current, topLevel) {
+  current.forEach((e) => {
+    if (e.id === id) {
+      e.children.forEach(c => topLevel.push(c))
+      current.splice(current.indexOf(e), 1)
+    } else {
+      deleteNode(id, e.children, topLevel)
+    }
+  })
+}
 
 function union(set1, set2) {
   set2.forEach(e => set1.add(e))
@@ -50,8 +61,8 @@ export default defineComponent({
   data() {
     return {
       tree: [],
-      filter: ref(''),
-      filterRef: ref(null)
+      filter: '',
+      filterRef: null
     }
         },
   name: 'EventTagsPage',
@@ -79,8 +90,12 @@ export default defineComponent({
       return res
     },
     resetFilter: function() {
-      filter.value = ''
-      filterRef.value.focus()
+      this.filter.value = ''
+      this.filterRef.value.focus()
+    },
+    deleteTag: function(id) {
+      api.delete('tags/event-tags/' + id).then(deleteNode(id, this.tree, this.tree))
+
     }
   }
 
