@@ -3,7 +3,7 @@
 
   <q-item-section top>
     <q-item-label lines="1">
-      <span class="text-h6 q-pr-xs">{{ name }}</span>
+      <span class="text-h6 q-pr-xs ellipsis fit">{{ name }}</span>
     </q-item-label>
     <q-item-label caption lines="1">
       {{ elems.length }} {{ elemname }}

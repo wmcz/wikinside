@@ -53,9 +53,17 @@ public class UserTagController {
     }
 
     @GetMapping("tags/user-tags")
-    public Collection<TagDto> getAll() {
+    public Collection<TagDto> getMany(@RequestBody(required = false) Collection<Long> ids) {
         Collection<TagDto> result = new ArrayList<>();
-        userTagService.findAll().forEach(t -> result.add(tagConverter.toDto(t)));
+        if (ids == null)
+            userTagService.findAll().forEach(t -> result.add(tagConverter.toDto(t)));
+        else {
+            ids.forEach(t -> result.add(
+                    tagConverter.toDto(
+                            userTagService
+                                    .findById(t)
+                                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag not found")))));
+        }
         return result;
     }
 

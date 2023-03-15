@@ -20,16 +20,24 @@ import { api } from 'boot/axios'
 export default defineComponent({
   data() {
     return {
+      tagdata: [],
       userdata: []
     }
-        },
+  },
   name: 'UsersPage',
   components: {
     UserLink
   },
   mounted() {
+    const self = this
+    api.get('/tags/user-tags').then((response) => {
+      this.tagdata = response.data.map(function(item) {return {name: item.name, id: item.id}})})
     api.get('/users').then((response) => {
-      this.userdata = response.data.map(function(item) {return {username: item.username, id: item.id}})})
+      this.userdata = response.data.map(
+        function(item) {return {
+          username: item.username,
+          id: item.id,
+          tags: item.tagIds.map(id => self.$data.tagdata.find(e => id === e.id))}})})
   },
   methods: {
     deleteUser: function (id) {

@@ -8,7 +8,8 @@
 
     </q-item-label>
     <q-item-label caption lines="1">
-      Tags: a b c
+      <TagBadge class="q-mr-xs" v-for="tag in tags" :key="tag.name" :id="tag.id" :name="tag.name" v-bind="tag" />
+      <caption v-if="!tags.length">No tags</caption>
     </q-item-label>
   </q-item-section>
   <q-item-section top side>
@@ -20,16 +21,22 @@
 </template>
 
 <script>
+import TagBadge from "components/TagBadge.vue";
+
 export default {
   name: "UserLink",
+  components: {TagBadge},
   props: {
     username: {
       type: String,
       required: true
     },
-
     id: {
       type: Number,
+      required: true
+    },
+    tags: {
+      type: Array,
       required: true
     }
   }

@@ -20,16 +20,24 @@ import { api } from 'boot/axios'
 export default defineComponent({
   data() {
     return {
+      tagdata: [],
       eventdata: []
     }
-        },
+  },
   name: 'EventsPage',
   components: {
     EventLink
   },
   mounted() {
+    const self = this
+    api.get('/tags/event-tags').then((response) => {
+      this.tagdata = response.data.map(function(item) {return {name: item.name, id: item.id}})})
     api.get('/events').then((response) => {
-      this.eventdata = response.data.map(function(item) {return {name: item.name, id: item.id}})})
+      this.eventdata = response.data.map(
+        function(item) {return {
+          name: item.name,
+          id: item.id,
+          tags: item.tagIds.map(id => self.$data.tagdata.find(e => id === e.id))}})})
   },
   methods: {
     deleteEvent: function (id) {

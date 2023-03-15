@@ -53,9 +53,17 @@ public class EventTagController {
     }
 
     @GetMapping("tags/event-tags")
-    public Collection<TagDto> getAll() {
+    public Collection<TagDto> getMany(@RequestBody(required = false) Collection<Long> ids) {
         Collection<TagDto> result = new ArrayList<>();
-        eventTagService.findAll().forEach(t -> result.add(tagConverter.toDto(t)));
+        if (ids == null)
+            eventTagService.findAll().forEach(t -> result.add(tagConverter.toDto(t)));
+        else {
+            ids.forEach(t -> result.add(
+                    tagConverter.toDto(
+                            eventTagService
+                                    .findById(t)
+                                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag not found")))));
+        }
         return result;
     }
 

@@ -42,7 +42,7 @@
 
     <q-page-container>
       <Suspense>
-        <router-view />
+        <router-view class="q-ma-md" />
       </Suspense>
     </q-page-container>
   </q-layout>
