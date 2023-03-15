@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import {defineComponent, ref} from 'vue'
+import {defineComponent} from 'vue'
 import TagLink from "components/TagLink.vue";
 import { api } from 'boot/axios'
 
@@ -53,7 +53,7 @@ function pluckChildren(elem, array) {
 
     pluckChildren(child, array)
     elem.children.push(child)
-    union(elem.users, child.users)
+    union(elem.events, child.events)
     array.splice(array.indexOf(child), 1)
   })
 }

@@ -7,9 +7,13 @@
     >
       <q-input :rules="[ val => val && val.length > 0 || '']" v-model="name" label="Tag name *" />
 
+      <q-select label="Users (optional)" multiple use-chips use-input counter v-model="selected" :options="useroptions" option-value="id" option-label="username" @filter="filterUsers"/>
+
+      <q-select label="Parent tag (optional)" use-chips use-input counter v-model="parent" :options="parentoptions" option-value="id" option-label="name" @filter="filterParents"/>
+
       <q-btn color="primary" type="submit">Submit</q-btn>
     </q-form>
-    <q-list bottom bordered class="rounded-borders" style="min-width: 600px">
+    <q-list v-if="tagdata.length" bottom bordered class="rounded-borders" style="min-width: 600px">
       <TagLink v-for="tag in tagdata" :key="tag.name" elemname="users" v-bind="tag" :elems="tag.elementIds"/>
     </q-list>
     </div>
@@ -26,7 +30,13 @@ export default defineComponent({
   data() {
     return {
       name: null,
-      tagdata: []
+      tagdata: [],
+      userdata: null,
+      useroptions: null,
+      selected: [],
+      parent: null,
+      parentdata: null,
+      parentoptions: null,
     }
   },
   methods: {
@@ -36,10 +46,42 @@ export default defineComponent({
           name: this.name,
           id: null,
           assignable: true,
-          elementIds: [],
-          parentId: null,
+          elementIds: this.selected.map(s => s.id),
+          parentId: this.parent ? this.parent.id : null,
           childrenIds: []
         }).then((response) => this.tagdata.push(response.data))
+    },
+    filterUsers(val, update, abort) {
+      const self = this
+      if (self.userdata === null) {
+        update(() => {
+          api.get('/users').then((response) => {
+          self.userdata = response.data.map(u => {return {
+            username: u.username,
+            id: u.id
+        }})
+            self.useroptions = self.userdata})})
+      } else {
+        update(() => self.useroptions = self.userdata.filter((u) => u.username.toLowerCase().indexOf(val.toLowerCase()) > -1))
+      }
+    },
+    filterParents(val, update, abort) {
+      const self = this
+      if (self.parentdata === null) {
+        update(() => {
+          api.get('/tags/user-tags').then((response) => {
+            self.parentdata = response.data.map(p => {
+              return {
+                name: p.name,
+                id: p.id
+              }
+            })
+            self.parentoptions = self.parentdata
+          })
+        })
+      } else {
+        update(() => self.parentoptions = self.parentdata.filter((p) => p.name.toLowerCase().indexOf(val.toLowerCase()) > -1))
+      }
     }
   },
   components: {
