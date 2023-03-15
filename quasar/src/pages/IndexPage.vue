@@ -2,8 +2,8 @@
   <q-page class="flex flex-center">
     <img
       alt="Quasar logo"
-      src="~assets/quasar-logo-vertical.svg"
-      style="width: 200px; height: 200px"
+      src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Wikimedia_CZ_-_vertical_logo_-_English_version.svg"
+      style="width: 300px; height: 300px"
     >
   </q-page>
 </template>
