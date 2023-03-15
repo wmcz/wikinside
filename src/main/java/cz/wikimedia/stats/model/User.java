@@ -9,7 +9,9 @@ public class User implements IdAble<Long> {
     /* ATTRIBUTES */
 
     @Id
-    private Long id; // Mediawiki guiuser id attribute
+    private Long id; // MediaWiki guiuser id attribute
+
+    private Long localId; // MediaWiki userid for a local wiki defined by GlobalWmClient
 
     @Transient
     private String username; // need to fetch to ensure it is up-to-date
@@ -69,6 +71,9 @@ public class User implements IdAble<Long> {
         return events;
     }
 
+    public Long getLocalId() {
+        return localId;
+    }
 
 
     /* SETTERS */
@@ -105,6 +110,11 @@ public class User implements IdAble<Long> {
 
     public User setId(Long id) {
         this.id = id;
+        return this;
+    }
+
+    public User setLocalId(Long localId) {
+        this.localId = localId;
         return this;
     }
 }

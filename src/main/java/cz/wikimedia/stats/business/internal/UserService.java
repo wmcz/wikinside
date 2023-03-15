@@ -45,8 +45,10 @@ public class UserService extends InternalService<User, Long> {
     }
 
     public <S extends User> Optional<S> createFromGlobalUser(S user) {
-        if (user.getId() == null)
+        if (user.getId() == null) {
             user.setId(wmUserService.getId(user.getUsername()));
+            user.setLocalId(wmUserService.getLocalId(user.getUsername()));
+        }
         return create(user);
     }
 

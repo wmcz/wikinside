@@ -5,6 +5,7 @@ import cz.wikimedia.stats.api.controller.dto.UserDto;
 import cz.wikimedia.stats.api.controller.dto.converter.EventConverter;
 import cz.wikimedia.stats.api.controller.dto.converter.UserConverter;
 import cz.wikimedia.stats.business.internal.UserService;
+import cz.wikimedia.stats.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,9 +46,9 @@ public class UserController {
 
     @GetMapping("/users")
     public Collection<UserDto> getMany() {
-        Collection<UserDto> result = new ArrayList<>();
-        userService.findAll().forEach(u -> result.add(userConverter.toDto(u)));
-        return result;
+        Collection<User> list = new ArrayList<>();
+        userService.findAll().forEach(list::add);
+        return userConverter.toDto(list);
     }
 
     @GetMapping("/users/username/{username}")

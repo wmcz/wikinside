@@ -22,9 +22,9 @@ public class UserConverter {
         this.wmUserService = wmUserService;
     }
 
-    public UserDto toDto(User user) {
+    private UserDto toDtoInner(User user) {
        return new UserDto(user.getId(),
-                          wmUserService.getUsername(user.getId()),
+                          user.getUsername(),
                           user.getEmail(),
                           ConverterUtils.getIds(user.getTags()),
                           ConverterUtils.getIds(user.getEvents()));
@@ -38,8 +38,14 @@ public class UserConverter {
                         ConverterUtils.getElems(dto.tagIds(), eventService));
     }
 
+    public UserDto toDto(User user) {
+        user = user.setUsername(wmUserService.getUsername(user.getId()));
+        return toDtoInner(user);
+    }
+
     public Collection<UserDto> toDto(Collection<User> users) {
-        return users.stream().map(this::toDto).toList();
+        users = wmUserService.updateNames(users);
+        return users.stream().map(this::toDtoInner).toList();
     }
 
     public Collection<User> fromDto(Collection<UserDto> dtos) {

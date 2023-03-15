@@ -48,6 +48,36 @@ public class WmClient {
                 .block();
     }
 
+    public BatchResponse<LocalUserQuery> getUsersById(String localIds) {
+        return client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .queryParam("action", "query")
+                        .queryParam("format", "json")
+                        .queryParam("list", "users")
+                        .queryParam("formatversion", 2)
+                        .queryParam("ususerids", localIds)
+                        .queryParam("maxlag", 1)
+                        .build())
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<BatchResponse<LocalUserQuery>>() {})
+                .block();
+    }
+
+    public BatchResponse<LocalUserQuery> getUsersByName(String names) {
+        return client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .queryParam("action", "query")
+                        .queryParam("format", "json")
+                        .queryParam("list", "users")
+                        .queryParam("formatversion", 2)
+                        .queryParam("ususers", names)
+                        .queryParam("maxlag", 1)
+                        .build())
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<BatchResponse<LocalUserQuery>>() {})
+                .block();
+    }
+
 
     public ContinuableBatchResponse<UserContribQuery, UserContribContinue> getUserContribs(String names, Instant start, Instant end) {
 
