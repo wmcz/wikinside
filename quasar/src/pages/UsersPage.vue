@@ -3,7 +3,16 @@
     <div class="q-gutter-md">
     <q-list top bordered class="rounded-borders" style="min-width: 600px">
       <q-item-label header>Users</q-item-label>
-        <UserLink v-for="user in userdata" :key="user.username" v-bind="user" @deleteUser="(id) => deleteUser(id)"/>
+      <q-input class="q-pa-md" ref="filterRef" v-model="filter" label="Filter">
+        <template v-slot:append>
+          <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
+        </template>
+      </q-input>
+      <q-table :rows="userdata" :row-key="username" grid style="max-width: 600px" :loading="loading" :filter="filter" :pagination="{ rowsPerPage: 10}">
+        <template v-slot:item="props">
+          <UserLink :key="props.row.username" v-bind="props.row" @deleteUser="(id) => deleteUser(id)" style="width: 600px"/>
+        </template>
+      </q-table>
     </q-list>
 
     <q-btn bottom to="/user/new" color="primary">Add</q-btn>
@@ -21,7 +30,9 @@ export default defineComponent({
   data() {
     return {
       tagdata: [],
-      userdata: []
+      userdata: [],
+      filter: '',
+      loading: true
     }
   },
   name: 'UsersPage',
@@ -37,7 +48,9 @@ export default defineComponent({
         function(item) {return {
           username: item.username,
           id: item.id,
-          tags: item.tagIds.map(id => self.$data.tagdata.find(e => id === e.id))}})})
+          tags: item.tagIds.map(id => self.$data.tagdata.find(e => id === e.id))}})
+      this.loading = false
+    }, () => this.loading = false)
   },
   methods: {
     deleteUser: function (id) {
@@ -47,6 +60,9 @@ export default defineComponent({
             this.userdata.find(e => e.id === id)),
           1))
 
+    },
+    resetFilter: function () {
+      this.filter = ''
     }
   }
 })
