@@ -62,7 +62,7 @@ export default defineComponent({
             }})
             self.eventoptions = self.eventdata})})
       } else {
-        update(() => self.eventoptions = self.eventdata.filter((e) => e.name.toLowerCase().indexOf(val.toLowerCase()) > -1))
+        update(() => self.eventoptions = self.eventdata.filter((e) => e.name.toLowerCase().includes(val.toLowerCase())))
       }
     },
     filterParents(val, update, abort) {

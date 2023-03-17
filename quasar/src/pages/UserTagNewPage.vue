@@ -80,7 +80,7 @@ export default defineComponent({
           })
         })
       } else {
-        update(() => self.parentoptions = self.parentdata.filter((p) => p.name.toLowerCase().indexOf(val.toLowerCase()) > -1))
+        update(() => self.parentoptions = self.parentdata.filter((p) => p.name.toLowerCase().includes(val.toLowerCase())))
       }
     }
   },
