@@ -9,7 +9,7 @@
       {{ elems.length }} {{ elemname }}
     </q-item-label>
   </q-item-section>
-  <q-item-section top side>
+  <q-item-section side>
     <div class="text-grey-8 q-gutter-xs">
       <q-btn class="gt-xs" size="12px" flat dense round icon="delete" @click.stop="$emit('deleteTag', id)" />
     </div>

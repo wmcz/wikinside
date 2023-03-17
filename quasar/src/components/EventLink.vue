@@ -11,7 +11,7 @@
       <caption v-if="!tags.length">No tags</caption>
     </q-item-label>
   </q-item-section>
-  <q-item-section top side>
+  <q-item-section side>
     <div class="text-grey-8 q-gutter-xs">
       <q-btn class="gt-xs" size="12px" flat dense round icon="delete" @click.stop="$emit('deleteEvent', id)"/>
     </div>
