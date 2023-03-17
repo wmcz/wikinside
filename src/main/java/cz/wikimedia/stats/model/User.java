@@ -13,7 +13,6 @@ public class User implements IdAble<Long> {
 
     private Long localId; // MediaWiki userid for a local wiki defined by GlobalWmClient
 
-    @Transient
     private String username; // need to fetch to ensure it is up-to-date
 
     //@Transient
