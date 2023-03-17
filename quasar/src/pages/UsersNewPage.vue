@@ -4,9 +4,10 @@
     <q-form top
       @submit="onSubmit"
       class="q-gutter-md"
+      style="max-width: 600px"
     >
       <q-input :rules="[ val => val && val.length > 0 || '']" v-model="username" label="User name *" />
-      <q-input v-model="tag" label="Tags" hint="this one doesn't work yet"/>
+      <q-select label="Tags (optional)" multiple use-chips use-input counter v-model="selected" :options="tagoptions" option-value="id" option-label="name" @filter="filterTags"/>
 
       <q-btn color="primary" type="submit">Submit</q-btn>
     </q-form>
@@ -27,7 +28,10 @@ export default defineComponent({
   data() {
     return {
       username: null,
-      userdata: []
+      userdata: [],
+      tagdata: null,
+      selected: [],
+      tagoptions: null
     }
   },
   methods: {
@@ -36,9 +40,32 @@ export default defineComponent({
         {
           username: this.username,
           id: null,
-          tagIds: [],
+          tagIds: this.selected.map(s => s.id),
           eventIds: []
-        }).then((response) => this.userdata.push(response.data))
+        }).then((response) => this.userdata.push({
+          username: response.data.username,
+          id: response.data.id,
+          tags: response.data.tagIds.map(i => this.tagdata.find(e => e.id === i))
+        }
+      ))
+    },
+    filterTags(val, update, abort) {
+      const self = this
+      if (self.tagdata === null) {
+        update(() => {
+          api.get('/tags/user-tags').then((response) => {
+            self.tagdata = response.data.map(t => {
+              return {
+                name: t.name,
+                id: t.id
+              }
+            })
+            self.tagoptions = self.tagdata
+          })
+        })
+      } else {
+        update(() => self.tagoptions = self.tagdata.filter(t => t.name.toLowerCase().includes(val.toLowerCase())))
+      }
     }
   },
   components: {
