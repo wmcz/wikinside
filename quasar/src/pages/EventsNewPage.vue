@@ -9,7 +9,16 @@
       <q-input :rules="[ val => val && val.length > 0 || '']" v-model="name" label="Event name *" />
       <q-select label="Tags (optional)" multiple use-chips use-input counter v-model="selected" :options="tagoptions" option-value="id" option-label="name" @filter="filterTags"/>
 
+      <div>
+        <q-field label="Dates" hint="Double click for single day events" stack-label borderless>
+          <template v-slot:control>
+            <q-date v-model="date" landscape today-btn range mask="YYYY-MM-DD"/>
+          </template>
+        </q-field>
+      </div>
+
       <q-btn color="primary" type="submit">Submit</q-btn>
+
     </q-form>
     <q-list bottom bordered class="rounded-borders" style="min-width: 600px">
       <EventLink v-for="event in eventdata" :key="event.name" v-bind="event"/>
@@ -31,7 +40,8 @@ export default defineComponent({
       eventdata: [],
       tagdata: null,
       selected: [],
-      tagoptions: null
+      tagoptions: null,
+      date: null,
     }
   },
   methods: {
