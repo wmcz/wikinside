@@ -8,6 +8,7 @@
     >
       <q-input :rules="[ val => val && val.length > 0 || '']" v-model="name" label="Event name *" />
       <q-select label="Tags (optional)" multiple use-chips use-input counter v-model="selected" :options="tagoptions" option-value="id" option-label="name" @filter="filterTags"/>
+      <UserSelect ref="userSelect"/>
 
       <div>
         <q-field label="Dates" hint="Double click for single day events" stack-label borderless>
@@ -31,6 +32,7 @@
 import { defineComponent } from 'vue'
 import EventLink from "components/EventLink.vue";
 import {api} from "boot/axios";
+import UserSelect from "components/UserSelect.vue";
 
 export default defineComponent({
   name: 'EventsNewPage',
@@ -52,7 +54,7 @@ export default defineComponent({
           id: null,
           tagIds: this.selected.map(s => s.id),
           projectIds: [],
-          userIds: []
+          userIds: this.$refs.userSelect.selected.map(s => s.id)
         }).then((response) => this.eventdata.push({
         name: response.data.name,
         id: response.data.id,
@@ -79,6 +81,7 @@ export default defineComponent({
     }
   },
   components: {
+    UserSelect,
     EventLink
   }
 })

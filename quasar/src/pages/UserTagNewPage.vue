@@ -7,7 +7,7 @@
     >
       <q-input :rules="[ val => val && val.length > 0 || '']" v-model="name" label="Tag name *" />
 
-      <q-select label="Users (optional)" multiple use-chips use-input counter v-model="selected" :options="useroptions" option-value="id" option-label="username" @filter="filterUsers"/>
+      <UserSelect ref="userSelect"/>
 
       <q-select label="Parent tag (optional)" use-chips use-input counter v-model="parent" :options="parentoptions" option-value="id" option-label="name" @filter="filterParents"/>
 
@@ -24,6 +24,7 @@
 import { defineComponent } from 'vue'
 import TagLink from "components/TagLink.vue";
 import {api} from "boot/axios";
+import UserSelect from "components/UserSelect.vue";
 
 export default defineComponent({
   name: 'UserTagNewPage',
@@ -31,12 +32,9 @@ export default defineComponent({
     return {
       name: null,
       tagdata: [],
-      userdata: null,
-      useroptions: null,
-      selected: [],
       parent: null,
       parentdata: null,
-      parentoptions: null,
+      parentoptions: null
     }
   },
   methods: {
@@ -46,24 +44,10 @@ export default defineComponent({
           name: this.name,
           id: null,
           assignable: true,
-          elementIds: this.selected.map(s => s.id),
+          elementIds: this.$refs.userSelect.selected.map(s => s.id),
           parentId: this.parent ? this.parent.id : null,
           childrenIds: []
         }).then((response) => this.tagdata.push(response.data))
-    },
-    filterUsers(val, update, abort) {
-      const self = this
-      if (self.userdata === null) {
-        update(() => {
-          api.get('/users').then((response) => {
-          self.userdata = response.data.map(u => {return {
-            username: u.username,
-            id: u.id
-        }})
-            self.useroptions = self.userdata})})
-      } else {
-        update(() => self.useroptions = self.userdata.filter((u) => u.username.toLowerCase().indexOf(val.toLowerCase()) > -1))
-      }
     },
     filterParents(val, update, abort) {
       const self = this
@@ -85,6 +69,7 @@ export default defineComponent({
     }
   },
   components: {
+    UserSelect,
     TagLink
   }
 })
