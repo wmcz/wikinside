@@ -1,5 +1,5 @@
 <template>
-  <q-select label="Tags (optional)" multiple use-chips use-input counter v-model="selected" :options="tagoptions" option-value="id" option-label="name" @filter="filterTags"/>
+  <q-select :label=" parent ? 'Parent tag (optional)' : 'Tags (optional)'" :multiple="!parent" use-chips use-input :counter="!parent" v-model="selected" :options="tagoptions" option-value="id" option-label="name" @filter="filterTags"/>
 </template>
 
 <script>
@@ -11,13 +11,16 @@ export default {
     return {
       tagdata: null,
       tagoptions: null,
-      selected: []
+      selected: parent ? null : []
     }
   },
   props: {
     url: {
       type: String,
       required: true
+    },
+    parent: {
+      type: Boolean
     }
   }
   ,

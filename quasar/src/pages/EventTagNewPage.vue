@@ -9,7 +9,7 @@
 
       <q-select label="Events (optional)" multiple use-chips use-input counter v-model="selected" :options="eventoptions" option-value="id" option-label="name" @filter="filterEvents"/>
 
-      <q-select label="Parent tag (optional)" use-chips use-input counter v-model="parent" :options="parentoptions" option-value="id" option-label="name" @filter="filterParents"/>
+      <TagSelect ref="parentSelect" parent url="tags/event-tags"/>
 
       <q-btn color="primary" type="submit">Submit</q-btn>
     </q-form>
@@ -24,6 +24,7 @@
 import { defineComponent } from 'vue'
 import TagLink from "components/TagLink.vue";
 import {api} from "boot/axios";
+import TagSelect from "components/TagSelect.vue";
 
 export default defineComponent({
   name: 'EventTagNewPage',
@@ -33,10 +34,7 @@ export default defineComponent({
       tagdata: [],
       eventdata: null,
       eventoptions: null,
-      selected: [],
-      parent: null,
-      parentdata: null,
-      parentoptions: null,
+      selected: []
     }
   },
   methods: {
@@ -47,7 +45,7 @@ export default defineComponent({
           id: null,
           assignable: true,
           elementIds: this.selected.map(s => s.id),
-          parentId: this.parent ? this.parent.id : null,
+          parentId: this.$refs.parentSelect.selected,
           childrenIds: []
         }).then((response) => this.tagdata.push(response.data))
     },
@@ -65,27 +63,10 @@ export default defineComponent({
         update(() => self.eventoptions = self.eventdata.filter((e) => e.name.toLowerCase().includes(val.toLowerCase())))
       }
     },
-    filterParents(val, update, abort) {
-      const self = this
-      if (self.parentdata === null) {
-        update(() => {
-          api.get('/tags/event-tags').then((response) => {
-            self.parentdata = response.data.map(p => {
-              return {
-                name: p.name,
-                id: p.id
-              }
-            })
-            self.parentoptions = self.parentdata
-          })
-        })
-      } else {
-        update(() => self.parentoptions = self.parentdata.filter((p) => p.name.toLowerCase().indexOf(val.toLowerCase()) > -1))
-      }
-    }
   },
   components: {
-    TagLink
+    TagLink,
+    TagSelect
   }
 })
 </script>
