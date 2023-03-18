@@ -7,7 +7,7 @@
       style="max-width: 600px"
     >
       <q-input :rules="[ val => val && val.length > 0 || '']" v-model="name" label="Event name *" />
-      <q-select label="Tags (optional)" multiple use-chips use-input counter v-model="selected" :options="tagoptions" option-value="id" option-label="name" @filter="filterTags"/>
+      <TagSelect  ref="tagSelect" url="tags/event-tags"/>
       <UserSelect ref="userSelect"/>
 
       <div>
@@ -33,6 +33,7 @@ import { defineComponent } from 'vue'
 import EventLink from "components/EventLink.vue";
 import {api} from "boot/axios";
 import UserSelect from "components/UserSelect.vue";
+import TagSelect from "components/TagSelect.vue";
 
 export default defineComponent({
   name: 'EventsNewPage',
@@ -40,9 +41,6 @@ export default defineComponent({
     return {
       name: null,
       eventdata: [],
-      tagdata: null,
-      selected: [],
-      tagoptions: null,
       date: null,
     }
   },
@@ -52,7 +50,7 @@ export default defineComponent({
         {
           name: this.name,
           id: null,
-          tagIds: this.selected.map(s => s.id),
+          tagIds: this.$refs.tagSelect.selected.map(s => s.id),
           projectIds: [],
           userIds: this.$refs.userSelect.selected.map(s => s.id)
         }).then((response) => this.eventdata.push({
@@ -61,26 +59,9 @@ export default defineComponent({
         tags: response.data.tagIds.map(i => this.tagdata.find(e => e.id === i))
       }))
     },
-    filterTags(val, update, abort) {
-      const self = this
-      if (self.tagdata === null) {
-        update(() => {
-          api.get('/tags/event-tags').then((response) => {
-            self.tagdata = response.data.map(t => {
-              return {
-                name: t.name,
-                id: t.id
-              }
-            })
-            self.tagoptions = self.tagdata
-          })
-        })
-      } else {
-        update(() => self.tagoptions = self.tagdata.filter(t => t.name.toLowerCase().includes(val.toLowerCase())))
-      }
-    }
   },
   components: {
+    TagSelect,
     UserSelect,
     EventLink
   }

@@ -7,8 +7,7 @@
       style="max-width: 600px"
     >
       <q-input :rules="[ val => val && val.length > 0 || '']" v-model="username" label="User name *" />
-      <q-select label="Tags (optional)" multiple use-chips use-input counter v-model="selected" :options="tagoptions" option-value="id" option-label="name" @filter="filterTags"/>
-
+      <TagSelect ref="tagselect" url="tags/user-tags"/>
       <q-btn color="primary" type="submit">Submit</q-btn>
     </q-form>
     <q-list bottom bordered class="rounded-borders" style="min-width: 600px">
@@ -22,16 +21,14 @@
 import { defineComponent } from 'vue'
 import UserLink from "components/UserLink.vue";
 import {api} from "boot/axios";
+import TagSelect from "components/TagSelect.vue";
 
 export default defineComponent({
   name: 'UsersNewPage',
   data() {
     return {
       username: null,
-      userdata: [],
-      tagdata: null,
-      selected: [],
-      tagoptions: null
+      userdata: []
     }
   },
   methods: {
@@ -40,7 +37,7 @@ export default defineComponent({
         {
           username: this.username,
           id: null,
-          tagIds: this.selected.map(s => s.id),
+          tagIds: this.$refs.tagselect.selected.map(s => s.id),
           eventIds: []
         }).then((response) => this.userdata.push({
           username: response.data.username,
@@ -49,26 +46,9 @@ export default defineComponent({
         }
       ))
     },
-    filterTags(val, update, abort) {
-      const self = this
-      if (self.tagdata === null) {
-        update(() => {
-          api.get('/tags/user-tags').then((response) => {
-            self.tagdata = response.data.map(t => {
-              return {
-                name: t.name,
-                id: t.id
-              }
-            })
-            self.tagoptions = self.tagdata
-          })
-        })
-      } else {
-        update(() => self.tagoptions = self.tagdata.filter(t => t.name.toLowerCase().includes(val.toLowerCase())))
-      }
-    }
   },
   components: {
+    TagSelect,
     UserLink
   }
 })
