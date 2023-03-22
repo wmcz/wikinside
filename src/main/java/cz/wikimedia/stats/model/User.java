@@ -2,6 +2,7 @@ package cz.wikimedia.stats.model;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 
 @Entity
 public class User implements IdAble<Long> {
@@ -36,6 +37,8 @@ public class User implements IdAble<Long> {
         this.id = id;
         this.username = username;
         this.email = email;
+        this.tags = new HashSet<>();
+        this.events = new HashSet<>();
     }
 
     public User(Long id, String username, String email, Collection<UserTag> tags, Collection<Event> events) {

@@ -78,4 +78,17 @@ public class UserService extends InternalService<User, Long> {
             return super.update(user);
         }
     }
+
+    public User processUser(String username) {
+        if (username.matches("([0-9]+\\.){3}[0-9]+|([0-9A-Fa-f]*:){7}[0-9A-Fa-f]+"))
+            return null; // IP in the username slot means user isn't logged in
+
+        return userRepository
+                .findByUsername(username)
+                .orElse(createFromGlobalUser(
+                        new User(
+                                null,
+                                username,
+                                null)).orElse(null));
+    }
 }

@@ -1,9 +1,7 @@
 package cz.wikimedia.stats.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
 public class Revision implements IdAble<Long> {
@@ -24,15 +22,22 @@ public class Revision implements IdAble<Long> {
     @ManyToOne
     private Project project;
 
+    private Instant timestamp;
+
+    @Column(length = 512)
+    private String summary;
+
     protected Revision() {}
 
-    public Revision(Long id, Long revId, Long diff, User user, Event event, Project project) {
+       public Revision(Long id, Long revId, Long diff, User user, Event event, Project project, Instant timestamp, String summary) {
         this.id = id;
         this.revId = revId;
         this.diff = diff;
         this.user = user;
         this.event = event;
         this.project = project;
+        this.timestamp = timestamp;
+        this.summary = summary;
     }
 
     @Override
@@ -58,5 +63,18 @@ public class Revision implements IdAble<Long> {
 
     public Project getProject() {
         return project;
+    }
+
+    public Instant getTimestamp() {
+        return timestamp;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public Revision setEvent(Event event) {
+        this.event = event;
+        return this;
     }
 }

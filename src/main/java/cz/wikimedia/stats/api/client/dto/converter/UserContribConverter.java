@@ -27,7 +27,9 @@ public class UserContribConverter {
                 contrib.sizeDiff(),
                 userService.findByUsername(contrib.user()).orElse(null),
                 null,
-                project);
+                project,
+                contrib.timestamp(),
+                contrib.comment());
     }
 
     public Revision fromContrib(UserContrib contrib, User user, Project project) {
@@ -37,7 +39,9 @@ public class UserContribConverter {
                 contrib.sizeDiff(),
                 user,
                 null,
-                project);
+                project,
+                contrib.timestamp(),
+                contrib.comment());
     }
 
     public Collection<Revision> fromContrib(Collection<UserContrib> contribs, Project project) {

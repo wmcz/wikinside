@@ -1,7 +1,7 @@
 package cz.wikimedia.stats.model;
 
 import javax.persistence.*;
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Collection;
 
 @Entity
@@ -19,8 +19,8 @@ public class Event implements IdAble<Long> {
     @Column(unique=true, nullable = false)
     private String name;
 
-    private Instant startDate;
-    private Instant endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     @ManyToMany
     private Collection<User> participants;
@@ -31,6 +31,8 @@ public class Event implements IdAble<Long> {
     @Transient
     private EventImpact impact;
 
+    private String hashtag;
+
 
     /* CONSTRUCTORS */
 
@@ -40,10 +42,11 @@ public class Event implements IdAble<Long> {
         this.name = name;
     }
 
-    public Event(Long id, Collection<EventTag> tags, String name, Instant startDate, Instant endDate, Collection<User> participants, Collection<Project> projects) {
+    public Event(Long id, Collection<EventTag> tags, String name, String hashtag, LocalDate startDate, LocalDate endDate, Collection<User> participants, Collection<Project> projects) {
         this.id = id;
         this.tags = tags;
         this.name = name;
+        this.hashtag = hashtag;
         this.startDate = startDate;
         this.endDate = endDate;
         this.participants = participants;
@@ -67,11 +70,11 @@ public class Event implements IdAble<Long> {
         return name;
     }
 
-    public Instant getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public Instant getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
@@ -81,6 +84,10 @@ public class Event implements IdAble<Long> {
 
     public Collection<Project> getProjects() {
         return projects;
+    }
+
+    public String getHashtag() {
+        return hashtag;
     }
 
 
@@ -106,12 +113,12 @@ public class Event implements IdAble<Long> {
         return this;
     }
 
-    public Event setStartDate(Instant startDate) {
+    public Event setStartDate(LocalDate startDate) {
         this.startDate = startDate;
         return this;
     }
 
-    public Event setEndDate(Instant endDate) {
+    public Event setEndDate(LocalDate endDate) {
         this.endDate = endDate;
         return this;
     }
@@ -119,6 +126,10 @@ public class Event implements IdAble<Long> {
     public Event setParticipants(Collection<User> eventParticipants) {
         this.participants = eventParticipants;
         return this;
+    }
+
+    public void setHashtag(String hashtag) {
+        this.hashtag = hashtag;
     }
 
     public Event addParticipant(User participant) {

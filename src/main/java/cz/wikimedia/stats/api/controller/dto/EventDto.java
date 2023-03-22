@@ -1,12 +1,13 @@
 package cz.wikimedia.stats.api.controller.dto;
 
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Collection;
 
 public record EventDto(Long id,
                        Collection<Long> tagIds,
                        String name,
-                       Instant startDate,
-                       Instant endDate,
+                       String hashtag,
+                       LocalDate startDate,
+                       LocalDate endDate,
                        Collection<Long> userIds,
                        Collection<Long> projectIds) {}
