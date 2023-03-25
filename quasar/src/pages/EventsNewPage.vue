@@ -41,7 +41,7 @@ export default defineComponent({
     return {
       name: null,
       eventdata: [],
-      date: null,
+      date: null
     }
   },
   methods: {
@@ -50,9 +50,11 @@ export default defineComponent({
         {
           name: this.name,
           id: null,
-          tagIds: this.$refs.tagSelect.selected.map(s => s.id),
+          tagIds: this.$refs.tagSelect.selected === null ? [] : this.$refs.tagSelect.selected.map(s => s.id),
           projectIds: [],
-          userIds: this.$refs.userSelect.selected.map(s => s.id)
+          userIds: this.$refs.userSelect.selected.map(s => s.id),
+          startDate: typeof this.date === "string" ? this.date : this.date.from,
+          endDate: typeof this.date === "string" ? this.date : this.date.to
         }).then((response) => this.eventdata.push({
         name: response.data.name,
         id: response.data.id,
