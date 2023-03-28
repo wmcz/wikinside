@@ -37,7 +37,7 @@ export default defineComponent({
         {
           username: this.username,
           id: null,
-          tagIds: this.$refs.tagselect.selected.map(s => s.id),
+          tagIds: this.$refs.tagselect.selected === null ? [] : this.$refs.tagselect.selected.map(s => s.id),
           eventIds: []
         }).then((response) => this.userdata.push({
           username: response.data.username,

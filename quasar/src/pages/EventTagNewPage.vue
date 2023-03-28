@@ -7,7 +7,7 @@
     >
       <q-input :rules="[ val => val && val.length > 0 || '']" v-model="name" label="Tag name *" />
 
-      <q-select label="Events (optional)" multiple use-chips use-input counter v-model="selected" :options="eventoptions" option-value="id" option-label="name" @filter="filterEvents"/>
+      <EventSelect ref="eventSelect"/>
 
       <TagSelect ref="parentSelect" parent url="tags/event-tags"/>
 
@@ -25,6 +25,7 @@ import { defineComponent } from 'vue'
 import TagLink from "components/TagLink.vue";
 import {api} from "boot/axios";
 import TagSelect from "components/TagSelect.vue";
+import EventSelect from "components/EventSelect.vue";
 
 export default defineComponent({
   name: 'EventTagNewPage',
@@ -32,9 +33,6 @@ export default defineComponent({
     return {
       name: null,
       tagdata: [],
-      eventdata: null,
-      eventoptions: null,
-      selected: []
     }
   },
   methods: {
@@ -44,27 +42,14 @@ export default defineComponent({
           name: this.name,
           id: null,
           assignable: true,
-          elementIds: this.selected.map(s => s.id),
+          elementIds: this.$refs.eventSelect.selected.map(s => s.id),
           parentId: this.$refs.parentSelect.selected,
           childrenIds: []
         }).then((response) => this.tagdata.push(response.data))
     },
-    filterEvents(val, update, abort) {
-      const self = this
-      if (self.userdata === null) {
-        update(() => {
-          api.get('/events').then((response) => {
-            self.eventdata = response.data.map(e => {return {
-              name: e.name,
-              id: e.id
-            }})
-            self.eventoptions = self.eventdata})})
-      } else {
-        update(() => self.eventoptions = self.eventdata.filter((e) => e.name.toLowerCase().includes(val.toLowerCase())))
-      }
-    },
   },
   components: {
+    EventSelect,
     TagLink,
     TagSelect
   }
