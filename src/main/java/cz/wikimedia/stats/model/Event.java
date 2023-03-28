@@ -28,8 +28,8 @@ public class Event implements IdAble<Long> {
     @ManyToMany
     private Collection<Project> projects;
 
-    @Transient
-    private EventImpact impact;
+    @ManyToMany
+    private Collection<Revision> revisions;
 
     private String hashtag;
 
@@ -90,6 +90,10 @@ public class Event implements IdAble<Long> {
         return hashtag;
     }
 
+    public Collection<Revision> getRevisions() {
+        return revisions;
+    }
+
 
 
     /* SETTERS */
@@ -139,6 +143,16 @@ public class Event implements IdAble<Long> {
 
     public Event removeParticipant(User participant) {
         this.participants.remove(participant);
+        return this;
+    }
+
+    public Event addRevision(Revision rev) {
+        this.revisions.add(rev);
+        return this;
+    }
+
+    public Event removeRevision(Revision rev) {
+        this.revisions.remove(rev);
         return this;
     }
 }

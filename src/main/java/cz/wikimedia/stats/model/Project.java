@@ -3,6 +3,8 @@ package cz.wikimedia.stats.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.Collection;
 
 @Entity
 public class Project implements IdAble<Long> {
@@ -12,6 +14,9 @@ public class Project implements IdAble<Long> {
 
     private String name;
     private String path;
+
+    @OneToMany(mappedBy = "project")
+    private Collection<Revision> revisions;
 
     protected Project() {}
 

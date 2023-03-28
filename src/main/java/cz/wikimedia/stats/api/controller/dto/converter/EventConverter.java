@@ -1,9 +1,7 @@
 package cz.wikimedia.stats.api.controller.dto.converter;
 
 import cz.wikimedia.stats.api.controller.dto.EventDto;
-import cz.wikimedia.stats.business.internal.EventTagService;
-import cz.wikimedia.stats.business.internal.ProjectService;
-import cz.wikimedia.stats.business.internal.UserService;
+import cz.wikimedia.stats.business.internal.*;
 import cz.wikimedia.stats.model.Event;
 import org.springframework.stereotype.Component;
 

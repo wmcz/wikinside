@@ -27,7 +27,7 @@ public class RevisionConverter {
                 dto.revId(),
                 dto.diff(),
                 ConverterUtils.getIfNotNull(dto.userId(),    userService),
-                ConverterUtils.getIfNotNull(dto.eventId(),   eventService),
+                ConverterUtils.getElems    (dto.eventIds(),  eventService),
                 ConverterUtils.getIfNotNull(dto.projectId(), projectService),
                 dto.timestamp(),
                 dto.summary());
@@ -39,7 +39,7 @@ public class RevisionConverter {
                 revision.getRevId(),
                 revision.getDiff(),
                 ConverterUtils.getIfNotNull(revision.getUser()),
-                ConverterUtils.getIfNotNull(revision.getEvent()),
+                ConverterUtils.getIds      (revision.getEvents()),
                 ConverterUtils.getIfNotNull(revision.getProject()),
                 revision.getTimestamp(),
                 revision.getSummary());

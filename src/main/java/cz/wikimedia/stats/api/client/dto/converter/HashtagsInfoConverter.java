@@ -7,6 +7,8 @@ import cz.wikimedia.stats.model.Project;
 import cz.wikimedia.stats.model.Revision;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+
 @Component
 public class HashtagsInfoConverter {
 
@@ -22,7 +24,7 @@ public class HashtagsInfoConverter {
                 info.revId(),
                 null,
                 userService.processUser(info.username()),
-                event,
+                Collections.singleton(event),
                 project,
                 info.timestamp(),
                 info.summary());

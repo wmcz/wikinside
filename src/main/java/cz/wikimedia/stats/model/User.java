@@ -25,8 +25,8 @@ public class User implements IdAble<Long> {
     @ManyToMany(mappedBy = "participants")
     private Collection<Event> events;
 
-    @Transient
-    private UserImpact impact;
+    @OneToMany(mappedBy = "user")
+    private Collection<Revision> revisions;
 
 
     /* CONSTRUCTORS */
@@ -75,6 +75,10 @@ public class User implements IdAble<Long> {
 
     public Long getLocalId() {
         return localId;
+    }
+
+    public Collection<Revision> getRevisions() {
+        return revisions;
     }
 
 

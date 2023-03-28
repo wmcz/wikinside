@@ -2,6 +2,7 @@ package cz.wikimedia.stats.business.internal;
 
 import cz.wikimedia.stats.business.external.WmUserService;
 import cz.wikimedia.stats.dao.EventRepository;
+import cz.wikimedia.stats.dao.RevisionRepository;
 import cz.wikimedia.stats.dao.UserRepository;
 import cz.wikimedia.stats.model.Event;
 import cz.wikimedia.stats.model.User;
@@ -16,12 +17,14 @@ public class UserService extends InternalService<User, Long> {
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
     private final WmUserService wmUserService;
+    private final RevisionRepository revisionRepository;
 
-    public UserService(UserRepository repository, EventRepository eventRepository, WmUserService wmUserService) {
+    public UserService(UserRepository repository, EventRepository eventRepository, WmUserService wmUserService, RevisionRepository revisionRepository) {
         super(repository);
         this.userRepository = repository;
         this.eventRepository = eventRepository;
         this.wmUserService = wmUserService;
+        this.revisionRepository = revisionRepository;
     }
 
     private Collection<Event> applyEvents(User user, Collection<Long> eventIds, Function<Event, Event> function) {
@@ -44,6 +47,10 @@ public class UserService extends InternalService<User, Long> {
         return applyEvents(user, eventIds, e -> e.removeParticipant(user));
     }
 
+    public void removeRevs(Collection<Long> ids) {
+        ids.forEach(revisionRepository::deleteById);
+    }
+
     public <S extends User> Optional<S> createFromGlobalUser(S user) {
         if (user.getId() == null) {
             user.setId(wmUserService.getId(user.getUsername()));
@@ -54,7 +61,10 @@ public class UserService extends InternalService<User, Long> {
 
     @Override
     public void deleteById(Long id) {
-        findById(id).ifPresent(u -> removeEvents(u, toIds(u.getEvents())));
+        findById(id).ifPresent(u -> {
+            removeEvents(u, toIds(u.getEvents()));
+            removeRevs(toIds(u.getRevisions()));
+        });
         super.deleteById(id);
     }
 
@@ -63,7 +73,7 @@ public class UserService extends InternalService<User, Long> {
         Optional<S> res = super.create(user);
         if (res.isPresent()) {
             addEvents(res.get(), toIds(user.getEvents()));
-            return update(res.get());
+            return super.update(res.get());
 
         } else return res;
     }

@@ -35,7 +35,7 @@ public class UserConverter {
                         dto.username(),
                         dto.email(),
                         ConverterUtils.getElems(dto.tagIds(), userTagService),
-                        ConverterUtils.getElems(dto.tagIds(), eventService));
+                        ConverterUtils.getElems(dto.eventIds(), eventService));
     }
 
     public UserDto toDto(User user) {
