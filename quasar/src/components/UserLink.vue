@@ -7,14 +7,14 @@
       <span class="text-caption">{{ id }}</span>
 
     </q-item-label>
-    <q-item-label caption lines="1">
+    <q-item-label v-if="!supresstags" caption lines="1">
       <TagBadge class="q-mr-xs" v-for="tag in tags" :key="tag.name" :id="tag.id" :name="tag.name" v-bind="tag" />
       <caption v-if="!tags.length">No tags</caption>
     </q-item-label>
   </q-item-section>
   <q-item-section side>
     <div class="text-grey-8 q-gutter-xs">
-      <q-btn class="gt-xs" size="12px" flat dense round icon="delete" @click.stop="$emit('deleteUser', id)"/>
+      <q-btn class="gt-xs" size="12px" flat dense round :icon="rightIcon ? rightIcon : 'delete'" @click.prevent="$emit('deleteUser', id)"/>
     </div>
   </q-item-section>
 </q-item>
@@ -38,6 +38,12 @@ export default {
     tags: {
       type: Array,
       required: true
+    },
+    supresstags: {
+      type: Boolean
+    },
+    rightIcon: {
+      type: String
     }
   }
 }

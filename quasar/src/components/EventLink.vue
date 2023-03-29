@@ -1,5 +1,5 @@
 <template>
-<q-item>
+<q-item router-link :to="{name: 'event', params: {id: id}}">
 
   <q-item-section top>
     <q-item-label lines="1">
@@ -13,7 +13,7 @@
   </q-item-section>
   <q-item-section side>
     <div class="text-grey-8 q-gutter-xs">
-      <q-btn class="gt-xs" size="12px" flat dense round :icon="rightIcon ? rightIcon : 'delete'" @click.stop="$emit('deleteEvent', id)"/>
+      <q-btn class="gt-xs" size="12px" flat dense round :icon="rightIcon ? rightIcon : 'delete'" @click.prevent="$emit('deleteEvent', id)"/>
     </div>
   </q-item-section>
 </q-item>
