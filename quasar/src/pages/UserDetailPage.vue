@@ -11,15 +11,15 @@
       </q-input>
       <q-table :rows="taglist" :row-key="name" grid style="max-width: 600px" :loading="tagloading" :filter="tagfilter" :pagination="{ rowsPerPage: 10}">
         <template v-slot:item="props">
-          <TagLink :key="props.row.name" v-bind="props.row" right-icon="clear" @deleteTag="(id) => removeTag(id)" style="width: 600px"/>
+          <TagLink :key="props.row.name" suppresselems v-bind="props.row" right-icon="clear" @deleteTag="(id) => removeTag(id)" style="width: 600px"/>
         </template>
         <template v-slot:no-data>
           No tags
         </template>
       </q-table>
       <div v-if="taginput" class="q-mb-md q-mx-md q-mt-none">
-        <TagSelect  url="tags/user-tags" label="Add tags"/>
-        <q-btn class="q-mr-sm" color="primary" label="Submit"/>
+        <TagSelect  url="tags/user-tags" label="Add tags" ref="tagSelect"/>
+        <q-btn class="q-mr-sm" color="primary" label="Submit" @click="onTagSubmit"/>
         <q-btn outline color="primary" label="Cancel" @click="taginput = false"/>
       </div>
       <q-btn v-else class="q-mb-md q-ml-md" color="primary" label="Add tags" @click="taginput = true"/>
@@ -112,14 +112,19 @@ export default defineComponent({
       this.eventfilter = ''
     },
     onTagSubmit() {
-
+      this.tagloading = true
+      this.userdata.tagIds.push(...this.$refs.tagSelect.selected.map(t => t.id))
+      api.put('users', this.userdata).then((response) => {
+        this.userdata = response.data
+        this.taglist = this.tagdata.filter(t => this.userdata.tagIds.includes(t.id))
+      })
     },
     onEventSubmit() {
       this.eventloading = true
       this.userdata.eventIds.push(...this.$refs.eventSelect.selected.map(e => e.id))
-      api.put('users/', this.userdata).then((response) => {
+      api.put('users', this.userdata).then((response) => {
         this.userdata = response.data
-        this.eventlist = this.eventdata.filter((e => this.userdata.eventIds.includes(e.id))).map(e => {return{
+        this.eventlist = this.eventdata.filter(e => this.userdata.eventIds.includes(e.id)).map(e => {return{
           name: e.name,
           id: e.id,
           tags: []

@@ -5,7 +5,7 @@
     <q-item-label lines="1">
       <span class="text-h6 q-pr-xs ellipsis fit">{{ name }}</span>
     </q-item-label>
-    <q-item-label caption lines="1">
+    <q-item-label v-if="!suppresselems" caption lines="1">
       {{ elems.length }} {{ elemname }}
     </q-item-label>
   </q-item-section>
@@ -32,8 +32,7 @@ export default {
     },
 
     elems: {
-      type: Array,
-      required: true
+      type: Array
     },
     elemname: {
       type: String,
@@ -41,6 +40,9 @@ export default {
     },
     rightIcon: {
       type: String
+    },
+    suppresselems: {
+      type: Boolean
     }
   }
 }
