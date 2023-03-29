@@ -8,7 +8,14 @@
     >
       <q-input :rules="[ val => val && val.length > 0 || '']" v-model="name" label="Event name *" />
       <TagSelect  ref="tagSelect" url="tags/event-tags"/>
-      <UserSelect ref="userSelect"/>
+
+      <div class="q-field__bottom q-pl-none">User selection strategy</div>
+      <div class="q-mt-none">
+        <span>Manual</span>
+        <q-toggle color="primary" keep-color v-model="fromHashtag" name="fromHashtag" label="Automatic (from hashtag)"/>
+      </div>
+      <UserSelect ref="userSelect" v-if="!fromHashtag"/>
+      <q-input :rules="[ val => val && val.length > 0 || '']" v-else label="Hashtag *" v-model="hashtag" hint="Works with or without the # sign, e.g. both '#WikiGap' and 'WikiGap' are the same"/>
 
       <div>
         <q-field label="Dates" hint="Double click for single day events" stack-label borderless>
@@ -41,7 +48,9 @@ export default defineComponent({
     return {
       name: null,
       eventdata: [],
-      date: null
+      date: null,
+      fromHashtag: false,
+      hashtag: null
     }
   },
   methods: {
@@ -52,7 +61,8 @@ export default defineComponent({
           id: null,
           tagIds: this.$refs.tagSelect.selected === null ? [] : this.$refs.tagSelect.selected.map(s => s.id),
           projectIds: [],
-          userIds: this.$refs.userSelect.selected.map(s => s.id),
+          userIds: this.fromHashtag || this.$refs.userSelect.selected === null ? [] : this.$refs.userSelect.selected.map(s => s.id),
+          hashtag: this.fromHashtag ? this.hashtag : null,
           startDate: typeof this.date === "string" ? this.date : this.date.from,
           endDate: typeof this.date === "string" ? this.date : this.date.to
         }).then((response) => this.eventdata.push({
