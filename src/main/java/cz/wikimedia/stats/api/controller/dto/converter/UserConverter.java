@@ -3,6 +3,7 @@ package cz.wikimedia.stats.api.controller.dto.converter;
 import cz.wikimedia.stats.api.controller.dto.UserDto;
 import cz.wikimedia.stats.business.external.WmUserService;
 import cz.wikimedia.stats.business.internal.EventService;
+import cz.wikimedia.stats.business.internal.UserService;
 import cz.wikimedia.stats.business.internal.UserTagService;
 import cz.wikimedia.stats.model.User;
 import org.springframework.stereotype.Component;
@@ -15,11 +16,13 @@ public class UserConverter {
     private final UserTagService userTagService;
     private final EventService eventService;
     private final WmUserService wmUserService;
+    private final UserService userService;
 
-    public UserConverter(UserTagService userTagService, EventService eventService, WmUserService wmUserService) {
+    public UserConverter(UserTagService userTagService, EventService eventService, WmUserService wmUserService, UserService userService) {
         this.userTagService = userTagService;
         this.eventService = eventService;
         this.wmUserService = wmUserService;
+        this.userService = userService;
     }
 
     private UserDto toDtoInner(User user) {
@@ -32,6 +35,7 @@ public class UserConverter {
 
     public User fromDto(UserDto dto) {
         return new User(dto.id(),
+                        dto.id() == null ? null : userService.findById(dto.id()).map(User::getLocalId).orElse(null),
                         dto.username(),
                         dto.email(),
                         ConverterUtils.getElems(dto.tagIds(), userTagService),

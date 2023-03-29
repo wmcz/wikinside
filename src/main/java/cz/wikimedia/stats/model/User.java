@@ -41,8 +41,9 @@ public class User implements IdAble<Long> {
         this.events = new HashSet<>();
     }
 
-    public User(Long id, String username, String email, Collection<UserTag> tags, Collection<Event> events) {
+    public User(Long id, Long localId, String username, String email, Collection<UserTag> tags, Collection<Event> events) {
         this.id = id;
+        this.localId = localId;
         this.username = username;
         this.email = email;
         this.tags = tags;
