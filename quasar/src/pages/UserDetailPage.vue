@@ -60,6 +60,26 @@ import TagLink from "components/TagLink.vue";
 import TagSelect from "components/TagSelect.vue";
 import EventSelect from "components/EventSelect.vue";
 
+function updateEvents(self) {
+  api.put('users', self.userdata).then((response) => {
+    self.userdata = response.data
+    self.eventlist = self.eventdata.filter(e => self.userdata.eventIds.includes(e.id)).map(e => {
+      return {
+        name: e.name,
+        id: e.id,
+        tags: []
+      }
+    })
+  })
+}
+
+function updateTags(self) {
+  api.put('users', self.userdata).then((response) => {
+    self.userdata = response.data
+    self.taglist = self.tagdata.filter(t => self.userdata.tagIds.includes(t.id))
+  })
+}
+
 
 export default defineComponent({
   data() {
@@ -114,23 +134,26 @@ export default defineComponent({
     onTagSubmit() {
       this.tagloading = true
       this.userdata.tagIds.push(...this.$refs.tagSelect.selected.map(t => t.id))
-      api.put('users', this.userdata).then((response) => {
-        this.userdata = response.data
-        this.taglist = this.tagdata.filter(t => this.userdata.tagIds.includes(t.id))
-      })
+      updateTags(this)
+      this.tagloading = false
     },
     onEventSubmit() {
       this.eventloading = true
       this.userdata.eventIds.push(...this.$refs.eventSelect.selected.map(e => e.id))
-      api.put('users', this.userdata).then((response) => {
-        this.userdata = response.data
-        this.eventlist = this.eventdata.filter(e => this.userdata.eventIds.includes(e.id)).map(e => {return{
-          name: e.name,
-          id: e.id,
-          tags: []
-        }})
-        this.eventloading = false
-      })
+      updateEvents(this)
+      this.eventloading = false
+    },
+    removeEvent(id) {
+      this.eventloading = true
+      this.userdata.eventIds.splice(this.userdata.eventIds.indexOf(id),1)
+      updateEvents(this)
+      this.eventloading = false
+    },
+    removeTag(id) {
+      this.tagloading = true
+      this.userdata.tagIds.splice(this.userdata.tagIds.indexOf(id), 1)
+      updateTags(this)
+      this.tagloading = false
     }
   }
 })
