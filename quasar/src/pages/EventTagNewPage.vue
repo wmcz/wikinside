@@ -43,7 +43,7 @@ export default defineComponent({
           id: null,
           assignable: true,
           elementIds: this.$refs.eventSelect.selected.map(s => s.id),
-          parentId: this.$refs.parentSelect.selected,
+          parentId: this.$refs.parentSelect.selected ? this.$refs.parentSelect.selected.id : null,
           childrenIds: []
         }).then((response) => this.tagdata.push(response.data))
     },
