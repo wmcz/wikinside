@@ -6,27 +6,27 @@
       class="q-gutter-md"
       style="max-width: 600px"
     >
-      <q-input :rules="[ val => val && val.length > 0 || '']" v-model="name" label="Event name *" />
+      <q-input :rules="[ val => val && val.length > 0 || '']" v-model="name" :label="$t('event.name') + ' *'" />
       <ProjectSelect ref="projectSelect"/>
       <TagSelect  ref="tagSelect" url="tags/event-tags"/>
 
-      <div class="q-field__bottom q-pl-none">User selection strategy</div>
+      <div class="q-field__bottom q-pl-none">{{ $t('event.strategy.label') }}</div>
       <div class="q-mt-none">
-        <span>Manual</span>
-        <q-toggle color="primary" keep-color v-model="fromHashtag" name="fromHashtag" label="Automatic (from hashtag)"/>
+        <span>{{ $t('event.strategy.manual') }}</span>
+        <q-toggle color="primary" keep-color v-model="fromHashtag" name="fromHashtag" :label="$t('event.strategy.auto')"/>
       </div>
       <UserSelect ref="userSelect" v-if="!fromHashtag"/>
-      <q-input :rules="[ val => val && val.length > 0 || '']" v-else label="Hashtag *" v-model="hashtag" hint="Works with or without the # sign, e.g. both '#WikiGap' and 'WikiGap' are the same"/>
+      <q-input :rules="[ val => val && val.length > 0 || '']" v-else :label="$t('event.hashtag') + ' *'" v-model="hashtag" :hint="$t('event.hashtag_hint')"/>
 
       <div>
-        <q-field label="Dates" hint="Double click for single day events" stack-label borderless>
+        <q-field :label="$t('event.dates')" :hint="$t('event.dates_hint')" stack-label borderless>
           <template v-slot:control>
             <q-date v-model="date" landscape today-btn range mask="YYYY-MM-DD"/>
           </template>
         </q-field>
       </div>
 
-      <q-btn color="primary" type="submit">Submit</q-btn>
+      <q-btn color="primary" type="submit">{{ $t('submit') }}</q-btn>
 
     </q-form>
     <q-list bottom bordered class="rounded-borders" style="min-width: 600px">

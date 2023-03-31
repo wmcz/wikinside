@@ -6,9 +6,9 @@
       class="q-gutter-md"
       style="max-width: 600px"
     >
-      <q-input :rules="[ val => val && val.length > 0 || '']" v-model="name" label="Project name *" />
-      <q-input :rules="[ val => val && val.length > 0 && !val.startsWith('http') || '']" v-model="path" label="Project path *" hint="Example: en.wikipedia.org"/>
-      <q-btn color="primary" type="submit">Submit</q-btn>
+      <q-input :rules="[ val => val && val.length > 0 || '']" v-model="name" :label="$t('project.name') + ' *'" />
+      <q-input :rules="[ val => val && val.length > 0 && !val.startsWith('http') || '']" v-model="path" :label="$t('project.path') + ' *'" :hint="$t('project.path_hint')"/>
+      <q-btn color="primary" type="submit">{{ $t('submit') }}</q-btn>
     </q-form>
     <q-list bottom bordered class="rounded-borders" style="min-width: 600px">
       <ProjectLink v-for="project in data" :key="project.name" v-bind="project"/>

@@ -1,5 +1,5 @@
 <template>
-  <q-select :label=" parent ? 'Parent tag (optional)' : 'Tags (optional)'" :multiple="!parent" use-chips use-input :counter="!parent" v-model="selected" :options="tagoptions" option-value="id" option-label="name" @filter="filterTags"/>
+  <q-select :label=" (parent ? $t('tag.parent') : $t('tag.many')) + $t('optional')" :multiple="!parent" use-chips use-input :counter="!parent" v-model="selected" :options="tagoptions" option-value="id" option-label="name" @filter="filterTags"/>
 </template>
 
 <script>

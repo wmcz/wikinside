@@ -5,12 +5,12 @@
       @submit="onSubmit"
       class="q-gutter-md"
     >
-      <q-input :rules="[ val => val && val.length > 0 || '']" v-model="name" label="Tag name *" />
+      <q-input :rules="[ val => val && val.length > 0 || '']" v-model="name" :label="$t('tag.name') + ' *'" />
 
       <UserSelect ref="userSelect"/>
       <TagSelect ref="parentSelect" parent url="tags/user-tags"/>
 
-      <q-btn color="primary" type="submit">Submit</q-btn>
+      <q-btn color="primary" type="submit">{{ $t('submit') }}</q-btn>
     </q-form>
     <q-list v-if="tagdata.length" bottom bordered class="rounded-borders" style="min-width: 600px">
       <TagLink v-for="tag in tagdata" :key="tag.name" elemname="users" v-bind="tag" :elems="tag.elementIds"/>

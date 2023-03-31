@@ -2,8 +2,8 @@
   <q-page class="flex flex-center">
     <div class="q-gutter-md">
     <q-list top bordered class="rounded-borders" style="min-width: 600px">
-      <q-item-label header>Events</q-item-label>
-      <q-input class="q-pa-md" ref="filterRef" v-model="filter" label="Filter">
+      <q-item-label header>{{ $t('event.many') }}</q-item-label>
+      <q-input class="q-pa-md" ref="filterRef" v-model="filter" :label="$t('filter')">
         <template v-slot:append>
           <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
         </template>
@@ -15,7 +15,7 @@
       </q-table>
     </q-list>
 
-    <q-btn bottom to="/event/new" color="primary">Add</q-btn>
+    <q-btn bottom to="/event/new" color="primary">{{ $t('add') }}</q-btn>
     </div>
   </q-page>
 </template>

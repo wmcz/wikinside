@@ -3,8 +3,8 @@
     <div class="q-gutter-md">
       <h3>{{ userdata.username }}</h3>
     <q-list top bordered class="rounded-borders" style="min-width: 600px">
-      <q-item-label header>Tags</q-item-label>
-      <q-input class="q-pa-md" ref="tagFilterRef" v-model="tagfilter" label="Filter">
+      <q-item-label header>{{ $t('tag.many') }}</q-item-label>
+      <q-input class="q-pa-md" ref="tagFilterRef" v-model="tagfilter" :label="$t('filter')">
         <template v-slot:append>
           <q-icon v-if="tagfilter !== ''" name="clear" class="cursor-pointer" @click="resetTagFilter" />
         </template>
@@ -14,20 +14,20 @@
           <TagLink :key="props.row.name" suppresselems v-bind="props.row" right-icon="clear" @deleteTag="(id) => removeTag(id)" style="width: 600px"/>
         </template>
         <template v-slot:no-data>
-          No tags
+          {{ $t('tag.none') }}
         </template>
       </q-table>
       <div v-if="taginput" class="q-mb-md q-mx-md q-mt-none">
-        <TagSelect  url="tags/user-tags" label="Add tags" ref="tagSelect"/>
-        <q-btn class="q-mr-sm" color="primary" label="Submit" @click="onTagSubmit"/>
-        <q-btn outline color="primary" label="Cancel" @click="taginput = false"/>
+        <TagSelect  url="tags/user-tags" :label="$t('tag.add')" ref="tagSelect"/>
+        <q-btn class="q-mr-sm" color="primary" :label="$t('submit')" @click="onTagSubmit"/>
+        <q-btn outline color="primary" :label="$t('cancel')" @click="taginput = false"/>
       </div>
-      <q-btn v-else class="q-mb-md q-ml-md" color="primary" label="Add tags" @click="taginput = true"/>
+      <q-btn v-else class="q-mb-md q-ml-md" color="primary" :label="$t('tag.add')" @click="taginput = true"/>
     </q-list>
 
     <q-list top bordered class="rounded-borders" style="min-width: 600px">
-      <q-item-label header>Events</q-item-label>
-      <q-input class="q-pa-md" ref="eventFilterRef" v-model="eventfilter" label="Filter">
+      <q-item-label header>{{ $t('event.many') }}</q-item-label>
+      <q-input class="q-pa-md" ref="eventFilterRef" v-model="eventfilter" :label="$t('filter')">
         <template v-slot:append>
           <q-icon v-if="eventfilter !== ''" name="clear" class="cursor-pointer" @click="resetEventFilter" />
         </template>
@@ -37,15 +37,15 @@
           <EventLink :key="props.row.name" supressnotag v-bind="props.row" right-icon="clear" @deleteEvent="(id) => removeEvent(id)" style="width: 600px"/>
         </template>
         <template v-slot:no-data>
-          No events
+          {{ $t('event.none') }}
         </template>
       </q-table>
       <div v-if="eventinput" class="q-mb-md q-mx-md q-mt-none">
-        <EventSelect label="Add events" ref="eventSelect"/>
-        <q-btn class="q-mr-sm" color="primary" label="Submit" @click="onEventSubmit"/>
-        <q-btn outline color="primary" label="Cancel" @click="eventinput = false"/>
+        <EventSelect :label="$t('event.add')" ref="eventSelect"/>
+        <q-btn class="q-mr-sm" color="primary" :label="$t('submit')" @click="onEventSubmit"/>
+        <q-btn outline color="primary" :label="$t('cancel')" @click="eventinput = false"/>
       </div>
-      <q-btn v-else class="q-mb-md q-ml-md" color="primary" label="Add events" @click="eventinput = true"/>
+      <q-btn v-else class="q-mb-md q-ml-md" color="primary" :label="$t('event.add')" @click="eventinput = true"/>
     </q-list>
     </div>
   </q-page>

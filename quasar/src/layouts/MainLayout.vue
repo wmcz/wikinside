@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          WMCZ Stats App
+          {{ $t('app_name')}}
         </q-toolbar-title>
 
         <div>0.2a</div>
@@ -37,7 +37,7 @@
           :key="link.title"
           v-bind="link"
         />
-        <NavLink style="position: absolute; bottom: 0; width: 100%" title="Projects" icon="travel_explore" link="/project"/>
+        <NavLink style="position: absolute; bottom: 0; width: 100%" :title="$t('project.many')" icon="travel_explore" link="/project"/>
       </q-list>
     </q-drawer>
 
@@ -53,34 +53,7 @@
 import {computed, defineComponent, ref} from 'vue'
 import NavLink from 'components/NavLink.vue'
 import {date} from 'quasar'
-
-const linksList = [
-{
-    title: 'Home',
-    icon: 'home',
-    link: "/"
-  },
-  {
-    title: 'Users',
-    icon: 'person',
-    link: '/user'
-  },
-  {
-    title: 'User tags',
-    icon: 'sell',
-    link: '/user/tag'
-  },
-  {
-    title: 'Events',
-    icon: 'fact_check',
-    link: '/event'
-  },
-  {
-    title: 'Event tags',
-    icon: 'sell',
-    link: '/event/tag'
-  },
-]
+import {useI18n} from "vue-i18n";
 
 export default defineComponent({
   name: 'MainLayout',
@@ -90,10 +63,38 @@ export default defineComponent({
   },
 
   setup () {
+    const { t } = useI18n()
     const leftDrawerOpen = ref(false)
     const today =  computed(() => {
       return date.formatDate(Date.now(), 'YYYY-MM-DD')
     })
+    const linksList = [
+      {
+        title: t('home'),
+        icon: 'home',
+        link: "/"
+      },
+      {
+        title: t('user.many'),
+        icon: 'person',
+        link: '/user'
+      },
+      {
+        title: t('tag.user'),
+        icon: 'sell',
+        link: '/user/tag'
+      },
+      {
+        title: t('event.many'),
+        icon: 'fact_check',
+        link: '/event'
+      },
+      {
+        title: t('tag.event'),
+        icon: 'sell',
+        link: '/event/tag'
+      },
+    ]
 
     return {
       navLinks: linksList,

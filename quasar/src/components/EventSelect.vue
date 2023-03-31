@@ -1,5 +1,5 @@
 <template>
-  <q-select label="Events (optional)" multiple use-chips use-input counter v-model="selected" :options="eventoptions" option-value="id" option-label="name" @filter="filterEvents"/>
+  <q-select :label="$t('event.many') + $t('optional')" multiple use-chips use-input counter v-model="selected" :options="eventoptions" option-value="id" option-label="name" @filter="filterEvents"/>
 </template>
 
 <script>

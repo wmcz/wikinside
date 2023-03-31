@@ -2,8 +2,8 @@
   <q-page class="flex flex-center">
     <div class="q-gutter-md">
     <q-list top bordered class="rounded-borders" style="min-width: 600px">
-      <q-item-label header>User tags</q-item-label>
-      <q-input class="q-pa-md" ref="filterRef" v-model="filter" label="Filter">
+      <q-item-label header>{{ $t('tag.user') }}</q-item-label>
+      <q-input class="q-pa-md" ref="filterRef" v-model="filter" :label="$t('filter')">
         <template v-slot:append>
           <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
         </template>
@@ -15,12 +15,12 @@
           :filter-method="node => node.name.toLowerCase().includes(filter.toLowerCase())"
         >
           <template v-slot:default-header="prop">
-            <TagLink :elems="[...prop.node.users]" :name="prop.node.name" :id="prop.node.id" elemname="users" @deleteTag="(id) => deleteTag(id)"/>
+            <TagLink :elems="[...prop.node.users]" :name="prop.node.name" :id="prop.node.id" :elemname="$t('user.many').toLowerCase()" @deleteTag="(id) => deleteTag(id)"/>
           </template>-->
         </q-tree>
       </q-list>
 
-    <q-btn bottom to="/user/tag/new" color="primary">Add</q-btn>
+    <q-btn bottom to="/user/tag/new" color="primary">{{ $t('add') }}</q-btn>
     </div>
   </q-page>
 </template>

@@ -6,9 +6,9 @@
       class="q-gutter-md"
       style="max-width: 600px"
     >
-      <q-input :rules="[ val => val && val.length > 0 || '']" v-model="username" label="User name *" />
+      <q-input :rules="[ val => val && val.length > 0 || '']" v-model="username" :label="$t('user.name') + ' *'" />
       <TagSelect ref="tagselect" url="tags/user-tags"/>
-      <q-btn color="primary" type="submit">Submit</q-btn>
+      <q-btn color="primary" type="submit">{{ $t('submit') }}</q-btn>
     </q-form>
     <q-list bottom bordered class="rounded-borders" style="min-width: 600px">
       <UserLink v-for="user in userdata" :key="user.username" v-bind="user"/>
