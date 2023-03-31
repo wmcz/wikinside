@@ -1,0 +1,48 @@
+<template>
+  <q-page class="flex flex-center">
+    <div class="q-gutter-md">
+    <q-form top
+      @submit="onSubmit"
+      class="q-gutter-md"
+      style="max-width: 600px"
+    >
+      <q-input :rules="[ val => val && val.length > 0 || '']" v-model="name" label="Project name *" />
+      <q-input :rules="[ val => val && val.length > 0 && !val.startsWith('http') || '']" v-model="path" label="Project path *" hint="Example: en.wikipedia.org"/>
+      <q-btn color="primary" type="submit">Submit</q-btn>
+    </q-form>
+    <q-list bottom bordered class="rounded-borders" style="min-width: 600px">
+      <ProjectLink v-for="project in data" :key="project.name" v-bind="project"/>
+    </q-list>
+    </div>
+  </q-page>
+</template>
+
+<script>
+import { defineComponent } from 'vue'
+import {api} from "boot/axios";
+import ProjectLink from "components/ProjectLink.vue";
+
+export default defineComponent({
+  name: 'UsersNewPage',
+  data() {
+    return {
+      name: null,
+      path: null,
+      data: []
+    }
+  },
+  methods: {
+    onSubmit() {
+      api.post('/projects',
+        {
+          name: this.name,
+          id: null,
+          path: this.path
+        }).then((response) => this.data.push(response.data))
+    },
+  },
+  components: {
+    ProjectLink
+  }
+})
+</script>

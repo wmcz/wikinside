@@ -15,6 +15,9 @@ const routes = [
       { path: '/event/new',     component: () => import('pages/EventsNewPage.vue') },
       { path: '/event/tag',     component: () => import('pages/EventTagsPage.vue') },
       { path: '/event/tag/new', component: () => import('pages/EventTagNewPage.vue') },
+      { path: '/project',       component: () => import('pages/ProjectsPage.vue') },
+      { path: '/project/new',   component: () => import('pages/ProjectsNewPage.vue') },
+
 
     ]
   },

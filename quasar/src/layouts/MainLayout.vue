@@ -27,7 +27,7 @@
       show-if-above
       bordered
     >
-      <q-list>
+      <q-list style="height: 100%;">
         <!--<q-item-label header>
           Essential Links
         </q-item-label>-->
@@ -37,6 +37,7 @@
           :key="link.title"
           v-bind="link"
         />
+        <NavLink style="position: absolute; bottom: 0; width: 100%" title="Projects" icon="travel_explore" link="/project"/>
       </q-list>
     </q-drawer>
 
