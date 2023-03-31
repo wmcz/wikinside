@@ -7,6 +7,7 @@
       style="max-width: 600px"
     >
       <q-input :rules="[ val => val && val.length > 0 || '']" v-model="name" label="Event name *" />
+      <ProjectSelect ref="projectSelect"/>
       <TagSelect  ref="tagSelect" url="tags/event-tags"/>
 
       <div class="q-field__bottom q-pl-none">User selection strategy</div>
@@ -41,6 +42,7 @@ import EventLink from "components/EventLink.vue";
 import {api} from "boot/axios";
 import UserSelect from "components/UserSelect.vue";
 import TagSelect from "components/TagSelect.vue";
+import ProjectSelect from "components/ProjectSelect.vue";
 
 export default defineComponent({
   name: 'EventsNewPage',
@@ -60,7 +62,7 @@ export default defineComponent({
           name: this.name,
           id: null,
           tagIds: this.$refs.tagSelect.selected === null ? [] : this.$refs.tagSelect.selected.map(s => s.id),
-          projectIds: [],
+          projectIds: this.$refs.projectSelect.selected.map(p => p.id),
           userIds: this.fromHashtag || this.$refs.userSelect.selected === null ? [] : this.$refs.userSelect.selected.map(s => s.id),
           hashtag: this.fromHashtag ? this.hashtag : null,
           startDate: typeof this.date === "string" ? this.date : this.date.from,
@@ -73,6 +75,7 @@ export default defineComponent({
     },
   },
   components: {
+    ProjectSelect,
     TagSelect,
     UserSelect,
     EventLink
