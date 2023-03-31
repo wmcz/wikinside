@@ -1,7 +1,25 @@
 <template>
  <q-page class="flex flex-center">
    <div class="q-gutter-md">
-     <h3>{{ eventdata.name }}</h3>
+     <h3 class="q-mb-sm">{{ eventdata.name }}</h3>
+     <q-list bordered class="rounded-borders">
+       <q-item>
+         <q-item-section avatar>
+            <q-icon color="primary" name="date_range"/>
+         </q-item-section>
+         <q-item-section>
+           {{ eventdata.startDate }} — {{ eventdata.endDate }}
+         </q-item-section>
+       </q-item>
+       <q-item v-if="eventdata.hashtag">
+         <q-item-section avatar>
+           <q-icon color="primary" class="text-weight-bolder">#</q-icon>
+         </q-item-section>
+         <q-item-section class="text-weight-bold">
+           {{ eventdata.hashtag }}
+         </q-item-section>
+       </q-item>
+     </q-list>
      <q-list top bordered class="rounded-borders" style="min-width: 600px">
        <q-item-label header>Tags</q-item-label>
        <q-input class="q-pa-md" ref="tagFilterRef" v-model="tagfilter" label="Filter">
