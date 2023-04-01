@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import {defineComponent, ref} from 'vue'
+import {defineComponent} from 'vue'
 import TagLink from "components/TagLink.vue";
 import { api } from 'boot/axios'
 import {getErrorMessage} from "src/util";
