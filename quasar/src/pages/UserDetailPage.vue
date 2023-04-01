@@ -59,25 +59,33 @@ import EventLink from "components/EventLink.vue";
 import TagLink from "components/TagLink.vue";
 import TagSelect from "components/TagSelect.vue";
 import EventSelect from "components/EventSelect.vue";
+import {getErrorMessage} from "src/util";
 
 function updateEvents(self) {
-  api.put('users', self.userdata).then((response) => {
-    self.userdata = response.data
-    self.eventlist = self.eventdata.filter(e => self.userdata.eventIds.includes(e.id)).map(e => {
-      return {
-        name: e.name,
-        id: e.id,
-        tags: []
-      }
+  api
+    .put('users', self.userdata)
+    .then((response) => {
+      self.userdata = response.data
+      self.eventlist = self.eventdata.filter(e => self.userdata.eventIds.includes(e.id)).map(e => {
+        return {
+          name: e.name,
+          id: e.id,
+          tags: []
+        }
+      })
     })
-  })
+    .catch(error => self.$q.notify(self.$t(getErrorMessage(error))))
 }
 
 function updateTags(self) {
-  api.put('users', self.userdata).then((response) => {
-    self.userdata = response.data
-    self.taglist = self.tagdata.filter(t => self.userdata.tagIds.includes(t.id))
-  })
+  api
+    .put('users', self.userdata)
+    .then((response) => {
+      self.userdata = response.data
+      self.taglist = self.tagdata.filter(t => self.userdata.tagIds.includes(t.id))
+    })
+    .catch(error => self.$q.notify(self.$t(getErrorMessage(error))))
+
 }
 
 
@@ -105,24 +113,44 @@ export default defineComponent({
     EventSelect
   },
   mounted() {
-    api.get('users/' + useRoute().params.id).then((response) => {
-      this.userdata = response.data
-      api.get('tags/user-tags').then((tagresponse) => {
-        this.tagdata = tagresponse.data
-        this.taglist = this.tagdata.filter(t => response.data.tagIds.includes(t.id))
-        this.tagloading = false
+    api
+      .get('users/' + useRoute().params.id)
+      .then((response) => {
+        this.userdata = response.data
+        api
+          .get('tags/user-tags')
+          .then((tagresponse) => {
+            this.tagdata = tagresponse.data
+            this.taglist = this.tagdata.filter(t => response.data.tagIds.includes(t.id))
+            this.tagloading = false
+          })
+          .catch(error => {
+            this.tagloading = false
+            this.$q.notify(this.$t(getErrorMessage(error)))
+          })
+        !response.data.eventIds.length ? this.eventloading = false :
+        api
+          .get('events')
+          .then((eventresponse) => {
+            this.eventdata = eventresponse.data
+            this.eventlist = this.eventdata.filter(e => response.data.eventIds.includes(e.id)).map(e => {return {
+              name: e.name,
+              id: e.id,
+              tags: []
+            }})
+            this.eventloading = false
+          })
+          .catch(error => {
+            this.eventloading = false
+            this.$q.notify(this.$t(getErrorMessage(error)))
+          })
+
       })
-      !response.data.eventIds.length ? this.eventloading = false :
-      api.get('events').then((eventresponse) => {
-        this.eventdata = eventresponse.data
-        this.eventlist = this.eventdata.filter(e => response.data.eventIds.includes(e.id)).map(e => {return {
-          name: e.name,
-          id: e.id,
-          tags: []
-        }})
+      .catch(error => {
         this.eventloading = false
+        this.tagloading = false
+        this.$q.notify(this.$t(getErrorMessage(error)))
       })
-    })
   },
   methods: {
     resetTagFilter() {

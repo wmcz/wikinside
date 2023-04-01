@@ -4,6 +4,7 @@
 
 <script>
 import {api} from "boot/axios";
+import {getErrorMessage} from "src/util";
 
 export default {
   name: "ProjectSelect",
@@ -19,9 +20,12 @@ export default {
       const self = this
       if (self.data === null) {
         update(() => {
-          api.get('/projects').then((response) => {
-            self.data = response.data
-            self.options = self.data})})
+          api
+            .get('/projects')
+            .then((response) => {
+              self.data = response.data
+              self.options = self.data})
+            .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))})
       } else {
         update(() => self.options = self.data.filter((p) => p.name.toLowerCase().includes(val.toLowerCase()) || p.path.toLowerCase().includes(val.toLowerCase())))
       }

@@ -4,6 +4,7 @@
 
 <script>
 import {api} from "boot/axios";
+import {getErrorMessage} from "src/util";
 
 export default {
   name: "UserSelect",
@@ -19,12 +20,15 @@ export default {
       const self = this
       if (self.userdata === null) {
         update(() => {
-          api.get('/users').then((response) => {
-            self.userdata = response.data.map(u => {return {
-              username: u.username,
-              id: u.id
-            }})
-            self.useroptions = self.userdata})})
+          api
+            .get('/users')
+            .then((response) => {
+              self.userdata = response.data.map(u => {return {
+                username: u.username,
+                id: u.id
+              }})
+              self.useroptions = self.userdata})
+            .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))})
       } else {
         update(() => self.useroptions = self.userdata.filter((u) => u.username.toLowerCase().includes(val.toLowerCase())))
       }

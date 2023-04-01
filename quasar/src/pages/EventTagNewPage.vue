@@ -26,6 +26,7 @@ import TagLink from "components/TagLink.vue";
 import {api} from "boot/axios";
 import TagSelect from "components/TagSelect.vue";
 import EventSelect from "components/EventSelect.vue";
+import {getErrorMessage} from "src/util";
 
 export default defineComponent({
   name: 'EventTagNewPage',
@@ -37,15 +38,17 @@ export default defineComponent({
   },
   methods: {
     onSubmit() {
-      api.post('/tags/event-tags',
-        {
+      api
+        .post('/tags/event-tags', {
           name: this.name,
           id: null,
           assignable: true,
           elementIds: this.$refs.eventSelect.selected.map(s => s.id),
           parentId: this.$refs.parentSelect.selected ? this.$refs.parentSelect.selected.id : null,
           childrenIds: []
-        }).then((response) => this.tagdata.push(response.data))
+        })
+        .then((response) => this.tagdata.push(response.data))
+        .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))
     },
   },
   components: {

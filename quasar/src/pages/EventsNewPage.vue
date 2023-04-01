@@ -43,6 +43,7 @@ import {api} from "boot/axios";
 import UserSelect from "components/UserSelect.vue";
 import TagSelect from "components/TagSelect.vue";
 import ProjectSelect from "components/ProjectSelect.vue";
+import {getErrorMessage} from "src/util";
 
 export default defineComponent({
   name: 'EventsNewPage',
@@ -57,8 +58,8 @@ export default defineComponent({
   },
   methods: {
     onSubmit() {
-      api.post('/events',
-        {
+      api
+        .post('/events', {
           name: this.name,
           id: null,
           tagIds: this.$refs.tagSelect.selected === null ? [] : this.$refs.tagSelect.selected.map(s => s.id),
@@ -67,11 +68,13 @@ export default defineComponent({
           hashtag: this.fromHashtag ? this.hashtag : null,
           startDate: typeof this.date === "string" ? this.date : this.date.from,
           endDate: typeof this.date === "string" ? this.date : this.date.to
-        }).then((response) => this.eventdata.push({
-        name: response.data.name,
-        id: response.data.id,
-        tags: response.data.tagIds.map(i => this.tagdata.find(e => e.id === i))
-      }))
+        })
+        .then((response) => this.eventdata.push({
+          name: response.data.name,
+          id: response.data.id,
+          tags: response.data.tagIds.map(i => this.tagdata.find(e => e.id === i))
+        }))
+        .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))
     },
   },
   components: {

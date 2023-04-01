@@ -29,6 +29,7 @@
 import {defineComponent} from 'vue'
 import TagLink from "components/TagLink.vue";
 import { api } from 'boot/axios'
+import {getErrorMessage} from "src/util";
 
 function deleteNode(id, current, topLevel) {
   current.forEach((e) => {
@@ -70,13 +71,17 @@ export default defineComponent({
     TagLink
   },
   mounted() {
-    api.get('/tags/event-tags').then((response) => {
-      this.tree = this.treeify(response.data.map(function(item) {return {name: item.name,
-                                                                         id: item.id,
-                                                                         events: new Set(item.elementIds),
-                                                                         children: [],
-                                                                         childrenIds: item.childrenIds,
-                                                                         parentId: item.parentId}}))})
+    api
+      .get('/tags/event-tags')
+      .then((response) => {
+        this.tree = this.treeify(response.data.map(function(item) {return {name: item.name,
+                                                                           id: item.id,
+                                                                           events: new Set(item.elementIds),
+                                                                           children: [],
+                                                                           childrenIds: item.childrenIds,
+                                                                           parentId: item.parentId}}))})
+      .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))
+
   },
   methods: {
     treeify: function(tags) {
@@ -94,8 +99,10 @@ export default defineComponent({
       this.filterRef.value.focus()
     },
     deleteTag: function(id) {
-      api.delete('tags/event-tags/' + id).then(deleteNode(id, this.tree, this.tree))
-
+      api
+        .delete('tags/event-tags/' + id)
+        .then(deleteNode(id, this.tree, this.tree))
+        .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))
     }
   }
 

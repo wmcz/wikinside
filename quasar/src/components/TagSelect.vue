@@ -4,6 +4,7 @@
 
 <script>
 import {api} from "boot/axios";
+import {getErrorMessage} from "src/util";
 
 export default {
   name: "TagSelect",
@@ -29,12 +30,15 @@ export default {
       const self = this
       if (self.tagdata === null) {
         update(() => {
-          api.get(this.url).then((response) => {
-            self.tagdata = response.data.map(t => {return {
-              name: t.name,
-              id: t.id
-            }})
-            self.tagoptions = self.tagdata})})
+          api
+            .get(this.url)
+            .then((response) => {
+              self.tagdata = response.data.map(t => {return {
+                name: t.name,
+                id: t.id
+              }})
+              self.tagoptions = self.tagdata})
+            .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))})
       } else {
         update(() => self.tagoptions = self.tagdata.filter((u) => u.name.toLowerCase().includes(val.toLowerCase())))
       }

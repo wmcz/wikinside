@@ -4,6 +4,7 @@
 
 <script>
 import {api} from "boot/axios";
+import {getErrorMessage} from "src/util";
 
 export default {
   name: "EventSelect",
@@ -19,12 +20,16 @@ export default {
       const self = this
       if (self.eventdata === null) {
         update(() => {
-          api.get('/events').then((response) => {
-            self.eventdata = response.data.map(e => {return {
-              name: e.name,
-              id: e.id
-            }})
-            self.eventoptions = self.eventdata})})
+          api
+            .get('/events')
+            .then((response) => {
+              self.eventdata = response.data.map(e => {return {
+                name: e.name,
+                id: e.id
+              }})
+              self.eventoptions = self.eventdata})
+            .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))
+        })
       } else {
         update(() => self.eventoptions = self.eventdata.filter((e) => e.name.toLowerCase().includes(val.toLowerCase())))
       }

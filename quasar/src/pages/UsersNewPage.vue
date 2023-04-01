@@ -22,6 +22,7 @@ import { defineComponent } from 'vue'
 import UserLink from "components/UserLink.vue";
 import {api} from "boot/axios";
 import TagSelect from "components/TagSelect.vue";
+import {getErrorMessage} from "src/util";
 
 export default defineComponent({
   name: 'UsersNewPage',
@@ -33,18 +34,20 @@ export default defineComponent({
   },
   methods: {
     onSubmit() {
-      api.post('/users',
-        {
+      api
+        .post('/users', {
           username: this.username,
           id: null,
           tagIds: this.$refs.tagselect.selected === null ? [] : this.$refs.tagselect.selected.map(s => s.id),
           eventIds: []
-        }).then((response) => this.userdata.push({
+        })
+        .then((response) => this.userdata.push({
           username: response.data.username,
           id: response.data.id,
           tags: response.data.tagIds.map(i => this.tagdata.find(e => e.id === i))
-        }
-      ))
+        }))
+        .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))
+
     },
   },
   components: {

@@ -24,6 +24,7 @@
 import {defineComponent} from 'vue'
 import EventLink from "components/EventLink.vue";
 import { api } from 'boot/axios'
+import {getErrorMessage} from "src/util";
 
 
 export default defineComponent({
@@ -41,24 +42,37 @@ export default defineComponent({
   },
   mounted() {
     const self = this
-    api.get('/tags/event-tags').then((response) => {
+    api
+      .get('/tags/event-tags')
+      .then((response) => {
       this.tagdata = response.data.map(function(item) {return {name: item.name, id: item.id}})})
-    api.get('/events').then((response) => {
-      this.eventdata = response.data.map(
-        function(item) {return {
-          name: item.name,
-          id: item.id,
-          tags: item.tagIds.map(id => self.$data.tagdata.find(e => id === e.id))}})
-      this.loading = false
-    }, () => this.loading = false)
+      .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))
+    api
+      .get('/events')
+      .then((response) => {
+        this.eventdata = response.data.map(
+          function(item) {return {
+            name: item.name,
+            id: item.id,
+            tags: item.tagIds.map(id => self.$data.tagdata.find(e => id === e.id))}})
+        this.loading = false
+      })
+      .catch(error => {
+        this.loading = false
+        this.$q.notify(this.$t(getErrorMessage(error)))
+      })
   },
   methods: {
     deleteEvent: function (id) {
-      api.delete('/events/' + id).then(
-        this.eventdata.splice(
-          this.eventdata.indexOf(
-            this.eventdata.find(e => e.id === id)),
-          1))
+      api
+        .delete('/events/' + id)
+        .then(
+          this.eventdata.splice(
+            this.eventdata.indexOf(
+              this.eventdata.find(e => e.id === id)),
+            1))
+        .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))
+
 
     }
 }

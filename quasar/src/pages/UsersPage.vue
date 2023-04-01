@@ -24,7 +24,7 @@
 import {defineComponent} from 'vue'
 import UserLink from "components/UserLink.vue";
 import { api } from 'boot/axios'
-
+import { getErrorMessage } from 'src/util'
 
 export default defineComponent({
   data() {
@@ -41,25 +41,36 @@ export default defineComponent({
   },
   mounted() {
     const self = this
-    api.get('/tags/user-tags').then((response) => {
-      this.tagdata = response.data.map(function(item) {return {name: item.name, id: item.id}})})
-    api.get('/users').then((response) => {
-      this.userdata = response.data.map(
-        function(item) {return {
-          username: item.username,
-          id: item.id,
-          tags: item.tagIds.map(id => self.$data.tagdata.find(e => id === e.id))}})
-      this.loading = false
-    }, () => this.loading = false)
+    api
+      .get('/tags/user-tags')
+      .then((response) => {
+        this.tagdata = response.data.map(function(item) {return {name: item.name, id: item.id}})})
+      .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))
+    api
+      .get('/users')
+      .then((response) => {
+        this.userdata = response.data.map(
+          function(item) {return {
+            username: item.username,
+            id: item.id,
+            tags: item.tagIds.map(id => self.$data.tagdata.find(e => id === e.id))}})
+        this.loading = false
+      })
+      .catch(error => {
+        this.$q.notify(this.$t(getErrorMessage(error)))
+        this.loading = false
+      })
   },
   methods: {
     deleteUser: function (id) {
-      api.delete('/users/' + id).then(
-        this.userdata.splice(
-          this.userdata.indexOf(
-            this.userdata.find(e => e.id === id)),
-          1))
-
+      api
+        .delete('/users/' + id)
+        .then(
+          this.userdata.splice(
+            this.userdata.indexOf(
+              this.userdata.find(e => e.id === id)),
+            1))
+        .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))
     },
     resetFilter: function () {
       this.filter = ''

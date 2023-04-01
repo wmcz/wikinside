@@ -23,6 +23,7 @@
 <script>
 import ProjectLink from "components/ProjectLink.vue";
 import {api} from "boot/axios";
+import {getErrorMessage} from "src/util";
 
 export default {
   name: "ProjectsPage",
@@ -37,10 +38,13 @@ export default {
     }
   },
   mounted() {
-    api.get('projects').then((response) => {
-      this.data = response.data
-      this.loading = false
-    })
+    api
+      .get('projects')
+      .then((response) => {
+        this.data = response.data
+        this.loading = false
+      })
+      .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))
   },
   methods: {
     resetFilter: function () {

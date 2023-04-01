@@ -76,19 +76,24 @@ import UserSelect from "components/UserSelect.vue";
 import TagSelect from "components/TagSelect.vue";
 import TagLink from "components/TagLink.vue";
 import UserLink from "components/UserLink.vue";
+import {getErrorMessage} from "src/util";
 
 function updateUsers(self) {
-  api.put('events', self.eventdata).then((response) => {
-    self.eventdata = response.data
-    self.userlist = self.userdata.filter(u => self.eventdata.userIds.includes(u.id))
-  })
+  api
+    .put('events', self.eventdata)
+    .then((response) => {
+      self.eventdata = response.data
+      self.userlist = self.userdata.filter(u => self.eventdata.userIds.includes(u.id))})
+    .catch(error => self.$q.notify(self.$t(getErrorMessage(error))))
 }
 
 function updateTags(self) {
-  api.put('events', self.eventdata).then((response) => {
-    self.eventdata = response.data
-    self.taglist = self.tagdata.filter(t => self.eventdata.tagIds.includes(t.id))
-  })
+  api
+    .put('events', self.eventdata)
+    .then((response) => {
+      self.eventdata = response.data
+      self.taglist = self.tagdata.filter(t => self.eventdata.tagIds.includes(t.id))})
+    .catch(error => self.$q.notify(self.$t(getErrorMessage(error))))
 }
 
 export default {
@@ -115,20 +120,39 @@ export default {
     }
   },
   mounted() {
-    api.get('events/' + useRoute().params.id).then((response) => {
-      this.eventdata = response.data
-      api.get('tags/event-tags').then((tagresponse) => {
-        this.tagdata = tagresponse.data
-        this.taglist = this.tagdata.filter(t => response.data.tagIds.includes(t.id))
-        this.tagloading = false
+    api
+      .get('events/' + useRoute().params.id)
+      .then((response) => {
+        this.eventdata = response.data
+        api
+          .get('tags/event-tags')
+          .then((tagresponse) => {
+            this.tagdata = tagresponse.data
+            this.taglist = this.tagdata.filter(t => response.data.tagIds.includes(t.id))
+            this.tagloading = false
+          })
+          .catch(error => {
+            this.tagloading = false
+            this.$q.notify(this.$t(getErrorMessage(error)))
+          })
+        !response.data.userIds.length ? this.userloading = false :
+        api
+          .get('users')
+          .then((userresponse) => {
+            this.userdata = userresponse.data
+            this.userlist = this.userdata.filter(u => response.data.userIds.includes(u.id))
+            this.userloading = false
+          })
+          .catch(error => {
+            this.userloading = false
+            this.$q.notify(this.$t(getErrorMessage(error)))
+          })
       })
-      !response.data.userIds.length ? this.userloading = false :
-        api.get('users').then((userresponse) => {
-          this.userdata = userresponse.data
-          this.userlist = this.userdata.filter(u => response.data.userIds.includes(u.id))
-          this.userloading = false
-        })
-    })
+      .catch(error => {
+        this.tagloading = false
+        this.userloading = false
+        this.$q.notify(this.$t(getErrorMessage(error)))
+      })
   },
   methods: {
     onUserSubmit() {

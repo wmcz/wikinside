@@ -46,5 +46,11 @@ export default {
     name: 'Jméno projektu',
     path: 'Cesta projektu',
     path_hint: 'Příklad: en.wikipedia.org'
+  },
+  notification: {
+    400: 'ERROR: Požadavek je špatně zformulovaný nebo jinak nesprávný.',
+    500: 'ERROR: Chyba na straně serveru; zkuste obnovit stránku.',
+    network_error: 'ERROR: Nelze se připojit k serveru.',
+    generic_error: 'ERROR: Něco se pokazilo; zkuste obnovit stránku.'
   }
 }

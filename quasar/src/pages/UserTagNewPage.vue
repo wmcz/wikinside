@@ -25,6 +25,7 @@ import TagLink from "components/TagLink.vue";
 import {api} from "boot/axios";
 import UserSelect from "components/UserSelect.vue";
 import TagSelect from "components/TagSelect.vue";
+import {getErrorMessage} from "src/util";
 
 export default defineComponent({
   name: 'UserTagNewPage',
@@ -39,15 +40,17 @@ export default defineComponent({
   },
   methods: {
     onSubmit() {
-      api.post('/tags/user-tags',
-        {
+      api
+        .post('/tags/user-tags', {
           name: this.name,
           id: null,
           assignable: true,
           elementIds: this.$refs.userSelect.selected.map(s => s.id),
           parentId: this.$refs.parentSelect.selected ? this.$refs.parentSelect.selected.id : null,
           childrenIds: []
-        }).then((response) => this.tagdata.push(response.data))
+        })
+        .then((response) => this.tagdata.push(response.data))
+        .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))
     },
   },
   components: {

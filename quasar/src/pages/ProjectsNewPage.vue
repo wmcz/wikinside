@@ -21,6 +21,7 @@
 import { defineComponent } from 'vue'
 import {api} from "boot/axios";
 import ProjectLink from "components/ProjectLink.vue";
+import {getErrorMessage} from "src/util";
 
 export default defineComponent({
   name: 'UsersNewPage',
@@ -33,12 +34,14 @@ export default defineComponent({
   },
   methods: {
     onSubmit() {
-      api.post('/projects',
-        {
+      api
+        .post('/projects', {
           name: this.name,
           id: null,
           path: this.path
-        }).then((response) => this.data.push(response.data))
+        })
+        .then((response) => this.data.push(response.data))
+        .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))
     },
   },
   components: {
