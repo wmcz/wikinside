@@ -15,6 +15,7 @@ const routes = [
       { path: '/event/:id',     component: () => import('pages/EventDetailPage.vue'), name: 'event' },
       { path: '/event/new',     component: () => import('pages/EventsNewPage.vue') },
       { path: '/event/tag',     component: () => import('pages/EventTagsPage.vue') },
+      { path: '/event/tag/:id', component: () => import('pages/EventTagDetailPage.vue'), name: 'eventtag'},
       { path: '/event/tag/new', component: () => import('pages/EventTagNewPage.vue') },
       { path: '/project',       component: () => import('pages/ProjectsPage.vue') },
       { path: '/project/new',   component: () => import('pages/ProjectsNewPage.vue') },
