@@ -88,12 +88,23 @@ function update(self, response) {
     .catch(error => self.$q.notify(self.$t(getErrorMessage(error))))
 }
 
-function changeUsers(self, id) {
-  self.data = self.tagdata.find(t => t.id == id)
-  self.data.children = self.data.childrenIds.map(id => self.tagdata.find(t => t.id === id))
-  self.data.parent = self.data.parentId === null ? null : self.tagdata.find(t => t.id === self.data.parentId)
-  self.data.elems = self.data.elementIds.map(id => self.userdata.find(u => u.id === id))
-  self.list = self.data.elems
+function changeTags(self, id, onFinish) {
+  api
+    .get('tags/user-tags')
+    .then((response) => {
+      self.tagdata = response.data
+      self.data = self.tagdata.find(t => t.id == id)
+      self.data.children = self.data.childrenIds.map(id => self.tagdata.find(t => t.id === id))
+      self.data.parent = self.data.parentId === null ? null : self.tagdata.find(t => t.id === self.data.parentId)
+      self.data.elems = self.data.elementIds.map(id => self.userdata.find(u => u.id === id))
+      self.list = self.data.elems
+      onFinish.call()
+    })
+    .catch(error => {
+      self.$q.notify(self.$t(getErrorMessage(error)))
+      onFinish.call()
+    })
+
 }
 
 function updateUsers(self) {
@@ -149,16 +160,8 @@ export default {
       .get('users')
       .then((response) => {
         self.userdata = response.data
-
-        api
-          .get('tags/user-tags')
-          .then((response) => {
-            self.tagdata = response.data
-            changeUsers(self, route.params.id)
-            self.loading = false
-          })
-          .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))
-
+        changeTags(self, route.params.id, () => {self.loading = false})
+        self.loading = false
       })
       .catch(error => {
         this.$q.notify(this.$t(getErrorMessage(error)))
@@ -198,7 +201,10 @@ export default {
     }
   },
   async beforeRouteUpdate(to, from) {
-    changeUsers(this, to.params.id)
+    changeTags(this, to.params.id, () => {})
+    this.userinput = false
+    this.parentinput = false
+    this.childinput = false
   }
 }
 </script>
