@@ -111,7 +111,7 @@ function updateParent(self) {
 
 function updateChildren(self) {
   update(self, (response) => {
-    self.data.children = response.data.map(id => self.tagdata.find(t => t.id === id))
+    self.data.children = response.data.childrenIds.map(id => self.tagdata.find(t => t.id === id))
   })
 }
 
