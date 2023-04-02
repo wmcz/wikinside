@@ -194,10 +194,10 @@ export default {
       this.filter = ''
     },
     removeUser(id) {
-      this.userloading = true
-      this.eventdata.userIds.splice(this.eventdata.userIds.indexOf(id), 1)
+      this.loading = true
+      this.data.elems.splice(this.data.elems.indexOf(id), 1)
       updateUsers(this)
-      this.userloading = false
+      this.loading = false
     }
   },
   async beforeRouteUpdate(to, from) {
