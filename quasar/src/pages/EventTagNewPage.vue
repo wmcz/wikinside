@@ -14,7 +14,7 @@
       <q-btn color="primary" type="submit">{{ $t('submit') }}</q-btn>
     </q-form>
     <q-list v-if="tagdata.length" bottom bordered class="rounded-borders" style="min-width: 600px">
-      <TagLink v-for="tag in tagdata" :key="tag.name" :elemname="$t('event.many')" v-bind="tag" :elems="tag.elementIds"/>
+      <TagLink v-for="tag in tagdata" :key="tag.name" elemtype="event" v-bind="tag" :elems="tag.elementIds"/>
     </q-list>
     </div>
   </q-page>

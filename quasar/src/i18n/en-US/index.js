@@ -5,6 +5,7 @@ export default {
   filter: 'Filter',
   submit: 'Submit',
   cancel: 'Cancel',
+  edit: 'Edit',
   home: 'Home',
   optional: ' (optional)',
   user: {

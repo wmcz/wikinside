@@ -9,6 +9,7 @@ const routes = [
       { path: '/user/:id',      component: () => import('pages/UserDetailPage.vue'), name: 'user' },
       { path: '/user/new',      component: () => import('pages/UsersNewPage.vue') },
       { path: '/user/tag',      component: () => import('pages/UserTagsPage.vue') },
+      { path: '/user/tag/:id',  component: () => import('pages/UserTagDetailPage.vue'), name: 'usertag' },
       { path: '/user/tag/new',  component: () => import('pages/UserTagNewPage.vue') },
       { path: '/event',         component: () => import('pages/EventsPage.vue') },
       { path: '/event/:id',     component: () => import('pages/EventDetailPage.vue'), name: 'event' },

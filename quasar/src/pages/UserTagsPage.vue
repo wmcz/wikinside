@@ -15,7 +15,7 @@
           :filter-method="node => node.name.toLowerCase().includes(filter.toLowerCase())"
         >
           <template v-slot:default-header="prop">
-            <TagLink :elems="[...prop.node.users]" :name="prop.node.name" :id="prop.node.id" :elemname="$t('user.many').toLowerCase()" @deleteTag="(id) => deleteTag(id)"/>
+            <TagLink :elems="[...prop.node.users]" :name="prop.node.name" :id="prop.node.id" elemtype="user" @deleteTag="(id) => deleteTag(id)"/>
           </template>-->
         </q-tree>
       </q-list>

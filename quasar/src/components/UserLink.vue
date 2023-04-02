@@ -8,7 +8,7 @@
 
     </q-item-label>
     <q-item-label v-if="!supresstags" caption lines="1">
-      <TagBadge class="q-mr-xs" v-for="tag in tags" :key="tag.name" :id="tag.id" :name="tag.name" v-bind="tag" />
+      <TagBadge class="q-mr-xs" v-for="tag in tags" :key="tag.name" :id="tag.id" :name="tag.name" v-bind="tag" elemtype="user"/>
       <caption v-if="!tags.length">{{ $t('tag.none') }}</caption>
     </q-item-label>
   </q-item-section>

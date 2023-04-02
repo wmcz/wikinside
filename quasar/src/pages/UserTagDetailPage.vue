@@ -1,0 +1,204 @@
+<template>
+ <q-page class="flex flex-center">
+   <div class="q-gutter-md">
+     <h3 class="q-mb-sm">{{ data.name }}</h3>
+     <q-list bordered class="rounded-borders" style="width: 600px">
+       <q-item v-if="data.parent">
+         <q-item-section avatar>
+            <q-icon color="primary" name="north_west"/>
+         </q-item-section>
+         <q-item-section>
+           <TagSelect parent url="tags/user-tags" :default-selected="data.parent" v-if="parentinput" ref="parentSelect"/>
+           <q-item-label v-else>
+            <TagBadge v-bind="data.parent" elemtype="user"/>
+           </q-item-label>
+         </q-item-section>
+         <q-item-section side>
+           <div>
+            <q-btn v-if="parentinput" color="primary" :label="$t('submit')" @click="onParentSubmit"/>
+            <q-btn color="primary" flat :label="parentinput ? $t('cancel') : $t('edit')" @click="parentinput=!parentinput"/>
+           </div>
+         </q-item-section>
+       </q-item>
+       <q-item v-if="data.children.length">
+         <q-item-section avatar>
+           <q-icon color="primary" name="subdirectory_arrow_right"></q-icon>
+         </q-item-section>
+         <q-item-section class="text-weight-bold">
+           <TagSelect v-if="childinput" url="tags/user-tags" :default-selected="data.children" ref="childSelect"/>
+           <q-item-label v-else lines="1">
+             <TagBadge class="q-mr-xs" v-for="tag in data.children" v-bind="tag" :key="tag.name" elemtype="user"/>
+           </q-item-label>
+         </q-item-section>
+         <q-item-section side>
+           <div>
+             <q-btn v-if="childinput" color="primary" :label="$t('submit')" @click="onChildSubmit"/>
+            <q-btn color="primary" flat :label="childinput ? $t('cancel') : $t('edit')" @click="childinput=!childinput"/>
+           </div>
+         </q-item-section>
+       </q-item>
+     </q-list>
+
+     <q-list top bordered class="rounded-borders" style="min-width: 600px">
+       <q-item-label header>{{ $t('user.many') }}</q-item-label>
+       <q-input class="q-pa-md" ref="filterRef" v-model="filter" :label="$t('filter')">
+         <template v-slot:append>
+           <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
+         </template>
+       </q-input>
+       <q-table :rows="list" :row-key="name" grid style="max-width: 600px" :loading="loading" :filter="filter" :pagination="{ rowsPerPage: 10}">
+         <template v-slot:item="props">
+           <UserLink :key="props.row.username" supresstags v-bind="props.row" right-icon="clear" @deleteUser="(id) => removeUser(id)" style="width: 600px"/>
+         </template>
+         <template v-slot:no-data>
+           {{ $t('user.none') }}
+         </template>
+       </q-table>
+       <div v-if="userinput" class="q-mb-md q-mx-md q-mt-none">
+         <UserSelect :label="$t('user.add')" ref="userSelect"/>
+         <q-btn class="q-mr-sm" color="primary" :label="$t('submit')" @click="onUserSubmit"/>
+         <q-btn outline color="primary" :label="$t('cancel')" @click="userinput = false"/>
+       </div>
+       <q-btn v-else class="q-mb-md q-ml-md" color="primary" :label="$t('user.add')" @click="userinput = true"/>
+     </q-list>
+   </div>
+ </q-page>
+</template>
+
+<script>
+import {api} from "boot/axios";
+import {useRoute} from "vue-router";
+import UserSelect from "components/UserSelect.vue";
+import UserLink from "components/UserLink.vue";
+import TagBadge from "components/TagBadge.vue";
+import {getErrorMessage} from "src/util";
+import TagSelect from "components/TagSelect.vue";
+
+function update(self, response) {
+  api
+    .put('tags/user-tags', {
+      name: self.data.name,
+      id: self.data.id,
+      assignable: true,
+      childrenIds: self.data.children.map(c => c.id),
+      elementIds: self.data.elems.map(e => e.id),
+      parentId: self.data.parent === null ? null : self.data.parent.id
+    })
+    .then(response)
+    .catch(error => self.$q.notify(self.$t(getErrorMessage(error))))
+}
+
+function changeUsers(self, id) {
+  self.data = self.tagdata.find(t => t.id == id)
+  self.data.children = self.data.childrenIds.map(id => self.tagdata.find(t => t.id === id))
+  self.data.parent = self.data.parentId === null ? null : self.tagdata.find(t => t.id === self.data.parentId)
+  self.data.elems = self.data.elementIds.map(id => self.userdata.find(u => u.id === id))
+  self.list = self.data.elems
+}
+
+function updateUsers(self) {
+  update(self, (response) => {
+    self.data.elems = response.data.elementIds.map(id => self.userdata.find(u => u.id === id))
+    self.list = self.data.elems
+  })
+}
+
+function updateParent(self) {
+  update(self, (response) => {
+    self.data.parent = self.tagdata.find(t => t.id === response.data.parentId)
+  })
+}
+
+function updateChildren(self) {
+  update(self, (response) => {
+    self.data.children = response.data.map(id => self.tagdata.find(t => t.id === id))
+  })
+}
+
+export default {
+  name: "UserTagDetailPage",
+  components: {
+    TagSelect,
+    UserLink,
+    UserSelect,
+    TagBadge
+  },
+  data() {
+    return {
+      tagdata: null,
+      data: {
+        name: '',
+        elems: [],
+        children: [],
+        parent: null
+      },
+      filter: '',
+      userinput: false,
+      parentinput: false,
+      childinput: false,
+      userdata: null,
+      list: [],
+      loading: true,
+    }
+  },
+  mounted() {
+    const route = useRoute()
+    const self = this
+
+    api
+      .get('users')
+      .then((response) => {
+        self.userdata = response.data
+
+        api
+          .get('tags/user-tags')
+          .then((response) => {
+            self.tagdata = response.data
+            changeUsers(self, route.params.id)
+            self.loading = false
+          })
+          .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))
+
+      })
+      .catch(error => {
+        this.$q.notify(this.$t(getErrorMessage(error)))
+        this.loading = false
+      })
+
+
+
+  },
+  methods: {
+    onUserSubmit() {
+      this.loading = true
+      this.data.elems.push(...this.$refs.userSelect.selected)
+      updateUsers(this)
+      this.$refs.userSelect.selected = []
+      this.userinput = false
+      this.loading = false
+    },
+    onParentSubmit() {
+      this.data.parent = this.$refs.parentSelect.selected
+      updateParent(this)
+      this.parentinput = false
+    },
+    onChildSubmit() {
+      this.data.children = this.$refs.childSelect.selected
+      updateChildren(this)
+      this.childinput = false
+    },
+    resetFilter() {
+      this.filter = ''
+    },
+    removeUser(id) {
+      this.userloading = true
+      this.eventdata.userIds.splice(this.eventdata.userIds.indexOf(id), 1)
+      updateUsers(this)
+      this.userloading = false
+    }
+  },
+  async beforeRouteUpdate(to, from) {
+    changeUsers(this, to.params.id)
+  }
+}
+</script>

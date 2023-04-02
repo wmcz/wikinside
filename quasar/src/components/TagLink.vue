@@ -1,12 +1,12 @@
 <template>
-<q-item>
+<q-item style="width: 100%" router-link :to="{name: elemtype + 'tag', params: {id: id}}">
 
   <q-item-section top>
     <q-item-label lines="1">
       <span class="text-h6 q-pr-xs ellipsis fit">{{ name }}</span>
     </q-item-label>
     <q-item-label v-if="!suppresselems" caption lines="1">
-      {{ elems.length }} {{ elemname }}
+      {{ elems.length }} {{ $t(elemtype + '.many').toLowerCase() }}
     </q-item-label>
   </q-item-section>
   <q-item-section side>
@@ -34,7 +34,7 @@ export default {
     elems: {
       type: Array
     },
-    elemname: {
+    elemtype: {
       type: String,
       required: true,
     },

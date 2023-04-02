@@ -12,7 +12,9 @@ export default {
     return {
       tagdata: null,
       tagoptions: null,
-      selected: parent ? null : []
+      selected: parent ?
+        (this.defaultSelected ? this.defaultSelected : null) :
+        (this.defaultSelected ? this.defaultSelected : [])
     }
   },
   props: {
@@ -22,6 +24,9 @@ export default {
     },
     parent: {
       type: Boolean
+    },
+    defaultSelected: {
+      type: Object
     }
   }
   ,

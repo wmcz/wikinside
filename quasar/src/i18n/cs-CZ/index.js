@@ -5,6 +5,7 @@ export default {
   filter: 'Filtrovat',
   submit: 'Potvrdit',
   cancel: 'Zrušit',
+  edit: 'Upravit',
   home: 'Domů',
   optional: ' (nepovinné)',
   user: {
