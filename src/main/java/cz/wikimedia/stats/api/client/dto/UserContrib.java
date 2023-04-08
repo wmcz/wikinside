@@ -9,6 +9,8 @@ import java.time.Instant;
 public record UserContrib(@JsonProperty("userid") Long userId,
                           @JsonProperty("user") String user,
                           @JsonProperty("revid") Long revId,
+                          @JsonProperty("pageid") Long pageId,
+                          @JsonProperty("parentid") Long parentId,
                           @JsonProperty("title") String title,
                           @JsonProperty("timestamp") Instant timestamp,
                           @JsonProperty("comment") String comment,

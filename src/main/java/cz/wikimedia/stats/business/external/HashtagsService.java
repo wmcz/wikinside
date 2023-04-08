@@ -28,11 +28,9 @@ public class HashtagsService {
     public Collection<Revision> getRevisions(Event event, LocalDate start, LocalDate end) {
         Collection<Revision> revs = new HashSet<>();
         for (Project p : event.getProjects()) {
-            revs.addAll(hashtagsClient
-                    .getFromHashtag(event.getHashtag(), p, start, end)
-                    .rows()
-                    .stream()
-                    .map(i -> hashtagsInfoConverter.fromInfo(i, p, event)).toList());
+            revs.addAll(
+                    hashtagsInfoConverter.fromInfo(
+                            hashtagsClient.getFromHashtag(event.getHashtag(), p, start, end).rows(), p, event));
         }
         return revs;
     }

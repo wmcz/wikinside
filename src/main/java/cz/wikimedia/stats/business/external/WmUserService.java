@@ -1,6 +1,7 @@
 package cz.wikimedia.stats.business.external;
 
 import cz.wikimedia.stats.api.client.WmClient;
+import cz.wikimedia.stats.api.client.dto.GlobalUserInfo;
 import cz.wikimedia.stats.api.client.dto.LocalUserInfo;
 import cz.wikimedia.stats.dao.UserRepository;
 import cz.wikimedia.stats.model.User;
@@ -25,8 +26,8 @@ public class WmUserService extends WmService {
         return client.getGlobalUserInfo(globalUserId).query().contents().name();
     }
 
-    public Long getId(String username) {
-        return client.getGlobalUserInfo(username).query().contents().id();
+    public GlobalUserInfo getGlobalUserInfo(String username) {
+        return client.getGlobalUserInfo(username).query().contents();
     }
 
     public Long getLocalId(String username) {

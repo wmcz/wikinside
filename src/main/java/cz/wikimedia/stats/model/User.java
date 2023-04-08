@@ -1,6 +1,7 @@
 package cz.wikimedia.stats.model;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -16,8 +17,7 @@ public class User implements IdAble<Long> {
 
     private String username; // need to fetch to ensure it is up-to-date
 
-    //@Transient
-    private String email;
+    private Instant registration;
 
     @ManyToMany
     private Collection<UserTag> tags;
@@ -33,21 +33,20 @@ public class User implements IdAble<Long> {
 
     protected User() {}
 
-    public User(Long id, String username, String email) {
+    public User(Long id, String username) {
         this.id = id;
         this.username = username;
-        this.email = email;
         this.tags = new HashSet<>();
         this.events = new HashSet<>();
     }
 
-    public User(Long id, Long localId, String username, String email, Collection<UserTag> tags, Collection<Event> events) {
+    public User(Long id, Long localId, String username, Instant registration, Collection<UserTag> tags, Collection<Event> events) {
         this.id = id;
         this.localId = localId;
         this.username = username;
-        this.email = email;
         this.tags = tags;
         this.events = events;
+        this.registration = registration;
     }
 
 
@@ -62,8 +61,8 @@ public class User implements IdAble<Long> {
         return username;
     }
 
-    public String getEmail() {
-        return email;
+    public Instant getRegistration() {
+        return registration;
     }
 
     public Collection<UserTag> getTags() {
@@ -89,12 +88,6 @@ public class User implements IdAble<Long> {
         this.username = username;
         return this;
     }
-
-    public User setEmail(String email) {
-        this.email = email;
-        return this;
-    }
-
     public User setTags(Collection<UserTag> tags) {
         this.tags = tags;
         return this;
@@ -122,6 +115,11 @@ public class User implements IdAble<Long> {
 
     public User setLocalId(Long localId) {
         this.localId = localId;
+        return this;
+    }
+
+    public User setRegistration(Instant registration) {
+        this.registration = registration;
         return this;
     }
 }

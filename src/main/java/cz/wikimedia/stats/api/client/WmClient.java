@@ -7,6 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
 
 import java.time.Instant;
+import java.util.function.Function;
 
 public class WmClient {
     private final WebClient client;
@@ -19,6 +20,15 @@ public class WmClient {
                 .queryParam("maxlag",        3);
     }
 
+    private <T> T get(Function<UriBuilder, UriBuilder> params) {
+        return client
+                .get()
+                .uri(uriBuilder -> params.apply(getdefaultQueryParams(uriBuilder)).build())
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<T>() {})
+                .block();
+    }
+
     public WmClient(String projectUrl, BuildProperties properties) {
         this.client = WebClient
                 .builder()
@@ -28,79 +38,57 @@ public class WmClient {
     }
 
     public BatchResponse<GUInfoQuery> getGlobalUserInfo(String username) {
-        return client.get()
-                .uri(uriBuilder -> getdefaultQueryParams(uriBuilder)
-                        .queryParam("meta", "globaluserinfo")
-                        .queryParam("guiuser", username)
-                        .build())
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<BatchResponse<GUInfoQuery>>() {})
-                .block();
+        return get(uriBuilder -> uriBuilder
+                .queryParam("meta", "globaluserinfo")
+                .queryParam("guiuser", username));
     }
 
     public BatchResponse<GUInfoQuery> getGlobalUserInfo(Long globalUserId) {
-        return client.get()
-                .uri(uriBuilder -> getdefaultQueryParams(uriBuilder)
+        return get(uriBuilder -> uriBuilder
                         .queryParam("meta", "globaluserinfo")
-                        .queryParam("guiid", globalUserId)
-                        .build())
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<BatchResponse<GUInfoQuery>>() {})
-                .block();
+                        .queryParam("guiid", globalUserId));
     }
 
     public BatchResponse<LocalUserQuery> getUsersById(String localIds) {
-        return client.get()
-                .uri(uriBuilder -> getdefaultQueryParams(uriBuilder)
+        return get(uriBuilder -> uriBuilder
                         .queryParam("list", "users")
-                        .queryParam("ususerids", localIds)
-                        .build())
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<BatchResponse<LocalUserQuery>>() {})
-                .block();
+                        .queryParam("ususerids", localIds));
     }
 
     public BatchResponse<LocalUserQuery> getUsersByName(String names) {
-        return client.get()
-                .uri(uriBuilder -> getdefaultQueryParams(uriBuilder)
+        return get(uriBuilder -> uriBuilder
                         .queryParam("list", "users")
-                        .queryParam("ususers", names)
-                        .build())
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<BatchResponse<LocalUserQuery>>() {})
-                .block();
+                        .queryParam("ususers", names));
     }
 
 
     public ContinuableBatchResponse<UserContribQuery, UserContribContinue> getUserContribs(String names, Instant start, Instant end) {
-
-        return client.get()
-                .uri(uriBuilder -> getdefaultQueryParams(uriBuilder)
+        return get(uriBuilder -> uriBuilder
                         .queryParam("list", "usercontribs")
                         .queryParam("ucuser", names)
                         .queryParam("ucend", start)
                         .queryParam("ucstart", end)
                         .queryParam("ucprop", "ids|title|timestamp|comment|sizediff|flags")
-                        .queryParam("uclimit", 200)
-                        .build())
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<ContinuableBatchResponse<UserContribQuery, UserContribContinue>>() {})
-                .block();
+                        .queryParam("uclimit", 200));
     }
 
     public ContinuableBatchResponse<UserContribQuery, UserContribContinue> getMoreUserContribs(String names, Instant start, Instant end, String ucContinue) {
-        return client.get()
-                .uri(uriBuilder -> getdefaultQueryParams(uriBuilder)
+        return get(uriBuilder -> uriBuilder
                         .queryParam("list", "usercontribs")
                         .queryParam("ucuser", names)
                         .queryParam("ucend", start)
                         .queryParam("ucstart", end)
                         .queryParam("ucprop", "ids|title|timestamp|comment|sizediff|flags")
                         .queryParam("uccontinue", ucContinue)
-                        .queryParam("uclimit", 200)
-                        .build())
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<ContinuableBatchResponse<UserContribQuery, UserContribContinue>>() {})
-                .block();
+                        .queryParam("uclimit", 200));
+    }
+
+    public BatchResponse<PageQuery> getPageInfo(String titles) {
+        return get(uriBuilder -> uriBuilder
+                .queryParam("titles", titles)
+                .queryParam("prop", "revisions")
+                .queryParam("rvprop", "ids")
+                .queryParam("rvlimit", 1)
+                .queryParam("rvdir", "newer"));
     }
 }

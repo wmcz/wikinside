@@ -14,6 +14,9 @@ public class Revision implements IdAble<Long> {
 
     private Long diff;
 
+    private Long pageId;
+    private Boolean created; // has this Revision created a page?
+
     @ManyToOne
     private User user;
 
@@ -30,10 +33,12 @@ public class Revision implements IdAble<Long> {
 
     protected Revision() {}
 
-       public Revision(Long id, Long revId, Long diff, User user, Collection<Event> events, Project project, Instant timestamp, String summary) {
+       public Revision(Long id, Long revId, Long diff, Long pageId, Boolean created, User user, Collection<Event> events, Project project, Instant timestamp, String summary) {
         this.id = id;
         this.revId = revId;
         this.diff = diff;
+        this.pageId = pageId;
+        this.created = created;
         this.user = user;
         this.events = events;
         this.project = project;
@@ -52,6 +57,14 @@ public class Revision implements IdAble<Long> {
 
     public Long getDiff() {
         return diff;
+    }
+
+    public Long getPageId() {
+        return pageId;
+    }
+
+    public Boolean isPageCreation() {
+        return created;
     }
 
     public User getUser() {

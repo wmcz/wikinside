@@ -28,16 +28,16 @@ public class UserConverter {
     private UserDto toDtoInner(User user) {
        return new UserDto(user.getId(),
                           user.getUsername(),
-                          user.getEmail(),
                           ConverterUtils.getIds(user.getTags()),
                           ConverterUtils.getIds(user.getEvents()));
     }
 
     public User fromDto(UserDto dto) {
+        User existing = userService.findById(dto.id()).orElse(null);
         return new User(dto.id(),
-                        dto.id() == null ? null : userService.findById(dto.id()).map(User::getLocalId).orElse(null),
+                        existing == null ? null : existing.getLocalId(),
                         dto.username(),
-                        dto.email(),
+                        existing == null ? null : existing.getRegistration(),
                         ConverterUtils.getElems(dto.tagIds(), userTagService),
                         ConverterUtils.getElems(dto.eventIds(), eventService));
     }

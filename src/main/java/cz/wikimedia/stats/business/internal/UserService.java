@@ -1,5 +1,6 @@
 package cz.wikimedia.stats.business.internal;
 
+import cz.wikimedia.stats.api.client.dto.GlobalUserInfo;
 import cz.wikimedia.stats.business.external.WmUserService;
 import cz.wikimedia.stats.dao.EventRepository;
 import cz.wikimedia.stats.dao.RevisionRepository;
@@ -36,7 +37,7 @@ public class UserService extends InternalService<User, Long> {
     }
 
     public Optional<User> findByUsername(String username) {
-        return userRepository.findById(wmUserService.getId(username));
+        return userRepository.findById(wmUserService.getGlobalUserInfo(username).id());
     }
 
     public Collection<Event> addEvents(User user, Collection<Long> eventIds) {
@@ -53,7 +54,9 @@ public class UserService extends InternalService<User, Long> {
 
     public <S extends User> Optional<S> createFromGlobalUser(S user) {
         if (user.getId() == null) {
-            user.setId(wmUserService.getId(user.getUsername()));
+            GlobalUserInfo info = wmUserService.getGlobalUserInfo(user.getUsername());
+            user.setId(info.id());
+            user.setRegistration(info.registration());
             user.setLocalId(wmUserService.getLocalId(user.getUsername()));
         }
         return create(user);
@@ -98,7 +101,7 @@ public class UserService extends InternalService<User, Long> {
                 .orElse(createFromGlobalUser(
                         new User(
                                 null,
-                                username,
-                                null)).orElse(null));
+                                username
+                        )).orElse(null));
     }
 }
