@@ -98,7 +98,7 @@ public class UserService extends InternalService<User, Long> {
 
         return userRepository
                 .findByUsername(username)
-                .orElse(createFromGlobalUser(
+                .orElseGet(() -> createFromGlobalUser(
                         new User(
                                 null,
                                 username

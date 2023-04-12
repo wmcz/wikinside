@@ -20,12 +20,12 @@ public class WmClient {
                 .queryParam("maxlag",        3);
     }
 
-    private <T> T get(Function<UriBuilder, UriBuilder> params) {
+    private <T> T get(Function<UriBuilder, UriBuilder> params, ParameterizedTypeReference<T> type) {
         return client
                 .get()
                 .uri(uriBuilder -> params.apply(getdefaultQueryParams(uriBuilder)).build())
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<T>() {})
+                .bodyToMono(type)
                 .block();
     }
 
@@ -39,26 +39,30 @@ public class WmClient {
 
     public BatchResponse<GUInfoQuery> getGlobalUserInfo(String username) {
         return get(uriBuilder -> uriBuilder
-                .queryParam("meta", "globaluserinfo")
-                .queryParam("guiuser", username));
+                        .queryParam("meta", "globaluserinfo")
+                        .queryParam("guiuser", username),
+                new ParameterizedTypeReference<BatchResponse<GUInfoQuery>>() {});
     }
 
     public BatchResponse<GUInfoQuery> getGlobalUserInfo(Long globalUserId) {
         return get(uriBuilder -> uriBuilder
                         .queryParam("meta", "globaluserinfo")
-                        .queryParam("guiid", globalUserId));
+                        .queryParam("guiid", globalUserId),
+                new ParameterizedTypeReference<BatchResponse<GUInfoQuery>>() {});
     }
 
     public BatchResponse<LocalUserQuery> getUsersById(String localIds) {
         return get(uriBuilder -> uriBuilder
                         .queryParam("list", "users")
-                        .queryParam("ususerids", localIds));
+                        .queryParam("ususerids", localIds),
+                new ParameterizedTypeReference<BatchResponse<LocalUserQuery>>() {});
     }
 
     public BatchResponse<LocalUserQuery> getUsersByName(String names) {
         return get(uriBuilder -> uriBuilder
                         .queryParam("list", "users")
-                        .queryParam("ususers", names));
+                        .queryParam("ususers", names),
+                new ParameterizedTypeReference<BatchResponse<LocalUserQuery>>() {});
     }
 
 
@@ -69,7 +73,8 @@ public class WmClient {
                         .queryParam("ucend", start)
                         .queryParam("ucstart", end)
                         .queryParam("ucprop", "ids|title|timestamp|comment|sizediff|flags")
-                        .queryParam("uclimit", 200));
+                        .queryParam("uclimit", 200),
+                new ParameterizedTypeReference<ContinuableBatchResponse<UserContribQuery, UserContribContinue>>() {});
     }
 
     public ContinuableBatchResponse<UserContribQuery, UserContribContinue> getMoreUserContribs(String names, Instant start, Instant end, String ucContinue) {
@@ -80,15 +85,25 @@ public class WmClient {
                         .queryParam("ucstart", end)
                         .queryParam("ucprop", "ids|title|timestamp|comment|sizediff|flags")
                         .queryParam("uccontinue", ucContinue)
-                        .queryParam("uclimit", 200));
+                        .queryParam("uclimit", 200),
+                new ParameterizedTypeReference<ContinuableBatchResponse<UserContribQuery, UserContribContinue>>() {});
     }
 
-    public BatchResponse<PageQuery> getPageInfo(String titles) {
+    public BatchResponse<PageQuery> getRevInfo(String revIds) {
         return get(uriBuilder -> uriBuilder
-                .queryParam("titles", titles)
-                .queryParam("prop", "revisions")
-                .queryParam("rvprop", "ids")
-                .queryParam("rvlimit", 1)
-                .queryParam("rvdir", "newer"));
+                        .queryParam("prop", "revisions")
+                        .queryParam("rvprops", "ids")
+                        .queryParam("rvslots", "*")
+                        .queryParam("revids", revIds),
+        new ParameterizedTypeReference<BatchResponse<PageQuery>>() {});
+    }
+
+    public BatchResponse<PageQuery> getPageInfoWithSizes(String revIds) {
+        return get(uriBuilder -> uriBuilder
+                        .queryParam("prop", "revisions")
+                        .queryParam("rvprop", "ids|size")
+                        .queryParam("rvslots", "*")
+                        .queryParam("revids", revIds),
+                new ParameterizedTypeReference<BatchResponse<PageQuery>>() {});
     }
 }

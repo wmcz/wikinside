@@ -2,7 +2,6 @@ package cz.wikimedia.stats.api.client.dto.converter;
 
 import cz.wikimedia.stats.api.client.dto.HashtagsInfo;
 import cz.wikimedia.stats.api.client.dto.WmPage;
-import cz.wikimedia.stats.api.client.dto.WmRev;
 import cz.wikimedia.stats.business.external.WmPageService;
 import cz.wikimedia.stats.business.internal.UserService;
 import cz.wikimedia.stats.model.Event;
@@ -10,10 +9,7 @@ import cz.wikimedia.stats.model.Project;
 import cz.wikimedia.stats.model.Revision;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Component
 public class HashtagsInfoConverter {
@@ -26,15 +22,16 @@ public class HashtagsInfoConverter {
         this.wmPageService = wmPageService;
     }
 
-    public Revision fromOneInfo(HashtagsInfo info, Project project, Event event, Map<String, WmPage> pages) {
-        WmPage page = pages.get(info.pageTitle());
-        Long firstRevId = page.revs().stream().findFirst().map(WmRev::revId).orElse(null);
-        return new Revision(
+    public Revision fromOneInfo(HashtagsInfo info, Project project, Event event, Map<Long, WmPage> pages) {
+        WmPage page = pages.get(info.revId());
+
+        if (page == null) return null;
+        else              return new Revision(
                 null,
                 info.revId(),
                 null,
                 page.pageId(),
-                info.revId().equals(firstRevId),
+                page.revs().iterator().next().parentId(),
                 userService.processUser(info.username()),
                 Collections.singleton(event),
                 project,
@@ -43,10 +40,15 @@ public class HashtagsInfoConverter {
     }
 
     public Collection<Revision> fromInfo(Collection<HashtagsInfo> info, Project project, Event event) {
-       Map<String, WmPage> pages = wmPageService
-               .getPages(info.stream().map(HashtagsInfo::pageTitle).toList(), project)
-               .stream()
-               .collect(Collectors.toMap(WmPage::title, p -> p));
-       return info.stream().map(i -> fromOneInfo(i, project, event, pages)).toList();
+       Map<Long, WmPage> pages = new HashMap<>(info.size());
+       wmPageService
+               .getPages(info.stream().map(HashtagsInfo::revId).toList(), project)
+               .forEach(page -> page.revs().forEach(rev -> pages.put(rev.revId(),
+                       new WmPage(page.pageId(),
+                                  page.namespace(),
+                                  page.title(),
+                                  Collections.singleton(rev)))));
+
+       return info.stream().map(i -> fromOneInfo(i, project, event, pages)).filter(Objects::nonNull).toList();
     }
 }

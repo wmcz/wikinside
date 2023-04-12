@@ -42,7 +42,7 @@ public class Event implements IdAble<Long> {
         this.name = name;
     }
 
-    public Event(Long id, Collection<EventTag> tags, String name, String hashtag, LocalDate startDate, LocalDate endDate, Collection<User> participants, Collection<Project> projects) {
+    public Event(Long id, Collection<EventTag> tags, String name, String hashtag, LocalDate startDate, LocalDate endDate, Collection<User> participants, Collection<Project> projects, Collection<Revision> revisions) {
         this.id = id;
         this.tags = tags;
         this.name = name;
@@ -51,6 +51,7 @@ public class Event implements IdAble<Long> {
         this.endDate = endDate;
         this.participants = participants;
         this.projects = projects;
+        this.revisions = revisions;
     }
 
     public Long getId() {

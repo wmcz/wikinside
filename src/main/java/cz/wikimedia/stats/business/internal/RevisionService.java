@@ -8,12 +8,13 @@ import cz.wikimedia.stats.dao.RevisionRepository;
 import cz.wikimedia.stats.model.Event;
 import cz.wikimedia.stats.model.Revision;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Collection;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -52,32 +53,65 @@ public class RevisionService extends InternalService<Revision, Long> {
         updateNonOwningField(rev, updated, Revision::getEvents, this::addEvents, this::removeEvents);
     }
 
-    private Collection<Revision> saveAndReturn(Collection<Revision> revs) {
+    private Collection<Revision> getEventRevisions(Event event) {
+        return eventService
+                .findById(event.getId())
+                .map(Event::getRevisions)
+                .orElse(Collections.emptySet());
+    }
+
+    private Revision updateOrCreate(Revision rev) {
+        System.out.println(rev.getRevId());
+        Optional<Revision> original = revisionRepository.findRevisionByRevIdAndProject(rev.getRevId(), rev.getProject());
+
+        if (original.isPresent()) {
+            rev.getEvents().forEach(e -> original.get().addEvent(e));
+            return update(original.get()).orElse(null);
+
+        } else return create(rev).orElse(null);
+    }
+
+    private Collection<Revision> updateOrCreate(Collection<Revision> revs) {
         return revs
                 .stream()
-                .map(r -> revisionRepository
-                        .findRevisionByRevIdAndProject(r.getRevId(), r.getProject())
-                        .map(f -> {r.getEvents().forEach(e -> eventService.update(e.addRevision(f))); return repository.findById(f.getId()).get();})
-                        .orElse(create(r).get())) // save if not already present
+                .map(this::updateOrCreate) // save if not already present
                 .toList();
     }
 
     public Collection<Revision> generateFromUserList(Event event) {
         wmUserService.updateNames(event.getParticipants());
-        Collection<Revision> revs = wmRevisionService.getUserContribs(event).stream().map(r -> r.addEvent(event)).toList();
-        return saveAndReturn(revs);
+        updateOrCreate(wmRevisionService.getUserContribs(event, event.getStartDate().atStartOfDay(ZoneId.systemDefault()).toInstant()).stream().map(r -> r.addEvent(event)).toList());
+        return getEventRevisions(event);
     }
 
     public Collection<Revision> generateFromHashTags(Event event) {
-        return saveAndReturn(hashtagsService.getRevisions(event));
+        updateOrCreate(hashtagsService.getRevisions(event, event.getStartDate(), event.getEndDate()));
+        return getEventRevisions(event);
     }
 
-    public Collection<Revision> updateFromHashTags(Event event) {
-        LocalDate start = event.getRevisions().stream().max(Comparator.comparing(Revision::getTimestamp))
-                .map(r -> LocalDate.ofInstant(r.getTimestamp(), ZoneId.systemDefault()))
-                .orElse(event.getStartDate());
-        return saveAndReturn(hashtagsService.getRevisions(event, start, event.getEndDate()));
+    private Instant getLastTimeStamp(Event event) {
+        return event
+                .getRevisions()
+                .stream()
+                .map(Revision::getTimestamp)
+                .max(Instant::compareTo)
+                .orElse(event
+                        .getStartDate()
+                        .atStartOfDay(ZoneId.systemDefault())
+                        .toInstant());
     }
+
+    public Collection<Revision> generateRevs(Event event) {
+        if (event.getHashtag() == null)
+             return generateFromUserList(event);
+        else return generateFromHashTags(event);
+    }
+
+    @Async
+    public void asyncGenerateRevs(Event event) {
+        generateRevs(event);
+    }
+
     @Override
     public <S extends Revision> Optional<S> create(S rev) {
         Optional<S> res = super.create(rev);

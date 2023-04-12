@@ -6,6 +6,7 @@ import cz.wikimedia.stats.model.Event;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 @Component
 public class EventConverter {
@@ -13,11 +14,13 @@ public class EventConverter {
     private final EventTagService eventTagService;
     private final UserService userService;
     private final ProjectService projectService;
+    private final EventService eventService;
 
-    public EventConverter(EventTagService eventTagService, UserService userService, ProjectService projectService) {
+    public EventConverter(EventTagService eventTagService, UserService userService, ProjectService projectService, EventService eventService) {
         this.eventTagService = eventTagService;
         this.userService = userService;
         this.projectService = projectService;
+        this.eventService = eventService;
     }
 
     public EventDto toDto(Event event) {
@@ -39,7 +42,8 @@ public class EventConverter {
                          dto.startDate(),
                          dto.endDate(),
                          ConverterUtils.getElems(dto.userIds(), userService),
-                         ConverterUtils.getElems(dto.projectIds(), projectService));
+                         ConverterUtils.getElems(dto.projectIds(), projectService),
+                         dto.id() == null ? new HashSet<>() : eventService.findById(dto.id()).map(Event::getRevisions).orElse(new HashSet<>()));
     }
 
     public Collection<EventDto> toDto(Collection<Event> events) {

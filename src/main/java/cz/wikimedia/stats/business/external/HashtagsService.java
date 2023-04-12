@@ -15,10 +15,12 @@ import java.util.HashSet;
 public class HashtagsService {
     private final HashtagsClient hashtagsClient;
     private final HashtagsInfoConverter hashtagsInfoConverter;
+    private final WmRevisionService wmRevisionService;
 
-    public HashtagsService(HashtagsClient hashtagsClient, HashtagsInfoConverter hashtagsInfoConverter) {
+    public HashtagsService(HashtagsClient hashtagsClient, HashtagsInfoConverter hashtagsInfoConverter, WmRevisionService wmRevisionService) {
         this.hashtagsClient = hashtagsClient;
         this.hashtagsInfoConverter = hashtagsInfoConverter;
+        this.wmRevisionService = wmRevisionService;
     }
 
     public Collection<Revision> getRevisions(Event event) {
@@ -29,9 +31,12 @@ public class HashtagsService {
         Collection<Revision> revs = new HashSet<>();
         for (Project p : event.getProjects()) {
             revs.addAll(
-                    hashtagsInfoConverter.fromInfo(
-                            hashtagsClient.getFromHashtag(event.getHashtag(), p, start, end).rows(), p, event));
+                    wmRevisionService.addDiffs(
+                            hashtagsInfoConverter.fromInfo(
+                                    hashtagsClient.getFromHashtag(event.getHashtag(), p, start, end).rows(), p, event),
+                            p));
         }
+        revs.forEach(r -> System.out.println(r.getRevId()));
         return revs;
     }
 }

@@ -4,7 +4,6 @@ import cz.wikimedia.stats.api.controller.dto.RevisionDto;
 import cz.wikimedia.stats.api.controller.dto.converter.RevisionConverter;
 import cz.wikimedia.stats.business.internal.EventService;
 import cz.wikimedia.stats.business.internal.RevisionService;
-import cz.wikimedia.stats.model.Event;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,16 +31,12 @@ public class RevisionController {
         return res;
     }
 
-    @GetMapping("/revisions/events/{eventId}")
-    public Collection<RevisionDto> generate(@PathVariable Long eventId, @RequestParam Boolean fromHashtag) {
-        //get revisions made in time of event by event's participants in event's projects
-        Event event = eventService
+    @GetMapping("/events/{eventId}/revisions")
+    public Collection<RevisionDto> get(@PathVariable Long eventId) {
+        return revisionConverter.toDto(eventService
                 .findById(eventId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event does not exist"));
-
-        return revisionConverter.toDto(fromHashtag ?
-                revisionService.generateFromHashTags(event) :
-                revisionService.generateFromUserList(event));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"))
+                .getRevisions());
 
     }
 

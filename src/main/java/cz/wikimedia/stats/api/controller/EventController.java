@@ -3,6 +3,7 @@ package cz.wikimedia.stats.api.controller;
 import cz.wikimedia.stats.api.controller.dto.EventDto;
 import cz.wikimedia.stats.api.controller.dto.converter.EventConverter;
 import cz.wikimedia.stats.business.internal.EventService;
+import cz.wikimedia.stats.business.internal.RevisionService;
 import cz.wikimedia.stats.model.Event;
 import cz.wikimedia.stats.model.Impact;
 import org.springframework.http.HttpStatus;
@@ -17,18 +18,21 @@ import java.util.Collection;
 public class EventController {
     private final EventService eventService;
     private final EventConverter eventConverter;
+    private final RevisionService revisionService;
 
-    public EventController(EventService eventService, EventConverter eventConverter) {
+    public EventController(EventService eventService, EventConverter eventConverter, RevisionService revisionService) {
         this.eventService = eventService;
         this.eventConverter = eventConverter;
+        this.revisionService = revisionService;
     }
 
     @PostMapping("/events")
     EventDto create(@RequestBody EventDto event) {
-        return eventConverter.toDto(
-                eventService
-                        .create(eventConverter.fromDto(event))
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event already exists")));
+        Event result = eventService
+                .create(eventConverter.fromDto(event))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event already exists"));
+        revisionService.asyncGenerateRevs(result);
+        return eventConverter.toDto(result);
     }
 
     @GetMapping("/events/{id}")
@@ -62,10 +66,12 @@ public class EventController {
 
     @PutMapping("/events")
     EventDto update(@RequestBody EventDto event) {
-        return eventConverter.toDto(
-                eventService
-                        .update(eventConverter.fromDto(event))
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event does not exist")));
+        Event result = eventService
+                .update(eventConverter.fromDto(event))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event does not exist"));
+        revisionService.asyncGenerateRevs(result);
+        return eventConverter.toDto(result);
+
     }
 
     @DeleteMapping("/events/{id}")

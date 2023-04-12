@@ -9,7 +9,7 @@ public record RevisionDto(@JsonProperty("id") Long id,
                           @JsonProperty("revId") Long revId,
                           @JsonProperty("diff") Long diff,
                           @JsonProperty("pageId") Long pageId,
-                          @JsonProperty("isCreation") Boolean isCreation,
+                          @JsonProperty("parentId") Long parentId,
 
                           @JsonProperty("userId") Long userId,
                           @JsonProperty("eventIds") Collection<Long> eventIds,
