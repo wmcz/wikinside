@@ -10,6 +10,7 @@ import cz.wikimedia.stats.model.Revision;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -108,6 +109,7 @@ public class RevisionService extends InternalService<Revision, Long> {
     }
 
     @Async
+    @Transactional
     public void asyncGenerateRevs(Event event) {
         generateRevs(event);
     }
