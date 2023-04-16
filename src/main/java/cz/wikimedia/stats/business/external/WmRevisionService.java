@@ -62,7 +62,7 @@ public class WmRevisionService {
             Collection<Long> ids = new ArrayList<>(50);
             queryrevs.stream().limit(25).forEach(r -> {ids.add(r.getRevId()); ids.add(r.getParentId());});
             client
-                    .getPageInfoWithSizes(ClientUtils.collect(ids))
+                    .getRevInfoWithSizes(ClientUtils.collect(ids))
                     .query()
                     .contents()
                     .forEach(p -> p.revs().forEach(r -> revSizes.put(r.revId(), r.size())));

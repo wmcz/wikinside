@@ -98,7 +98,7 @@ public class WmClient {
         new ParameterizedTypeReference<BatchResponse<PageQuery>>() {});
     }
 
-    public BatchResponse<PageQuery> getPageInfoWithSizes(String revIds) {
+    public BatchResponse<PageQuery> getRevInfoWithSizes(String revIds) {
         return get(uriBuilder -> uriBuilder
                         .queryParam("prop", "revisions")
                         .queryParam("rvprop", "ids|size")
