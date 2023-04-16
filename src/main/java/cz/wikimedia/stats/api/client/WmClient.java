@@ -92,7 +92,7 @@ public class WmClient {
     public BatchResponse<PageQuery> getRevInfo(String revIds) {
         return get(uriBuilder -> uriBuilder
                         .queryParam("prop", "revisions")
-                        .queryParam("rvprops", "ids")
+                        .queryParam("rvprop", "ids")
                         .queryParam("rvslots", "*")
                         .queryParam("revids", revIds),
         new ParameterizedTypeReference<BatchResponse<PageQuery>>() {});
