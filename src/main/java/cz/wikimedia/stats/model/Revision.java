@@ -3,6 +3,7 @@ package cz.wikimedia.stats.model;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Objects;
 
 @Entity
 public class Revision implements IdAble<Long> {
@@ -105,5 +106,17 @@ public class Revision implements IdAble<Long> {
     public Revision removeEvent(Event event) {
         this.events.remove(event);
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Revision revision)) return false;
+        return Objects.equals(getRevId(), revision.getRevId()) && Objects.equals(getProject(), revision.getProject());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRevId(), getProject());
     }
 }

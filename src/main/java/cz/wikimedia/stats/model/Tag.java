@@ -4,6 +4,7 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Objects;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -72,4 +73,15 @@ public abstract class Tag<E> implements IdAble<Long> {
     public abstract Tag<E> removeChild(Tag<E> tag);
     public abstract Tag<E> setParent(@Nullable Tag<E> tag);
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Tag<?> tag)) return false;
+        return Objects.equals(getId(), tag.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
 }

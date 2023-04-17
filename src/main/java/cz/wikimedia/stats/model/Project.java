@@ -2,6 +2,7 @@ package cz.wikimedia.stats.model;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Objects;
 
 @Entity
 public class Project implements IdAble<Long> {
@@ -36,5 +37,17 @@ public class Project implements IdAble<Long> {
 
     public String getPath() {
         return path;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Project project)) return false;
+        return Objects.equals(getPath(), project.getPath());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPath());
     }
 }
