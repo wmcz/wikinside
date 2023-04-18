@@ -3,10 +3,12 @@ package cz.wikimedia.stats.api.client.dto.converter;
 import cz.wikimedia.stats.api.client.dto.HashtagsInfo;
 import cz.wikimedia.stats.api.client.dto.WmPage;
 import cz.wikimedia.stats.business.external.WmPageService;
+import cz.wikimedia.stats.business.internal.EventService;
 import cz.wikimedia.stats.business.internal.UserService;
 import cz.wikimedia.stats.model.Event;
 import cz.wikimedia.stats.model.Project;
 import cz.wikimedia.stats.model.Revision;
+import cz.wikimedia.stats.model.User;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -16,27 +18,33 @@ public class HashtagsInfoConverter {
 
     private final UserService userService;
     private final WmPageService wmPageService;
+    private final EventService eventService;
 
-    public HashtagsInfoConverter(UserService userService, WmPageService wmPageService) {
+    public HashtagsInfoConverter(UserService userService, WmPageService wmPageService, EventService eventService) {
         this.userService = userService;
         this.wmPageService = wmPageService;
+        this.eventService = eventService;
     }
 
-    public Revision fromOneInfo(HashtagsInfo info, Project project, Event event, Map<Long, WmPage> pages) {
+    private Revision fromOneInfo(HashtagsInfo info, Project project, Event event, Map<Long, WmPage> pages) {
         WmPage page = pages.get(info.revId());
+        User author = userService.processUser(info.username());
 
         if (page == null) return null;
-        else              return new Revision(
-                null,
-                info.revId(),
-                null,
-                page.pageId(),
-                page.revs().iterator().next().parentId(),
-                userService.processUser(info.username()),
-                Collections.singleton(event),
-                project,
-                info.timestamp(),
-                info.summary());
+        else {
+            event.addParticipant(author);
+            return new Revision(
+                    null,
+                    info.revId(),
+                    null,
+                    page.pageId(),
+                    page.revs().iterator().next().parentId(),
+                    author,
+                    Collections.singleton(event),
+                    project,
+                    info.timestamp(),
+                    info.summary());
+        }
     }
 
     public Collection<Revision> fromInfo(Collection<HashtagsInfo> info, Project project, Event event) {
@@ -49,6 +57,8 @@ public class HashtagsInfoConverter {
                                   page.title(),
                                   Collections.singleton(rev)))));
 
-       return info.stream().map(i -> fromOneInfo(i, project, event, pages)).filter(Objects::nonNull).toList();
+       Collection<Revision> res = info.stream().map(i -> fromOneInfo(i, project, event, pages)).filter(Objects::nonNull).toList();
+       eventService.update(event);
+       return res;
     }
 }
