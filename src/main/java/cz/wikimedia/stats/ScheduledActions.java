@@ -21,7 +21,7 @@ public class ScheduledActions {
     public void updateEvents() {
         eventService.findAll().spliterator().forEachRemaining(e -> {
             if (e.getEndDate().isBefore(LocalDate.now().minusDays(3))) {
-                revisionService.asyncGenerateRevs(e);
+                revisionService.asyncGenerateRevs(e.getId());
             }
         });
     }

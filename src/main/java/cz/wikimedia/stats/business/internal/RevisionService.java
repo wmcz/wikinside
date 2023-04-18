@@ -110,8 +110,8 @@ public class RevisionService extends InternalService<Revision, Long> {
 
     @Async
     @Transactional
-    public void asyncGenerateRevs(Event event) {
-        generateRevs(event);
+    public void asyncGenerateRevs(Long eventId) {
+        eventService.findById(eventId).ifPresent(this::generateRevs);
     }
 
     @Override

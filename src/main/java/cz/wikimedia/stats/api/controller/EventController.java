@@ -31,7 +31,7 @@ public class EventController {
         Event result = eventService
                 .create(eventConverter.fromDto(event))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event already exists"));
-        revisionService.asyncGenerateRevs(result);
+        revisionService.asyncGenerateRevs(result.getId());
         return eventConverter.toDto(result);
     }
 
@@ -69,7 +69,7 @@ public class EventController {
         Event result = eventService
                 .update(eventConverter.fromDto(event))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event does not exist"));
-        revisionService.asyncGenerateRevs(result);
+        revisionService.asyncGenerateRevs(result.getId());
         return eventConverter.toDto(result);
 
     }
