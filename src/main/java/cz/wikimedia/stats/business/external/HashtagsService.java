@@ -36,7 +36,6 @@ public class HashtagsService {
                                     hashtagsClient.getFromHashtag(event.getHashtag(), p, start, end).rows(), p, event),
                             p));
         }
-        revs.forEach(r -> System.out.println(r.getRevId()));
         return revs;
     }
 }
