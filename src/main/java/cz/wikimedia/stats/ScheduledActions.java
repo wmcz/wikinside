@@ -20,7 +20,7 @@ public class ScheduledActions {
     @Scheduled(cron = "0 13 4 * * *")
     public void updateEvents() {
         eventService.findAll().spliterator().forEachRemaining(e -> {
-            if (e.getEndDate().isBefore(LocalDate.now().minusDays(3))) {
+            if (e.getEndDate().isAfter(LocalDate.now().minusDays(3))) {
                 revisionService.asyncGenerateRevs(e.getId());
             }
         });
