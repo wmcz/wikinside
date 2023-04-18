@@ -2,6 +2,7 @@ package cz.wikimedia.stats.business.external;
 
 import cz.wikimedia.stats.api.client.WmClient;
 import cz.wikimedia.stats.api.client.dto.UserContrib;
+import cz.wikimedia.stats.api.client.dto.WmRev;
 import cz.wikimedia.stats.api.client.dto.converter.UserContribConverter;
 import cz.wikimedia.stats.model.Event;
 import cz.wikimedia.stats.model.Project;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class WmRevisionService {
@@ -24,10 +26,7 @@ public class WmRevisionService {
         this.userContribConverter = userContribConverter;
     }
 
-    public Collection<Revision> getUserContribs(Collection<String> usernames, Instant start, Instant end, Project project) {
-        WmClient client = wmClientService.getClient(project);
-        String names = ClientUtils.collectNames(usernames);
-
+    private Collection<UserContrib> getUserContribsInner(String names, Instant start, Instant end, WmClient client) {
         var response = client.getUserContribs(names, start, end);
         Collection<UserContrib> contribs = new ArrayList<>(response.query().contents());
 
@@ -35,7 +34,25 @@ public class WmRevisionService {
             response = client.getMoreUserContribs(names, start, end, response.toContinue().listContinue());
             contribs.addAll(response.query().contents());
         }
-        return userContribConverter.fromContrib(contribs, project);
+
+        return contribs;
+    }
+
+    private Collection<WmRev> getRevInfo(Collection<Long> ids, WmClient client) {
+        return client
+                .getRevInfoWithSizes(ClientUtils.collect(ids))
+                .query()
+                .contents()
+                .stream()
+                .flatMap(p -> p.revs().stream()).toList();
+    }
+
+    public Collection<Revision> getUserContribs(Collection<String> usernames, Instant start, Instant end, Project project) {
+        WmClient client = wmClientService.getClient(project);
+
+        return userContribConverter.fromContrib(
+                ClientUtils.applyWithLimit(usernames, names -> getUserContribsInner(ClientUtils.collectNames(names), start, end, client)),
+                project);
     }
 
     public Collection<Revision> getUserContribs(Collection<String> usernames, Instant start, Instant end, Collection<Project> projects) {
@@ -54,20 +71,19 @@ public class WmRevisionService {
 
     public Collection<Revision> addDiffs(Collection<Revision> revs, Project project) {
         WmClient client = wmClientService.getClient(project);
-        Collection<Revision> queryrevs = new ArrayList<>(revs);
-        Map<Long, Long> revSizes = new HashMap<>(revs.size());
+
+        Collection<Long> revIds = revs.stream().reduce(
+                new HashSet<>(revs.size() * 2),
+                (col, rev) -> {col.add(rev.getRevId()); col.add(rev.getParentId()); return col;},
+                (col, col2) -> {col.addAll(col2); return col;});
+
+        Map<Long, Long> revSizes = ClientUtils.applyWithLimit(
+                revIds,
+                ids -> getRevInfo(ids, client))
+               .stream()
+               .collect(Collectors.toMap(WmRev::revId, WmRev::size));
         revSizes.put(0L, 0L);
 
-        while (queryrevs.size() > 0) {
-            Collection<Long> ids = new ArrayList<>(50);
-            queryrevs.stream().limit(25).forEach(r -> {ids.add(r.getRevId()); ids.add(r.getParentId());});
-            client
-                    .getRevInfoWithSizes(ClientUtils.collect(ids))
-                    .query()
-                    .contents()
-                    .forEach(p -> p.revs().forEach(r -> revSizes.put(r.revId(), r.size())));
-            queryrevs = queryrevs.stream().skip(25).toList();
-        }
         revs.forEach(r -> r.setDiff(revSizes.get(r.getRevId()) - revSizes.get(r.getParentId())));
         return revs;
     }

@@ -42,9 +42,11 @@ public class WmUserService extends WmService {
     }
 
     public Collection<User> updateNames(Collection<User> users) {
-        String ids = ClientUtils.collect(users.stream().map(User::getLocalId).toList());
         try {
-            Collection<LocalUserInfo> updated = client.getUsersById(ids).query().contents();
+            Collection<LocalUserInfo> updated = ClientUtils.applyWithLimit(
+                    users.stream().map(User::getLocalId).toList(),
+                    ids -> client.getUsersById(ClientUtils.collect(ids)).query().contents());
+
             users.forEach(u -> {
                 var i = updated.iterator();
                 while (i.hasNext()) {
