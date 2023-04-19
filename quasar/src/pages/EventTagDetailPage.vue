@@ -39,6 +39,8 @@
        </q-item>
      </q-list>
 
+     <ImpactList :url="'tags/event-tags/' + $route.params.id"/>
+
      <q-list top bordered class="rounded-borders" style="min-width: 600px">
        <q-item-label header>{{ $t('event.many') }}</q-item-label>
        <q-input class="q-pa-md" ref="filterRef" v-model="filter" :label="$t('filter')">
@@ -73,6 +75,7 @@ import EventLink from "components/EventLink.vue";
 import TagBadge from "components/TagBadge.vue";
 import {getErrorMessage} from "src/util";
 import TagSelect from "components/TagSelect.vue";
+import ImpactList from "components/ImpactList.vue";
 
 function update(self, response) {
   api
@@ -129,6 +132,7 @@ function updateChildren(self) {
 export default {
   name: "EventTagDetailPage",
   components: {
+    ImpactList,
     TagSelect,
     EventLink,
     EventSelect,

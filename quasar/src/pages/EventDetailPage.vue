@@ -20,6 +20,9 @@
          </q-item-section>
        </q-item>
      </q-list>
+
+     <ImpactList :url="'events/' + $route.params.id"/>
+
      <q-list top bordered class="rounded-borders" style="min-width: 600px">
        <q-item-label header>{{ $t('tag.many') }}</q-item-label>
        <q-input class="q-pa-md" ref="tagFilterRef" v-model="tagfilter" :label="$t('filter')">
@@ -77,6 +80,7 @@ import TagSelect from "components/TagSelect.vue";
 import TagLink from "components/TagLink.vue";
 import UserLink from "components/UserLink.vue";
 import {getErrorMessage} from "src/util";
+import ImpactList from "components/ImpactList.vue";
 
 function updateUsers(self) {
   api
@@ -99,6 +103,7 @@ function updateTags(self) {
 export default {
   name: "EventDetailPage",
   components: {
+    ImpactList,
     UserLink,
     TagLink,
     TagSelect,

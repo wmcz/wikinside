@@ -48,6 +48,12 @@ export default {
     path: 'Project path',
     path_hint: 'Example: en.wikipedia.org'
   },
+  impact: {
+    createdPages: 'newly created pages',
+    editedPages: 'edited pages (including newly created ones)',
+    edits: 'edits',
+    byteDiff: 'added bytes'
+  },
   notification: {
     400: 'ERROR: Request is malformed or otherwise incorrect',
     500: 'ERROR: Server-side error; try refreshing the website.',

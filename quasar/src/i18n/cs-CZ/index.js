@@ -48,6 +48,12 @@ export default {
     path: 'Cesta projektu',
     path_hint: 'Příklad: en.wikipedia.org'
   },
+  impact: {
+    createdPages: 'nově vytvořených stránek',
+    editedPages: 'změněných stránek (včetně vytvořených)',
+    edits: 'editací',
+    byteDiff: 'přidaných bajtů'
+  },
   notification: {
     400: 'ERROR: Požadavek je špatně zformulovaný nebo jinak nesprávný.',
     500: 'ERROR: Chyba na straně serveru; zkuste obnovit stránku.',
