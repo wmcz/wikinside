@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
@@ -66,8 +67,10 @@ public class RevisionService extends InternalService<Revision, Long> {
         Optional<Revision> original = revisionRepository.findRevisionByRevIdAndProject(rev.getRevId(), rev.getProject());
 
         if (original.isPresent()) {
-            rev.getEvents().forEach(e -> original.get().addEvent(e));
-            return update(original.get()).orElse(null);
+            Collection<Event> events = new ArrayList<>(original.get().getEvents());
+            events.addAll(rev.getEvents());
+            updateEvents(original.get(), events);
+            return findById(original.get().getId()).orElse(null);
 
         } else return create(rev).orElse(null);
     }
