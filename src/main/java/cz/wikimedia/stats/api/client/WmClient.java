@@ -9,8 +9,7 @@ import org.springframework.web.util.UriBuilder;
 import java.time.Instant;
 import java.util.function.Function;
 
-public class WmClient {
-    private final WebClient client;
+public class WmClient extends AbstractClient {
 
     private UriBuilder getdefaultQueryParams(UriBuilder uriBuilder) {
         return uriBuilder
@@ -21,20 +20,15 @@ public class WmClient {
     }
 
     private <T> T get(Function<UriBuilder, UriBuilder> params, ParameterizedTypeReference<T> type) {
-        return client
-                .get()
-                .uri(uriBuilder -> params.apply(getdefaultQueryParams(uriBuilder)).build())
-                .retrieve()
-                .bodyToMono(type)
-                .block();
+        return getWithRetries(uriBuilder -> params.apply(getdefaultQueryParams(uriBuilder)).build(), type);
     }
 
     public WmClient(String projectUrl, BuildProperties properties) {
-        this.client = WebClient
+        super(WebClient
                 .builder()
                 .defaultHeader("User-Agent", properties.getName() + "/" + properties.getVersion() + " (" + properties.get("contact") + ")")
                 .baseUrl("https://" + projectUrl + "/w/api.php")
-                .build();
+                .build());
     }
 
     public BatchResponse<GUInfoQuery> getGlobalUserInfo(String username) {
