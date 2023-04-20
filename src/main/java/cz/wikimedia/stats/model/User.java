@@ -2,9 +2,9 @@ package cz.wikimedia.stats.model;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class User implements IdAble<Long> {
@@ -21,13 +21,13 @@ public class User implements IdAble<Long> {
     private Instant registration;
 
     @ManyToMany
-    private Collection<UserTag> tags;
+    private Set<UserTag> tags;
 
     @ManyToMany(mappedBy = "participants")
-    private Collection<Event> events;
+    private Set<Event> events;
 
     @OneToMany(mappedBy = "user")
-    private Collection<Revision> revisions;
+    private Set<Revision> revisions;
 
 
     /* CONSTRUCTORS */
@@ -41,7 +41,7 @@ public class User implements IdAble<Long> {
         this.events = new HashSet<>();
     }
 
-    public User(Long id, Long localId, String username, Instant registration, Collection<UserTag> tags, Collection<Event> events) {
+    public User(Long id, Long localId, String username, Instant registration, Set<UserTag> tags, Set<Event> events) {
         this.id = id;
         this.localId = localId;
         this.username = username;
@@ -66,11 +66,11 @@ public class User implements IdAble<Long> {
         return registration;
     }
 
-    public Collection<UserTag> getTags() {
+    public Set<UserTag> getTags() {
         return tags;
     }
 
-    public Collection<Event> getEvents() {
+    public Set<Event> getEvents() {
         return events;
     }
 
@@ -78,7 +78,7 @@ public class User implements IdAble<Long> {
         return localId;
     }
 
-    public Collection<Revision> getRevisions() {
+    public Set<Revision> getRevisions() {
         return revisions;
     }
 
@@ -89,12 +89,12 @@ public class User implements IdAble<Long> {
         this.username = username;
         return this;
     }
-    public User setTags(Collection<UserTag> tags) {
+    public User setTags(Set<UserTag> tags) {
         this.tags = tags;
         return this;
     }
 
-    public User setEvents(Collection<Event> events) {
+    public User setEvents(Set<Event> events) {
         this.events = events;
         return this;
     }

@@ -2,8 +2,8 @@ package cz.wikimedia.stats.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Event implements IdAble<Long> {
@@ -15,7 +15,7 @@ public class Event implements IdAble<Long> {
     private Long id;
 
     @ManyToMany
-    private Collection<EventTag> tags;
+    private Set<EventTag> tags;
 
     @Column(unique=true, nullable = false)
     private String name;
@@ -24,13 +24,13 @@ public class Event implements IdAble<Long> {
     private LocalDate endDate;
 
     @ManyToMany
-    private Collection<User> participants;
+    private Set<User> participants;
 
     @ManyToMany
-    private Collection<Project> projects;
+    private Set<Project> projects;
 
     @ManyToMany
-    private Collection<Revision> revisions;
+    private Set<Revision> revisions;
 
     private String hashtag;
 
@@ -43,7 +43,7 @@ public class Event implements IdAble<Long> {
         this.name = name;
     }
 
-    public Event(Long id, Collection<EventTag> tags, String name, String hashtag, LocalDate startDate, LocalDate endDate, Collection<User> participants, Collection<Project> projects, Collection<Revision> revisions) {
+    public Event(Long id, Set<EventTag> tags, String name, String hashtag, LocalDate startDate, LocalDate endDate, Set<User> participants, Set<Project> projects, Set<Revision> revisions) {
         this.id = id;
         this.tags = tags;
         this.name = name;
@@ -64,7 +64,7 @@ public class Event implements IdAble<Long> {
     /* GETTERS */
 
 
-    public Collection<EventTag> getTags() {
+    public Set<EventTag> getTags() {
         return tags;
     }
 
@@ -80,11 +80,11 @@ public class Event implements IdAble<Long> {
         return endDate;
     }
 
-    public Collection<User> getParticipants() {
+    public Set<User> getParticipants() {
         return participants;
     }
 
-    public Collection<Project> getProjects() {
+    public Set<Project> getProjects() {
         return projects;
     }
 
@@ -92,7 +92,7 @@ public class Event implements IdAble<Long> {
         return hashtag;
     }
 
-    public Collection<Revision> getRevisions() {
+    public Set<Revision> getRevisions() {
         return revisions;
     }
 
@@ -100,7 +100,7 @@ public class Event implements IdAble<Long> {
 
     /* SETTERS */
 
-    public void setTags(Collection<EventTag> tags) {
+    public void setTags(Set<EventTag> tags) {
         this.tags = tags;
     }
 
@@ -129,7 +129,7 @@ public class Event implements IdAble<Long> {
         return this;
     }
 
-    public Event setParticipants(Collection<User> eventParticipants) {
+    public Event setParticipants(Set<User> eventParticipants) {
         this.participants = eventParticipants;
         return this;
     }

@@ -6,6 +6,8 @@ import org.springframework.lang.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ConverterUtils {
     public static <T extends IdAble<Long>> Collection<Long> getIds(Collection<T> elems) {
@@ -17,8 +19,8 @@ public class ConverterUtils {
     }
 
     public static <T extends IdAble<Long>, S extends InternalService<T, Long>>
-    Collection<T> getElems(Collection<Long> ids, S service) {
-        Collection<T> elems = new ArrayList<>(ids.size());
+    Set<T> getElems(Collection<Long> ids, S service) {
+        Set<T> elems = new HashSet<>(ids.size());
         ids.forEach(id -> service.findById(id).ifPresent(elems::add));
         return elems;
     }

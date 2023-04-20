@@ -6,12 +6,12 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import java.util.Collection;
+import java.util.Set;
 
 @Entity
 public class EventTag extends Tag<Event> {
 
-    public EventTag(Long id, String name, boolean assignable, Collection<Event> tagged, EventTag parent, Collection<EventTag> children) {
+    public EventTag(Long id, String name, boolean assignable, Set<Event> tagged, EventTag parent, Set<EventTag> children) {
         super(id, name, assignable);
         this.tagged = tagged;
         this.parent = parent;
@@ -32,18 +32,18 @@ public class EventTag extends Tag<Event> {
 
 
     @ManyToMany(mappedBy = "tags")
-    private Collection<Event> tagged;
+    private Set<Event> tagged;
 
     @Nullable
     @ManyToOne
     private EventTag parent;
 
     @OneToMany(mappedBy = "parent")
-    private Collection<EventTag> children;
+    private Set<EventTag> children;
 
 
     @Override
-    public Collection<Event> getTagged() {
+    public Set<Event> getTagged() {
         return tagged;
     }
 
@@ -53,12 +53,12 @@ public class EventTag extends Tag<Event> {
     }
 
     @Override
-    public Collection<EventTag> getChildren() {
+    public Set<EventTag> getChildren() {
         return children;
     }
 
     @Override
-    public EventTag setTagged(Collection<Event> tagged) {
+    public EventTag setTagged(Set<Event> tagged) {
         this.tagged = tagged;
         return this;
     }
@@ -76,7 +76,7 @@ public class EventTag extends Tag<Event> {
     }
 
     @Override
-    public EventTag setChildren(Collection<Tag<Event>> tags) {
+    public EventTag setChildren(Set<Tag<Event>> tags) {
         children.clear();
         tags.forEach(this::addChild);
         return this;

@@ -4,11 +4,12 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 public class UserTag extends Tag<User> {
 
-    public UserTag(Long id, String name, boolean assignable, Collection<User> tagged, UserTag parent, Collection<UserTag> children) {
+    public UserTag(Long id, String name, boolean assignable, Set<User> tagged, UserTag parent, Set<UserTag> children) {
         super(id, name, assignable);
         this.tagged = tagged;
         this.parent = parent;
@@ -29,14 +30,14 @@ public class UserTag extends Tag<User> {
 
 
     @ManyToMany(mappedBy = "tags")
-    private Collection<User> tagged;
+    private Set<User> tagged;
 
     @Nullable
     @ManyToOne
     private UserTag parent;
 
     @OneToMany(mappedBy = "parent")
-    private Collection<UserTag> children;
+    private Set<UserTag> children;
 
 
     @Override
@@ -55,7 +56,7 @@ public class UserTag extends Tag<User> {
     }
 
     @Override
-    public UserTag setTagged(Collection<User> tagged) {
+    public UserTag setTagged(Set<User> tagged) {
         this.tagged = tagged;
         return this;
     }
@@ -73,7 +74,7 @@ public class UserTag extends Tag<User> {
     }
 
     @Override
-    public UserTag setChildren(Collection<Tag<User>> tags) {
+    public UserTag setChildren(Set<Tag<User>> tags) {
         children.clear();
         tags.forEach(this::addChild);
         return this;

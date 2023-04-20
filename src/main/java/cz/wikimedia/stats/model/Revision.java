@@ -2,8 +2,8 @@ package cz.wikimedia.stats.model;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Revision implements IdAble<Long> {
@@ -23,7 +23,7 @@ public class Revision implements IdAble<Long> {
     private User user;
 
     @ManyToMany(mappedBy = "revisions")
-    private Collection<Event> events;
+    private Set<Event> events;
 
     @ManyToOne
     private Project project;
@@ -35,7 +35,7 @@ public class Revision implements IdAble<Long> {
 
     protected Revision() {}
 
-       public Revision(Long id, Long revId, Long diff, Long pageId, Long parentId, User user, Collection<Event> events, Project project, Instant timestamp, String summary) {
+       public Revision(Long id, Long revId, Long diff, Long pageId, Long parentId, User user, Set<Event> events, Project project, Instant timestamp, String summary) {
         this.id = id;
         this.revId = revId;
         this.diff = diff;
@@ -82,7 +82,7 @@ public class Revision implements IdAble<Long> {
         return user;
     }
 
-    public Collection<Event> getEvents() {
+    public Set<Event> getEvents() {
         return events;
     }
 
