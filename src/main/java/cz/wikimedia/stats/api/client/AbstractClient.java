@@ -11,6 +11,9 @@ import java.net.UnknownHostException;
 import java.util.function.Function;
 
 public abstract class AbstractClient {
+
+    private final int MAXIMUM_RETRIES = 3;
+
     protected final WebClient client;
 
     protected AbstractClient(WebClient client) {
@@ -19,11 +22,9 @@ public abstract class AbstractClient {
 
     protected <T> T getWithRetries(Function<UriBuilder, URI> urifunc, ParameterizedTypeReference<T> type) {
         T res = null;
-        boolean retry;
+        int retry = 0;
 
         do {
-            retry = false;
-
             try {
                 res = client
                         .get()
@@ -36,10 +37,10 @@ public abstract class AbstractClient {
 
                 if (e.getCause() instanceof PrematureCloseException || e.getCause() instanceof UnknownHostException) {
                     // probably not ideal but retrying fixes the problem
-                    retry = true;
+                    retry++;
                 } else throw e;
             }
-        } while (retry);
+        } while (retry > 0 && retry <= MAXIMUM_RETRIES);
         return res;
     }
 }
