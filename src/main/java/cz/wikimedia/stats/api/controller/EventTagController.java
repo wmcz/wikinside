@@ -4,10 +4,8 @@ import cz.wikimedia.stats.api.controller.dto.EventDto;
 import cz.wikimedia.stats.api.controller.dto.TagDto;
 import cz.wikimedia.stats.api.controller.dto.converter.EventConverter;
 import cz.wikimedia.stats.api.controller.dto.converter.TagConverter;
-import cz.wikimedia.stats.business.internal.EventService;
 import cz.wikimedia.stats.business.internal.EventTagService;
 import cz.wikimedia.stats.model.EventTag;
-import cz.wikimedia.stats.model.Impact;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +19,6 @@ import java.util.NoSuchElementException;
 @RestController
 public class EventTagController {
 
-    private final EventService eventService;
-
     private Collection<EventTag> getChildrenInner(Long id) {
         Collection<EventTag> children = eventTagService.findById(id).map(EventTag::getChildren).orElse(new HashSet<>());
         children.forEach(c -> children.addAll(getChildrenInner(c.getId())));
@@ -33,11 +29,10 @@ public class EventTagController {
     private final TagConverter tagConverter;
     private final EventConverter eventConverter;
 
-    public EventTagController(EventTagService eventTagService, TagConverter tagConverter, EventConverter eventConverter, EventService eventService) {
+    public EventTagController(EventTagService eventTagService, TagConverter tagConverter, EventConverter eventConverter) {
         this.eventTagService = eventTagService;
         this.tagConverter = tagConverter;
         this.eventConverter = eventConverter;
-        this.eventService = eventService;
     }
 
 
@@ -55,14 +50,6 @@ public class EventTagController {
         return tagConverter.toDto(eventTagService
                 .findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag not found")));
-    }
-
-    @GetMapping("/tags/event-tags/{id}/impact")
-    Impact getImpact(@PathVariable Long id) {
-        EventTag tag = eventTagService
-                .findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag not found"));
-        return eventService.getImpact(tag.getTagged());
     }
 
     @GetMapping("tags/event-tags")

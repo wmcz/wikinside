@@ -5,7 +5,6 @@ import cz.wikimedia.stats.api.controller.dto.converter.EventConverter;
 import cz.wikimedia.stats.business.internal.EventService;
 import cz.wikimedia.stats.business.internal.RevisionService;
 import cz.wikimedia.stats.model.Event;
-import cz.wikimedia.stats.model.Impact;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,15 +41,6 @@ public class EventController {
                         .findById(id)
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found")));
     }
-
-    @GetMapping("/events/{id}/impact")
-    Impact getImpact(@PathVariable Long id) {
-        Event event = eventService
-                .findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
-        return eventService.getImpact(event);
-    }
-
 
     @GetMapping("/events")
     Collection<EventDto> getMany() {
