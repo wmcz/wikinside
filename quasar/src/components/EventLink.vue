@@ -1,12 +1,12 @@
 <template>
-<q-item router-link :to="{name: 'event', params: {id: id}}">
+<q-item router-link :to="{name: 'event', params: {id: id}}" style="width: 100%">
 
   <q-item-section top>
     <q-item-label lines="1">
       <span class="text-h6 q-pr-xs">{{ name }}</span>
 
     </q-item-label>
-    <q-item-label caption lines="1">
+    <q-item-label caption lines="1" >
       <TagBadge class="q-mr-xs" v-for="tag in tags" :key="tag.name" :id="tag.id" :name="tag.name" v-bind="tag" elemtype="event"/>
       <caption v-if="!supressnotag && !tags.length">{{ $t('tag.none') }}</caption>
     </q-item-label>

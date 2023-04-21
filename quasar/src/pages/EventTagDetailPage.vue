@@ -2,16 +2,17 @@
  <q-page class="flex flex-center">
    <div class="q-gutter-md">
      <h3 class="q-mb-sm">{{ data.name }}</h3>
-     <q-list bordered class="rounded-borders" style="width: 600px">
-       <q-item v-if="data.parent">
+     <q-list bordered class="rounded-borders">
+       <q-item>
          <q-item-section avatar>
             <q-icon color="primary" name="north_west"/>
          </q-item-section>
          <q-item-section>
            <TagSelect parent url="tags/event-tags" :default-selected="data.parent" v-if="parentinput" ref="parentSelect"/>
-           <q-item-label v-else>
+           <q-item-label v-else-if="data.parent">
             <TagBadge v-bind="data.parent" elemtype="event"/>
            </q-item-label>
+           <q-item-label v-else caption> {{ $t('tag.no_parent') }} </q-item-label>
          </q-item-section>
          <q-item-section side>
            <div>
@@ -20,15 +21,16 @@
            </div>
          </q-item-section>
        </q-item>
-       <q-item v-if="data.children.length">
+       <q-item >
          <q-item-section avatar>
            <q-icon color="primary" name="subdirectory_arrow_right"></q-icon>
          </q-item-section>
          <q-item-section class="text-weight-bold">
            <TagSelect v-if="childinput" url="tags/event-tags" :default-selected="data.children" ref="childSelect"/>
-           <q-item-label v-else lines="1">
+           <q-item-label v-else-if="data.children.length" lines="1">
              <TagBadge class="q-mr-xs" v-for="tag in data.children" v-bind="tag" :key="tag.name" elemtype="event"/>
            </q-item-label>
+           <q-item-label v-else caption> {{ $t('tag.no_children') }} </q-item-label>
          </q-item-section>
          <q-item-section side>
            <div>
@@ -41,16 +43,16 @@
 
      <ImpactList :url="'tags/event-tags/' + $route.params.id"/>
 
-     <q-list top bordered class="rounded-borders" style="min-width: 600px">
+     <q-list top bordered class="rounded-borders">
        <q-item-label header>{{ $t('event.many') }}</q-item-label>
        <q-input class="q-pa-md" ref="filterRef" v-model="filter" :label="$t('filter')">
          <template v-slot:append>
            <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
          </template>
        </q-input>
-       <q-table :rows="list" :row-key="name" grid style="max-width: 600px" :loading="loading" :filter="filter" :pagination="{ rowsPerPage: 10}">
+       <q-table :rows="list" :row-key="name" grid :loading="loading" :filter="filter" :pagination="{ rowsPerPage: 10}">
          <template v-slot:item="props">
-           <EventLink :key="props.row.name" supressnotag v-bind="props.row" right-icon="clear" @deleteEvent="(id) => removeEvent(id)" style="width: 600px"/>
+           <EventLink :key="props.row.name" supressnotag v-bind="props.row" right-icon="clear" @deleteEvent="(id) => removeEvent(id)"/>
          </template>
          <template v-slot:no-data>
            {{ $t('event.none') }}

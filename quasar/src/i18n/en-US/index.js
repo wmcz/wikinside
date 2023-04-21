@@ -39,7 +39,9 @@ export default {
     event: 'Event tags',
     name: 'Tag name',
     add: 'Add tags',
-    parent: 'Parent tag'
+    parent: 'Parent tag',
+    no_children: 'No children',
+    no_parent: 'No parent tag'
   },
   project: {
     one: 'Project',

@@ -4,7 +4,6 @@
     <q-form top
       @submit="onSubmit"
       class="q-gutter-md"
-      style="max-width: 600px"
     >
       <q-input :rules="[ val => val && val.length > 0 || '']" v-model="name" :label="$t('event.name') + ' *'" />
       <ProjectSelect ref="projectSelect"/>
@@ -29,7 +28,7 @@
       <q-btn color="primary" type="submit">{{ $t('submit') }}</q-btn>
 
     </q-form>
-    <q-list bottom bordered class="rounded-borders" style="min-width: 600px">
+    <q-list bottom bordered class="rounded-borders">
       <EventLink v-for="event in eventdata" :key="event.name" v-bind="event"/>
     </q-list>
     </div>

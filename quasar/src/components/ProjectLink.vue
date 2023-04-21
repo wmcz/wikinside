@@ -1,5 +1,5 @@
 <template>
-  <q-item>
+  <q-item style="width:100%">
 
     <q-item-section top>
       <q-item-label lines="1">

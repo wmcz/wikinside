@@ -23,16 +23,16 @@
 
      <ImpactList :url="'events/' + $route.params.id"/>
 
-     <q-list top bordered class="rounded-borders" style="min-width: 600px">
+     <q-list top bordered class="rounded-borders">
        <q-item-label header>{{ $t('tag.many') }}</q-item-label>
        <q-input class="q-pa-md" ref="tagFilterRef" v-model="tagfilter" :label="$t('filter')">
          <template v-slot:append>
            <q-icon v-if="tagfilter !== ''" name="clear" class="cursor-pointer" @click="resetTagFilter" />
          </template>
        </q-input>
-       <q-table :rows="taglist" :row-key="name" grid style="max-width: 600px" :loading="tagloading" :filter="tagfilter" :pagination="{ rowsPerPage: 10}">
+       <q-table :rows="taglist" :row-key="name" grid  :loading="tagloading" :filter="tagfilter" :pagination="{ rowsPerPage: 10}">
          <template v-slot:item="props">
-           <TagLink elemtype="event" :key="props.row.name" suppresselems v-bind="props.row" right-icon="clear" @deleteTag="(id) => removeTag(id)" style="width: 600px"/>
+           <TagLink elemtype="event" :key="props.row.name" suppresselems v-bind="props.row" right-icon="clear" @deleteTag="(id) => removeTag(id)"/>
          </template>
          <template v-slot:no-data>
            {{ $t('tag.none') }}
@@ -46,16 +46,16 @@
        <q-btn v-else class="q-mb-md q-ml-md" color="primary" :label="$t('tag.add')" @click="taginput = true"/>
      </q-list>
 
-     <q-list top bordered class="rounded-borders" style="min-width: 600px">
+     <q-list top bordered class="rounded-borders">
        <q-item-label header>{{ $t('user.many') }}</q-item-label>
        <q-input class="q-pa-md" ref="userFilterRef" v-model="userfilter" :label="$t('filter')">
          <template v-slot:append>
            <q-icon v-if="userfilter !== ''" name="clear" class="cursor-pointer" @click="resetUserFilter" />
          </template>
        </q-input>
-       <q-table :rows="userlist" :row-key="name" grid style="max-width: 600px" :loading="userloading" :filter="userfilter" :pagination="{ rowsPerPage: 10}">
+       <q-table :rows="userlist" :row-key="name" grid :loading="userloading" :filter="userfilter" :pagination="{ rowsPerPage: 10}">
          <template v-slot:item="props">
-           <UserLink :key="props.row.username" supresstags v-bind="props.row" right-icon="clear" @deleteUser="(id) => removeUser(id)" style="width: 600px"/>
+           <UserLink :key="props.row.username" supresstags v-bind="props.row" right-icon="clear" @deleteUser="(id) => removeUser(id)"/>
          </template>
          <template v-slot:no-data>
            {{ $t('user.none') }}

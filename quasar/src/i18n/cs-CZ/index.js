@@ -39,7 +39,9 @@ export default {
     event: 'Tagy událostí',
     name: 'Jméno tagu',
     add: 'Přidat tagy',
-    parent: 'Nadtag'
+    parent: 'Nadtag',
+    no_children: 'Žádné podtagy',
+    no_parent: 'Žádný nadtag'
   },
   project: {
     one: 'Projekt',

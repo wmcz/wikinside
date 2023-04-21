@@ -2,16 +2,16 @@
   <q-page class="flex flex-center">
     <div class="q-gutter-md">
       <h3>{{ userdata.username }}</h3>
-    <q-list top bordered class="rounded-borders" style="min-width: 600px">
+    <q-list top bordered class="rounded-borders">
       <q-item-label header>{{ $t('tag.many') }}</q-item-label>
       <q-input class="q-pa-md" ref="tagFilterRef" v-model="tagfilter" :label="$t('filter')">
         <template v-slot:append>
           <q-icon v-if="tagfilter !== ''" name="clear" class="cursor-pointer" @click="resetTagFilter" />
         </template>
       </q-input>
-      <q-table :rows="taglist" :row-key="name" grid style="max-width: 600px" :loading="tagloading" :filter="tagfilter" :pagination="{ rowsPerPage: 10}">
+      <q-table :rows="taglist" :row-key="name" grid :loading="tagloading" :filter="tagfilter" :pagination="{ rowsPerPage: 10}">
         <template v-slot:item="props">
-          <TagLink elemtype="user" :key="props.row.name" suppresselems v-bind="props.row" right-icon="clear" @deleteTag="(id) => removeTag(id)" style="width: 600px"/>
+          <TagLink elemtype="user" :key="props.row.name" suppresselems v-bind="props.row" right-icon="clear" @deleteTag="(id) => removeTag(id)"/>
         </template>
         <template v-slot:no-data>
           {{ $t('tag.none') }}
@@ -25,16 +25,16 @@
       <q-btn v-else class="q-mb-md q-ml-md" color="primary" :label="$t('tag.add')" @click="taginput = true"/>
     </q-list>
 
-    <q-list top bordered class="rounded-borders" style="min-width: 600px">
+    <q-list top bordered class="rounded-borders">
       <q-item-label header>{{ $t('event.many') }}</q-item-label>
       <q-input class="q-pa-md" ref="eventFilterRef" v-model="eventfilter" :label="$t('filter')">
         <template v-slot:append>
           <q-icon v-if="eventfilter !== ''" name="clear" class="cursor-pointer" @click="resetEventFilter" />
         </template>
       </q-input>
-      <q-table :rows="eventlist" :row-key="name" grid style="max-width: 600px" :loading="eventloading" :filter="eventfilter" :pagination="{ rowsPerPage: 10}">
+      <q-table :rows="eventlist" :row-key="name" grid :loading="eventloading" :filter="eventfilter" :pagination="{ rowsPerPage: 10}">
         <template v-slot:item="props">
-          <EventLink :key="props.row.name" supressnotag v-bind="props.row" right-icon="clear" @deleteEvent="(id) => removeEvent(id)" style="width: 600px"/>
+          <EventLink :key="props.row.name" supressnotag v-bind="props.row" right-icon="clear" @deleteEvent="(id) => removeEvent(id)"/>
         </template>
         <template v-slot:no-data>
           {{ $t('event.none') }}

@@ -1,16 +1,16 @@
 <template>
   <q-page class="flex flex-center">
     <div class="q-gutter-md">
-    <q-list top bordered class="rounded-borders" style="min-width: 600px">
+    <q-list top bordered class="rounded-borders">
       <q-item-label header>{{ $t('event.many') }}</q-item-label>
       <q-input class="q-pa-md" ref="filterRef" v-model="filter" :label="$t('filter')">
         <template v-slot:append>
           <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
         </template>
       </q-input>
-      <q-table :rows="eventdata" :row-key="name" grid style="max-width: 600px" :loading="loading" :filter="filter" :pagination="{ rowsPerPage: 10}">
+      <q-table :rows="eventdata" :row-key="name" grid :loading="loading" :filter="filter" :pagination="{ rowsPerPage: 10}">
         <template v-slot:item="props">
-          <EventLink :key="props.row.name" v-bind="props.row" @deleteEvent="(id) => deleteEvent(id)" style="width: 600px"/>
+          <EventLink :key="props.row.name" v-bind="props.row" @deleteEvent="(id) => deleteEvent(id)"/>
         </template>
       </q-table>
     </q-list>

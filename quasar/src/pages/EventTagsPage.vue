@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-center">
     <div class="q-gutter-md">
-    <q-list top bordered class="rounded-borders" style="min-width: 600px">
+    <q-list top bordered class="rounded-borders">
       <q-item-label header>{{ $t('tag.event') }}</q-item-label>
       <q-input class="q-pa-md" ref="filterRef" v-model="filter" :label="$t('filter')">
         <template v-slot:append>

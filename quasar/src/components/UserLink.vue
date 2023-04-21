@@ -1,5 +1,5 @@
 <template>
-<q-item router-link :to="{name: 'user', params: { id: id }}">
+<q-item router-link :to="{name: 'user', params: { id: id }}" style="width: 100%">
 
   <q-item-section top>
     <q-item-label lines="1">

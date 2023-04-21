@@ -1,16 +1,16 @@
 <template>
   <q-page class="flex flex-center">
     <div class="q-gutter-md">
-    <q-list top bordered class="rounded-borders" style="min-width: 600px">
+    <q-list top bordered class="rounded-borders">
       <q-item-label header>{{ $t('user.many') }}</q-item-label>
       <q-input class="q-pa-md" ref="filterRef" v-model="filter" :label="$t('filter')">
         <template v-slot:append>
           <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
         </template>
       </q-input>
-      <q-table :rows="userdata" :row-key="username" grid style="max-width: 600px" :loading="loading" :filter="filter" :pagination="{ rowsPerPage: 10}">
+      <q-table :rows="userdata" :row-key="username" grid :loading="loading" :filter="filter" :pagination="{ rowsPerPage: 10}">
         <template v-slot:item="props">
-          <UserLink :key="props.row.username" v-bind="props.row" @deleteUser="(id) => deleteUser(id)" style="width: 600px"/>
+          <UserLink :key="props.row.username" v-bind="props.row" @deleteUser="(id) => deleteUser(id)"/>
         </template>
       </q-table>
     </q-list>
