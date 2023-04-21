@@ -22,7 +22,7 @@ public abstract class AbstractClient {
 
     protected <T> T getWithRetries(Function<UriBuilder, URI> urifunc, ParameterizedTypeReference<T> type) {
         T res = null;
-        int retry = 0;
+        int retries = 0;
 
         do {
             try {
@@ -32,15 +32,16 @@ public abstract class AbstractClient {
                         .retrieve()
                         .bodyToMono(type)
                         .block();
+                retries = 0;
 
             } catch (WebClientRequestException e) {
 
                 if (e.getCause() instanceof PrematureCloseException || e.getCause() instanceof UnknownHostException) {
                     // probably not ideal but retrying fixes the problem
-                    retry++;
+                    retries++;
                 } else throw e;
             }
-        } while (retry > 0 && retry <= MAXIMUM_RETRIES);
+        } while (retries > 0 && retries <= MAXIMUM_RETRIES);
         return res;
     }
 }
