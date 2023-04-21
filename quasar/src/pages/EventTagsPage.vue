@@ -8,7 +8,7 @@
           <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
         </template>
       </q-input>
-        <q-tree
+        <q-tree :class=" tree.length ? '' :'q-pa-md'"
           :nodes="tree"
           node-key="id"
           :filter="filter"
