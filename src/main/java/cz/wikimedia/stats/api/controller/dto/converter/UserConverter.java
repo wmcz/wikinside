@@ -33,7 +33,7 @@ public class UserConverter {
     }
 
     public User fromDto(UserDto dto) {
-        User existing = userService.findById(dto.id()).orElse(null);
+        User existing = dto.id() == null ? null : userService.findById(dto.id()).orElse(null);
         return new User(dto.id(),
                         existing == null ? null : existing.getLocalId(),
                         dto.username(),
