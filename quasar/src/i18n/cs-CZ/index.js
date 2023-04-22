@@ -57,7 +57,7 @@ export default {
     byteDiff: 'přidaných bajtů'
   },
   notification: {
-    400: 'ERROR: Požadavek je špatně zformulovaný nebo jinak nesprávný.',
+    400: 'ERROR: Požadavek je špatně zformulovaný nebo jinak nesprávný. Jsou všechna pole vyplněna správně?',
     500: 'ERROR: Chyba na straně serveru; zkuste obnovit stránku.',
     network_error: 'ERROR: Nelze se připojit k serveru.',
     generic_error: 'ERROR: Něco se pokazilo; zkuste obnovit stránku.'

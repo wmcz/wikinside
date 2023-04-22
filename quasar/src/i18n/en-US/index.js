@@ -57,7 +57,7 @@ export default {
     byteDiff: 'added bytes'
   },
   notification: {
-    400: 'ERROR: Request is malformed or otherwise incorrect',
+    400: 'ERROR: Request is malformed or otherwise incorrect. Are all fields filled correctly?',
     500: 'ERROR: Server-side error; try refreshing the website.',
     network_error: 'ERROR: Could not connect to server.',
     generic_error: 'ERROR: Something has gone wrong; try refreshing the website.'
