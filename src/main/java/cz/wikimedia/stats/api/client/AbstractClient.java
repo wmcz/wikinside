@@ -36,12 +36,12 @@ public abstract class AbstractClient {
 
             } catch (WebClientRequestException e) {
 
-                if (e.getCause() instanceof PrematureCloseException || e.getCause() instanceof UnknownHostException) {
+                if (retries <= MAXIMUM_RETRIES && (e.getCause() instanceof PrematureCloseException || e.getCause() instanceof UnknownHostException)) {
                     // probably not ideal but retrying fixes the problem
                     retries++;
                 } else throw e;
             }
-        } while (retries > 0 && retries <= MAXIMUM_RETRIES);
+        } while (retries > 0);
         return res;
     }
 }
