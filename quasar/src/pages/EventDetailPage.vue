@@ -10,6 +10,14 @@
          <q-item-section>
            {{ eventdata.startDate }} — {{ eventdata.endDate }}
          </q-item-section>
+         <q-item-section side>
+           <q-btn color="primary" flat :label="dateinput ? $t('cancel') : $t('edit')" @click="dateinput=!dateinput"/>
+           <q-popup-proxy @before-hide="dateinput = false">
+            <q-date landscape range today-btn v-model="date" mask="YYYY-MM-DD">
+              <q-btn style="float: right" flat color="primary" :label="$t('submit')" @click="onDateSubmit"/>
+            </q-date>
+           </q-popup-proxy>
+         </q-item-section>
        </q-item>
        <q-item v-if="eventdata.hashtag">
          <q-item-section avatar>
@@ -82,22 +90,23 @@ import UserLink from "components/UserLink.vue";
 import {getErrorMessage} from "src/util";
 import ImpactList from "components/ImpactList.vue";
 
-function updateUsers(self) {
+function submit(self, then) {
   api
     .put('events', self.eventdata)
-    .then((response) => {
-      self.eventdata = response.data
-      self.userlist = self.userdata.filter(u => self.eventdata.userIds.includes(u.id))})
+    .then(then)
     .catch(error => self.$q.notify(self.$t(getErrorMessage(error))))
 }
 
+function updateUsers(self) {
+  submit(self, (response) => {
+    self.eventdata = response.data
+    self.userlist = self.userdata.filter(u => self.eventdata.userIds.includes(u.id))})
+}
+
 function updateTags(self) {
-  api
-    .put('events', self.eventdata)
-    .then((response) => {
-      self.eventdata = response.data
-      self.taglist = self.tagdata.filter(t => self.eventdata.tagIds.includes(t.id))})
-    .catch(error => self.$q.notify(self.$t(getErrorMessage(error))))
+  submit(self, (response) => {
+    self.eventdata = response.data
+    self.taglist = self.tagdata.filter(t => self.eventdata.tagIds.includes(t.id))})
 }
 
 export default {
@@ -118,10 +127,12 @@ export default {
       taglist: [],
       userdata: [],
       userlist: [],
+      date: null,
       tagloading: true,
       userloading: true,
       taginput: false,
-      userinput: false
+      userinput: false,
+      dateinput: false
     }
   },
   mounted() {
@@ -129,6 +140,7 @@ export default {
       .get('events/' + useRoute().params.id)
       .then((response) => {
         this.eventdata = response.data
+        this.date = {from: this.eventdata.startDate, to: this.eventdata.endDate}
         api
           .get('tags/event-tags')
           .then((tagresponse) => {
@@ -171,6 +183,14 @@ export default {
       this.eventdata.tagIds.push(...this.$refs.tagSelect.selected.map(t => t.id))
       updateTags(this)
       this.tagloading = false
+    },
+    onDateSubmit() {
+      this.eventdata.startDate = typeof this.date === "string" ? this.date : this.date.from
+      this.eventdata.endDate = typeof this.date === "string" ? this.date : this.date.to
+      submit(this, (response) => {
+        this.eventdata.startDate = response.data.startDate
+        this.eventdata.endDate = response.data.endDate
+      })
     },
     resetTagFilter() {
       this.tagfilter = ''
