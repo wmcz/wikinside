@@ -24,9 +24,16 @@
            <q-icon color="primary" name="public"/>
          </q-item-section>
          <q-item-section class="text-weight-bold">
-           <q-item-label lines="1">
+           <q-select v-if="projectinput" :label="$t('project.many')" multiple use-chips use-input:counter v-model="projectselect" :options="projectoptions" option-value="id" option-label="name" @filter="filterProjects"/>
+           <q-item-label lines="1" v-else>
              <q-badge class="q-mr-xs" rounded v-for="project in projects" :label="project.name" :key="project.name"/>
            </q-item-label>
+         </q-item-section>
+         <q-item-section side>
+           <div>
+            <q-btn v-if="projectinput" color="primary" :label="$t('submit')" @click="onProjectSubmit"/>
+            <q-btn flat color="primary" :label="projectinput ? $t('cancel') : $t('edit')" @click="projectinput=!projectinput"/>
+           </div>
          </q-item-section>
        </q-item>
        <q-item v-if="eventdata.hashtag">
@@ -140,12 +147,15 @@ export default {
       userlist: [],
       date: null,
       projectdata: [],
+      projectoptions: [],
       projects: [],
+      projectselect: [],
       tagloading: true,
       userloading: true,
       taginput: false,
       userinput: false,
       dateinput: false,
+      projectinput: false,
     }
   },
   mounted() {
@@ -182,6 +192,7 @@ export default {
           .then((projectresponse) => {
             this.projectdata = projectresponse.data
             this.projects = this.projectdata.filter(p => response.data.projectIds.includes(p.id))
+            this.projectselect = this.projects
           })
       })
       .catch(error => {
@@ -211,6 +222,13 @@ export default {
         this.eventdata.endDate = response.data.endDate
       })
     },
+    onProjectSubmit() {
+      this.eventdata.projectIds = this.projectselect.map(p => p.id);
+      submit(this, (response) => {
+        this.projects = this.projectdata.filter(p => response.data.projectIds.includes(p.id))
+      })
+      this.projectinput = false
+    },
     resetTagFilter() {
       this.tagfilter = ''
     },
@@ -228,6 +246,9 @@ export default {
       this.eventdata.userIds.splice(this.eventdata.userIds.indexOf(id), 1)
       updateUsers(this)
       this.userloading = false
+    },
+    filterProjects(val, update, abort) {
+      update(() => this.projectoptions = this.projectdata.filter((u) => u.name.toLowerCase().includes(val.toLowerCase())))
     }
   }
 }
