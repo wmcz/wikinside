@@ -42,15 +42,17 @@ export default defineComponent({
   },
   mounted() {
     const self = this
+    Promise.all([
     api
       .get('/tags/event-tags')
       .then((response) => {
       this.tagdata = response.data.map(function(item) {return {name: item.name, id: item.id}})})
-      .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))
+      .catch(error => this.$q.notify(this.$t(getErrorMessage(error)))),
     api
       .get('/events')
+      ])
       .then((response) => {
-        this.eventdata = response.data.map(
+        this.eventdata = response[1].data.map(
           function(item) {return {
             name: item.name,
             id: item.id,
