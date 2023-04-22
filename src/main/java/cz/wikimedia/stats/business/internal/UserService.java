@@ -59,6 +59,10 @@ public class UserService extends InternalService<User, Long> {
             user.setRegistration(info.registration());
             user.setLocalId(wmUserService.getLocalId(user.getUsername()));
         }
+        if (user.getId() == null) {
+            // user doesn't exist
+            return Optional.empty();
+        }
         return create(user);
     }
 
