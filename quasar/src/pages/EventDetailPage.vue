@@ -19,6 +19,16 @@
            </q-popup-proxy>
          </q-item-section>
        </q-item>
+       <q-item>
+         <q-item-section avatar>
+           <q-icon color="primary" name="public"/>
+         </q-item-section>
+         <q-item-section class="text-weight-bold">
+           <q-item-label lines="1">
+             <q-badge class="q-mr-xs" rounded v-for="project in projects" :label="project.name" :key="project.name"/>
+           </q-item-label>
+         </q-item-section>
+       </q-item>
        <q-item v-if="eventdata.hashtag">
          <q-item-section avatar>
            <q-icon color="primary" class="text-weight-bolder">#</q-icon>
@@ -128,11 +138,13 @@ export default {
       userdata: [],
       userlist: [],
       date: null,
+      projectdata: [],
+      projects: [],
       tagloading: true,
       userloading: true,
       taginput: false,
       userinput: false,
-      dateinput: false
+      dateinput: false,
     }
   },
   mounted() {
@@ -163,6 +175,12 @@ export default {
           .catch(error => {
             this.userloading = false
             this.$q.notify(this.$t(getErrorMessage(error)))
+          })
+        api
+          .get('projects')
+          .then((projectresponse) => {
+            this.projectdata = projectresponse.data
+            this.projects = this.projectdata.filter(p => response.data.projectIds.includes(p.id))
           })
       })
       .catch(error => {
