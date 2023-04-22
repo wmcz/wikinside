@@ -42,7 +42,7 @@ public class UserContribConverter {
                 contrib.pageId(),
                 contrib.parentId(),
                 user,
-                null,
+                new HashSet<>(),
                 project,
                 contrib.timestamp(),
                 contrib.comment());
