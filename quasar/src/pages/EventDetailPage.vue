@@ -39,7 +39,7 @@
        </q-item>
      </q-list>
 
-     <ImpactList :url="'events/' + $route.params.id"/>
+     <ImpactList :url="'events/' + $route.params.id" ref="impactref"/>
 
      <q-list top bordered class="rounded-borders">
        <q-item-label header>{{ $t('tag.many') }}</q-item-label>
@@ -101,6 +101,7 @@ import {getErrorMessage} from "src/util";
 import ImpactList from "components/ImpactList.vue";
 
 function submit(self, then) {
+  self.$refs.impactref.showDisclaimer = true
   api
     .put('events', self.eventdata)
     .then(then)

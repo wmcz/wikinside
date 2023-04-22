@@ -54,7 +54,8 @@ export default {
     createdPages: 'newly created pages',
     editedPages: 'edited pages (including newly created ones)',
     edits: 'edits',
-    byteDiff: 'added bytes'
+    byteDiff: 'added bytes',
+    disclaimer: 'Impact is not automatically updated after changes to events. To recalculate, please wait a moment, and then refresh the page. Processing the changes usually does not take more than a few seconds, but may take longer in some cases.'
   },
   notification: {
     400: 'ERROR: Request is malformed or otherwise incorrect. Are all fields filled correctly?',

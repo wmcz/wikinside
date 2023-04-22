@@ -54,7 +54,8 @@ export default {
     createdPages: 'nově vytvořených stránek',
     editedPages: 'změněných stránek (včetně vytvořených)',
     edits: 'editací',
-    byteDiff: 'přidaných bajtů'
+    byteDiff: 'přidaných bajtů',
+    disclaimer: 'Změny se neprojevují na dopadu automaticky. Pro přepočet po změně vlastností prosím chvíli vyčkejte, a poté obnovte stránku. Zpracování změn obvykle netrvá déle než několik vteřin, ale v některých případech může být pomalejší.'
   },
   notification: {
     400: 'ERROR: Požadavek je špatně zformulovaný nebo jinak nesprávný. Jsou všechna pole vyplněna správně?',
