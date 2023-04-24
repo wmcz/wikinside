@@ -100,8 +100,9 @@ public class Event implements IdAble<Long> {
 
     /* SETTERS */
 
-    public void setTags(Set<EventTag> tags) {
+    public Event setTags(Set<EventTag> tags) {
         this.tags = tags;
+        return this;
     }
 
     public Event addTag(EventTag tag) {
@@ -134,8 +135,9 @@ public class Event implements IdAble<Long> {
         return this;
     }
 
-    public void setHashtag(String hashtag) {
+    public Event setHashtag(String hashtag) {
         this.hashtag = hashtag;
+        return this;
     }
 
     public Event addParticipant(User participant) {
