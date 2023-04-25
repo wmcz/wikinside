@@ -15,11 +15,6 @@ public class UserTag extends Tag<User> {
         this.parent = parent;
         this.children = children;
     }
-
-    public UserTag(String name) {
-        super(name);
-    }
-
     public UserTag() {
         super();
     }
@@ -57,12 +52,6 @@ public class UserTag extends Tag<User> {
     }
 
     @Override
-    public UserTag setTagged(Set<User> tagged) {
-        this.tagged = tagged;
-        return this;
-    }
-
-    @Override
     public UserTag addTagged(User tagged) {
         this.tagged.add(tagged);
         return this;
@@ -71,13 +60,6 @@ public class UserTag extends Tag<User> {
     @Override
     public UserTag removeTagged(User tagged) {
         this.tagged.remove(tagged);
-        return this;
-    }
-
-    @Override
-    public UserTag setChildren(Set<Tag<User>> tags) {
-        children.clear();
-        tags.forEach(this::addChild);
         return this;
     }
 

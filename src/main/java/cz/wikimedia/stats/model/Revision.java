@@ -103,11 +103,6 @@ public class Revision implements IdAble<Long> {
         return this;
     }
 
-    public Revision removeEvent(Event event) {
-        this.events.remove(event);
-        return this;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

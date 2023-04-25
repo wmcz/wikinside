@@ -18,10 +18,6 @@ public class EventTag extends Tag<Event> {
         this.children = children;
     }
 
-    public EventTag(String name) {
-        super(name);
-    }
-
     public EventTag() {
         super();
     }
@@ -57,11 +53,6 @@ public class EventTag extends Tag<Event> {
         this.name = name;
         return this;
     }
-    @Override
-    public EventTag setTagged(Set<Event> tagged) {
-        this.tagged = tagged;
-        return this;
-    }
 
     @Override
     public EventTag addTagged(Event tagged) {
@@ -72,13 +63,6 @@ public class EventTag extends Tag<Event> {
     @Override
     public EventTag removeTagged(Event tagged) {
         this.tagged.remove(tagged);
-        return this;
-    }
-
-    @Override
-    public EventTag setChildren(Set<Tag<Event>> tags) {
-        children.clear();
-        tags.forEach(this::addChild);
         return this;
     }
 

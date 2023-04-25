@@ -96,15 +96,6 @@ public class Event implements IdAble<Long> {
         return revisions;
     }
 
-
-
-    /* SETTERS */
-
-    public Event setTags(Set<EventTag> tags) {
-        this.tags = tags;
-        return this;
-    }
-
     public Event addTag(EventTag tag) {
         this.tags.add(tag);
         return this;
@@ -122,16 +113,6 @@ public class Event implements IdAble<Long> {
 
     public Event setStartDate(LocalDate startDate) {
         this.startDate = startDate;
-        return this;
-    }
-
-    public Event setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-        return this;
-    }
-
-    public Event setParticipants(Set<User> eventParticipants) {
-        this.participants = eventParticipants;
         return this;
     }
 

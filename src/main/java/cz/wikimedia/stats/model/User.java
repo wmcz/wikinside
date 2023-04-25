@@ -89,15 +89,6 @@ public class User implements IdAble<Long> {
         this.username = username;
         return this;
     }
-    public User setTags(Set<UserTag> tags) {
-        this.tags = tags;
-        return this;
-    }
-
-    public User setEvents(Set<Event> events) {
-        this.events = events;
-        return this;
-    }
 
     public User addTag(UserTag tag) {
         tags.add(tag.addTagged(this));

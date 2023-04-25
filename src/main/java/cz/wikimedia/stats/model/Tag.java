@@ -5,7 +5,6 @@ import org.springframework.lang.Nullable;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -51,10 +50,8 @@ public abstract class Tag<E> implements IdAble<Long> {
 
     public abstract Tag<E> setName(String name);
 
-    public abstract Tag<E> setTagged(Set<E> tagged);
     public abstract Tag<E> addTagged(E tagged);
     public abstract Tag<E> removeTagged(E tagged);
-    public abstract Tag<E> setChildren(Set<Tag<E>> tags);
 
     public abstract Tag<E> addChild(Tag<E> tag);
     public abstract Tag<E> removeChild(Tag<E> tag);
