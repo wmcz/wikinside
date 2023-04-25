@@ -84,7 +84,6 @@ function update(self, response) {
     .put('tags/event-tags', {
       name: self.data.name,
       id: self.data.id,
-      assignable: true,
       childrenIds: self.data.children.map(c => c.id),
       elementIds: self.data.elems.map(e => e.id),
       parentId: self.data.parent === null ? null : self.data.parent.id

@@ -42,7 +42,6 @@ export default defineComponent({
         .post('/tags/event-tags', {
           name: this.name,
           id: null,
-          assignable: true,
           elementIds: this.$refs.eventSelect.selected.map(s => s.id),
           parentId: this.$refs.parentSelect.selected ? this.$refs.parentSelect.selected.id : null,
           childrenIds: []

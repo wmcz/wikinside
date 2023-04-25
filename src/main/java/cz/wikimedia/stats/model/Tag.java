@@ -20,25 +20,17 @@ public abstract class Tag<E> implements IdAble<Long> {
     @GeneratedValue
     private Long id;
 
-    private final boolean assignable;
-
-    protected Tag(Long id, String name, boolean assignable) {
+    protected Tag(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.assignable = assignable;
-    }
-
-    protected Tag(String name, boolean assignable) {
-        this.name = name;
-        this.assignable = assignable;
-    }
-
-    protected Tag() {
-        this("", true);
     }
 
     protected Tag(String name) {
-        this(name, true);
+        this.name = name;
+    }
+
+    protected Tag() {
+        this("");
     }
 
     public Long getId() {
@@ -47,10 +39,6 @@ public abstract class Tag<E> implements IdAble<Long> {
 
     public String getName() {
         return name;
-    }
-
-    public boolean isAssignable() {
-        return assignable;
     }
 
     public abstract Collection<E> getTagged();

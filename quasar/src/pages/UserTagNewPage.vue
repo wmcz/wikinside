@@ -44,7 +44,6 @@ export default defineComponent({
         .post('/tags/user-tags', {
           name: this.name,
           id: null,
-          assignable: true,
           elementIds: this.$refs.userSelect.selected.map(s => s.id),
           parentId: this.$refs.parentSelect.selected ? this.$refs.parentSelect.selected.id : null,
           childrenIds: []

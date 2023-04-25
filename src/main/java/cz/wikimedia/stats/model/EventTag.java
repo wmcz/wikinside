@@ -11,25 +11,20 @@ import java.util.Set;
 @Entity
 public class EventTag extends Tag<Event> {
 
-    public EventTag(Long id, String name, boolean assignable, Set<Event> tagged, EventTag parent, Set<EventTag> children) {
-        super(id, name, assignable);
+    public EventTag(Long id, String name, Set<Event> tagged, EventTag parent, Set<EventTag> children) {
+        super(id, name);
         this.tagged = tagged;
         this.parent = parent;
         this.children = children;
-    }
-
-    public EventTag(String name, boolean assignable) {
-        super(name, assignable);
-    }
-
-    public EventTag() {
-        super();
     }
 
     public EventTag(String name) {
         super(name);
     }
 
+    public EventTag() {
+        super();
+    }
 
     @ManyToMany(mappedBy = "tags")
     private Set<Event> tagged;

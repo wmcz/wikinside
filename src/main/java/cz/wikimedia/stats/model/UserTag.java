@@ -9,25 +9,20 @@ import java.util.Set;
 @Entity
 public class UserTag extends Tag<User> {
 
-    public UserTag(Long id, String name, boolean assignable, Set<User> tagged, UserTag parent, Set<UserTag> children) {
-        super(id, name, assignable);
+    public UserTag(Long id, String name, Set<User> tagged, UserTag parent, Set<UserTag> children) {
+        super(id, name);
         this.tagged = tagged;
         this.parent = parent;
         this.children = children;
-    }
-
-    public UserTag(String name, boolean assignable) {
-        super(name, assignable);
-    }
-
-    public UserTag() {
-        super();
     }
 
     public UserTag(String name) {
         super(name);
     }
 
+    public UserTag() {
+        super();
+    }
 
     @ManyToMany(mappedBy = "tags")
     private Set<User> tagged;
