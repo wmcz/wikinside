@@ -49,9 +49,7 @@ public abstract class Tag<E> implements IdAble<Long> {
 
     /* SETTERS */
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public abstract Tag<E> setName(String name);
 
     public abstract Tag<E> setTagged(Set<E> tagged);
     public abstract Tag<E> addTagged(E tagged);

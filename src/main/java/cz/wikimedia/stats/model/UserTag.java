@@ -51,6 +51,12 @@ public class UserTag extends Tag<User> {
     }
 
     @Override
+    public UserTag setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    @Override
     public UserTag setTagged(Set<User> tagged) {
         this.tagged = tagged;
         return this;

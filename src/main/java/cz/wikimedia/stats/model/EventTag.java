@@ -53,6 +53,11 @@ public class EventTag extends Tag<Event> {
     }
 
     @Override
+    public EventTag setName(String name) {
+        this.name = name;
+        return this;
+    }
+    @Override
     public EventTag setTagged(Set<Event> tagged) {
         this.tagged = tagged;
         return this;
