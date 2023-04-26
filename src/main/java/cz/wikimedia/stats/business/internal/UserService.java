@@ -40,15 +40,15 @@ public class UserService extends InternalService<User, Long> {
         return userRepository.findById(wmUserService.getGlobalUserInfo(username).id());
     }
 
-    public Collection<Event> addEvents(User user, Collection<Long> eventIds) {
+    private Collection<Event> addEvents(User user, Collection<Long> eventIds) {
         return applyEvents(user, eventIds, e -> e.addParticipant(user));
     }
 
-    public Collection<Event> removeEvents(User user, Collection<Long> eventIds) {
+    private Collection<Event> removeEvents(User user, Collection<Long> eventIds) {
         return applyEvents(user, eventIds, e -> e.removeParticipant(user));
     }
 
-    public void removeRevs(Collection<Long> ids) {
+    private void removeRevs(Collection<Long> ids) {
         ids.forEach(revisionRepository::deleteById);
     }
 

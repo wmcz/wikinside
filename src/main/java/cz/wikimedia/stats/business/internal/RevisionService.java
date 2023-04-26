@@ -81,13 +81,13 @@ public class RevisionService extends InternalService<Revision, Long> {
                 .toList();
     }
 
-    public Collection<Revision> generateFromUserList(Event event) {
+    private Collection<Revision> generateFromUserList(Event event) {
         wmUserService.updateNames(event.getParticipants());
         updateOrCreate(wmRevisionService.getUserContribs(event, event.getStartDate().atStartOfDay(ZoneId.systemDefault()).toInstant()).stream().map(r -> r.addEvent(event)).toList());
         return getEventRevisions(event);
     }
 
-    public Collection<Revision> generateFromHashTags(Event event) {
+    private Collection<Revision> generateFromHashTags(Event event) {
         updateOrCreate(hashtagsService.getRevisions(event, event.getStartDate(), event.getEndDate()));
         return getEventRevisions(event);
     }

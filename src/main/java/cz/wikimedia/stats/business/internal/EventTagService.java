@@ -48,19 +48,19 @@ public class EventTagService extends InternalService<EventTag, Long> {
         updateNonOwningField(tag, updated, EventTag::getChildren, this::addChildren, this::removeChildren);
     }
 
-    public Collection<Event> addEvents(EventTag tag, Collection<Long> eventIds) {
+    private Collection<Event> addEvents(EventTag tag, Collection<Long> eventIds) {
         return applyEvents(tag, eventIds, u -> u.addTag(tag));
     }
 
-    public Collection<Event> removeEvents(EventTag tag, Collection<Long> eventIds) {
+    private Collection<Event> removeEvents(EventTag tag, Collection<Long> eventIds) {
         return applyEvents(tag, eventIds, u -> u.removeTag(tag));
     }
 
-    public Collection<EventTag> addChildren(EventTag tag, Collection<Long> childrenIds) {
+    private Collection<EventTag> addChildren(EventTag tag, Collection<Long> childrenIds) {
         return applyChildren(tag, childrenIds, tag);
     }
 
-    public Collection<EventTag> removeChildren(EventTag tag, Collection<Long> childrenIds) {
+    private Collection<EventTag> removeChildren(EventTag tag, Collection<Long> childrenIds) {
         return applyChildren(tag, childrenIds, null);
     }
 

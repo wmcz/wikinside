@@ -56,11 +56,11 @@ public class UserTagService extends InternalService<UserTag, Long> {
         return applyUsers(tag, userIds, u -> u.removeTag(tag));
     }
 
-    public Collection<UserTag> addChildren(UserTag tag, Collection<Long> childrenIds) {
+    private Collection<UserTag> addChildren(UserTag tag, Collection<Long> childrenIds) {
         return applyChildren(tag, childrenIds, tag);
     }
 
-    public Collection<UserTag> removeChildren(UserTag tag, Collection<Long> childrenIds) {
+    private Collection<UserTag> removeChildren(UserTag tag, Collection<Long> childrenIds) {
         return applyChildren(tag, childrenIds, null);
     }
 
