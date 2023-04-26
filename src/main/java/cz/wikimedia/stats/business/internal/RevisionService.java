@@ -29,11 +29,11 @@ public class RevisionService extends InternalService<Revision, Long> {
     private final EventRepository eventRepository;
     private final EventService eventService;
 
-    public RevisionService(CrudRepository<Revision, Long> repository, WmRevisionService wmRevisionService, WmUserService wmUserService, RevisionRepository revisionRepository, HashtagsService hashtagsService, EventService eventService, EventRepository eventRepository) {
+    public RevisionService(RevisionRepository repository, WmRevisionService wmRevisionService, WmUserService wmUserService, HashtagsService hashtagsService, EventService eventService, EventRepository eventRepository) {
         super(repository);
         this.wmRevisionService = wmRevisionService;
         this.wmUserService = wmUserService;
-        this.revisionRepository = revisionRepository;
+        this.revisionRepository = repository;
         this.hashtagsService = hashtagsService;
         this.eventRepository = eventRepository;
         this.eventService = eventService;
