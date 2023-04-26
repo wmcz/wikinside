@@ -10,7 +10,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -47,23 +46,6 @@ public class EventTagService extends InternalService<EventTag, Long> {
 
     private void updateChildren(EventTag tag, Collection<EventTag> updated) {
         updateNonOwningField(tag, updated, EventTag::getChildren, this::addChildren, this::removeChildren);
-    }
-
-    public Optional<EventTag> setParent(EventTag tag, EventTag parent) {
-        Optional<EventTag> res = update(tag.setParent(parent));
-        if (update(parent).isEmpty())
-            throw new IllegalStateException("Inconsistent data: parent-child relationship could not be established properly for the following tags:" + parent.getId() + ", " + tag.getId());
-        return res;
-    }
-
-    public Collection<Event> getEventsWithTag(EventTag tag) {
-        Collection<Event> result = new HashSet<>(tag.getTagged());
-        tag.getChildren().forEach(child -> result.addAll(getEventsWithTag(child)));
-        return result;
-    }
-
-    public Collection<EventTag> findByName(String name) {
-        return eventTagRepository.findEventTagsByName(name);
     }
 
     public Collection<Event> addEvents(EventTag tag, Collection<Long> eventIds) {

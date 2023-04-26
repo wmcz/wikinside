@@ -16,12 +16,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class EventService extends InternalService<Event, Long> {
-    private final EventRepository eventRepository;
     private final ImpactService impactService;
 
     public EventService(EventRepository repository, ImpactService impactService) {
         super(repository);
-        this.eventRepository = repository;
         this.impactService = impactService;
     }
 
@@ -35,10 +33,6 @@ public class EventService extends InternalService<Event, Long> {
                                 .plusDays(1)
                                 .atStartOfDay(ZoneId.systemDefault())
                                 .toInstant());
-    }
-
-    public Collection<Event> findByName(String name) {
-        return eventRepository.findEventsByName(name);
     }
 
     public Impact getImpact(Event event) {

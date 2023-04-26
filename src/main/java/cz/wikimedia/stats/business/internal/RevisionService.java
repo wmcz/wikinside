@@ -7,7 +7,6 @@ import cz.wikimedia.stats.dao.EventRepository;
 import cz.wikimedia.stats.dao.RevisionRepository;
 import cz.wikimedia.stats.model.Event;
 import cz.wikimedia.stats.model.Revision;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
