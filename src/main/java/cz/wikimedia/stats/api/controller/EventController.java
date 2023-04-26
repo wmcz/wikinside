@@ -49,11 +49,6 @@ public class EventController {
         return result;
     }
 
-    @GetMapping("/events/name/{name}")
-    Collection<EventDto> getByName(@PathVariable String name) {
-        return eventConverter.toDto(eventService.findByName(name));
-    }
-
     @PutMapping("/events")
     EventDto update(@RequestBody EventDto event) {
         Event result = eventService

@@ -1,8 +1,6 @@
 package cz.wikimedia.stats.api.controller;
 
-import cz.wikimedia.stats.api.controller.dto.EventDto;
 import cz.wikimedia.stats.api.controller.dto.UserDto;
-import cz.wikimedia.stats.api.controller.dto.converter.EventConverter;
 import cz.wikimedia.stats.api.controller.dto.converter.UserConverter;
 import cz.wikimedia.stats.business.internal.UserService;
 import cz.wikimedia.stats.model.User;
@@ -13,19 +11,16 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.NoSuchElementException;
 
 @RestController
 public class UserController {
 
     private final UserService userService;
     private final UserConverter userConverter;
-    private final EventConverter eventConverter;
 
-    public UserController(UserService userService, UserConverter userConverter, EventConverter eventConverter) {
+    public UserController(UserService userService, UserConverter userConverter) {
         this.userService = userService;
         this.userConverter = userConverter;
-        this.eventConverter = eventConverter;
     }
 
     @PostMapping("/users")
@@ -51,48 +46,12 @@ public class UserController {
         return userConverter.toDto(list);
     }
 
-    @GetMapping("/users/username/{username}")
-    public UserDto getByName(@PathVariable String username) {
-        return userConverter.toDto(
-                userService
-                        .findByUsername(username)
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist")));
-    }
-
     @PutMapping("/users")
     public UserDto update(@RequestBody UserDto user) {
         return userConverter.toDto(
                 userService
                         .update(userConverter.fromDto(user))
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist")));
-    }
-
-    @PostMapping("/users/{id}/events")
-    public Collection<EventDto> addEvents(@PathVariable Long id, @RequestBody Collection<Long> eventIds) {
-        try {
-            return eventConverter.toDto(
-                    userService.addEvents(
-                            userService
-                                    .findById(id)
-                                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist")),
-                            eventIds));
-        } catch (NoSuchElementException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist");
-        }
-    }
-
-    @DeleteMapping("/users/{id}/events")
-    public Collection<EventDto> removeEvents(@PathVariable Long id, @RequestBody Collection<Long> eventIds) {
-        try {
-            return eventConverter.toDto(
-                    userService.removeEvents(
-                            userService
-                                    .findById(id)
-                                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist")),
-                            eventIds));
-        } catch (NoSuchElementException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist");
-        }
     }
 
     @DeleteMapping("/users/{id}")
