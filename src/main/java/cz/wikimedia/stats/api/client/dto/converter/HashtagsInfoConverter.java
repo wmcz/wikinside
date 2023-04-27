@@ -3,7 +3,6 @@ package cz.wikimedia.stats.api.client.dto.converter;
 import cz.wikimedia.stats.api.client.dto.HashtagsInfo;
 import cz.wikimedia.stats.api.client.dto.WmPage;
 import cz.wikimedia.stats.business.external.WmPageService;
-import cz.wikimedia.stats.business.internal.EventService;
 import cz.wikimedia.stats.business.internal.UserService;
 import cz.wikimedia.stats.model.Event;
 import cz.wikimedia.stats.model.Project;
@@ -18,12 +17,10 @@ public class HashtagsInfoConverter {
 
     private final UserService userService;
     private final WmPageService wmPageService;
-    private final EventService eventService;
 
-    public HashtagsInfoConverter(UserService userService, WmPageService wmPageService, EventService eventService) {
+    public HashtagsInfoConverter(UserService userService, WmPageService wmPageService) {
         this.userService = userService;
         this.wmPageService = wmPageService;
-        this.eventService = eventService;
     }
 
     private Revision fromOneInfo(HashtagsInfo info, Project project, Event event, Map<Long, WmPage> pages) {
@@ -57,8 +54,6 @@ public class HashtagsInfoConverter {
                                   page.title(),
                                   Collections.singleton(rev)))));
 
-       Collection<Revision> res = info.stream().map(i -> fromOneInfo(i, project, event, pages)).filter(Objects::nonNull).toList();
-       eventService.update(event);
-       return res;
+       return info.stream().map(i -> fromOneInfo(i, project, event, pages)).filter(Objects::nonNull).toList();
     }
 }

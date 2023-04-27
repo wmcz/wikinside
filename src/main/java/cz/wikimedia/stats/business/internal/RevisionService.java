@@ -84,6 +84,7 @@ public class RevisionService extends InternalService<Revision, Long> {
     private Collection<Revision> generateFromUserList(Event event) {
         wmUserService.updateNames(event.getParticipants());
         updateOrCreate(wmRevisionService.getUserContribs(event, event.getStartDate().atStartOfDay(ZoneId.systemDefault()).toInstant()).stream().map(r -> r.addEvent(event)).toList());
+        eventService.update(event);
         return getEventRevisions(event);
     }
 
