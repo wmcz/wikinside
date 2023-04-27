@@ -40,7 +40,7 @@ public class HashtagsInfoConverter {
                     page.pageId(),
                     page.revs().iterator().next().parentId(),
                     author,
-                    Collections.singleton(event),
+                    new HashSet<>(Collections.singleton(event)),
                     project,
                     info.timestamp(),
                     info.summary());
