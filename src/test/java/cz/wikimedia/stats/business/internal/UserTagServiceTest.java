@@ -90,7 +90,7 @@ class UserTagServiceTest {
         Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(4L, "four", null, null, null));
         Mockito.verifyNoInteractions(userRepository);
 
-        Assertions.assertTrue(service.create(new UserTag(5L, "five", new HashSet<>(), null, new HashSet<>(List.of(new UserTag(1L, "one", null, null, null), new UserTag(2L, "two", null, null, null))))).isPresent());
+        Assertions.assertTrue(service.create(new UserTag(5L, "five", new HashSet<>(), null, new HashSet<>(List.of(new UserTag(1L, "one", null, null, new HashSet<>()), new UserTag(2L, "two", null, null, new HashSet<>()))))).isPresent());
         Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(5L, "five", null, null, null));
         Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(1L, "one", null, null, null));
         Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(2L, "two", null, null, null));
@@ -115,7 +115,7 @@ class UserTagServiceTest {
         Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(1L, "one", new HashSet<>(), null, new HashSet<>()));
         Mockito.verifyNoInteractions(userRepository);
 
-        Assertions.assertTrue(service.update(new UserTag(1L, "one", new HashSet<>(), null, new HashSet<>(List.of(new UserTag(3L, "three", null, null, null))))).isPresent());
+        Assertions.assertTrue(service.update(new UserTag(1L, "one", new HashSet<>(), null, new HashSet<>(List.of(new UserTag(3L, "three", null, null, new HashSet<>()))))).isPresent());
         Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(1L, "one", null, null, null));
         Mockito.verify(repository, Mockito.never())      .save(new UserTag(2L, "two", null, null, null));
         Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(3L, "three", null, null, null));
