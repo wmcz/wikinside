@@ -10,7 +10,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 
 @Service
@@ -64,6 +66,25 @@ public class UserTagService extends InternalService<UserTag, Long> {
         return applyChildren(tag, childrenIds, null);
     }
 
+    private boolean validateTreeInner(UserTag tag, Set<UserTag> tags) {
+        if (!tags.add(tag)) return false;
+        else return tag
+                .getChildren()
+                .stream()
+                .map(t -> validateTreeInner(t, tags))
+                .reduce(true, (acc, val) -> acc && val);
+    }
+
+    private boolean validateTree(UserTag tag) {
+        while (tag.getParent() != null) {
+            if (tag.equals(tag.getParent())) return false;
+            tag = tag.getParent();
+        }
+
+        HashSet<UserTag> tags = new HashSet<>();
+        return validateTreeInner(tag, tags);
+    }
+
     @Override
     public void deleteById(Long id) {
         findById(id).ifPresent(t -> {
@@ -75,6 +96,8 @@ public class UserTagService extends InternalService<UserTag, Long> {
 
     @Override
     public <S extends UserTag> Optional<S> create(S tag) {
+        if (!validateTree(tag)) return Optional.empty();
+
         Optional<S> res = super.create(tag);
         if (res.isPresent()) {
             addUsers   (res.get(), toIds(tag.getTagged()));
@@ -86,6 +109,8 @@ public class UserTagService extends InternalService<UserTag, Long> {
 
     @Override
     public <S extends UserTag> Optional<S> update(S tag) {
+        if (!validateTree(tag)) return Optional.empty();
+
         Optional<UserTag> current = findById(tag.getId());
 
         if (current.isEmpty()) return Optional.empty();

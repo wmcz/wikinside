@@ -10,7 +10,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 
 @Service
@@ -64,6 +66,26 @@ public class EventTagService extends InternalService<EventTag, Long> {
         return applyChildren(tag, childrenIds, null);
     }
 
+    private boolean validateTreeInner(EventTag tag, Set<EventTag> tags) {
+        if (!tags.add(tag)) return false;
+        /*else if (tag.getChildren() == null)*/
+        else return tag
+                .getChildren()
+                .stream()
+                .map(t -> validateTreeInner(t, tags))
+                .reduce(true, (acc, val) -> acc && val);
+    }
+
+    private boolean validateTree(EventTag tag) {
+        while (tag.getParent() != null) {
+            if (tag.equals(tag.getParent())) return false;
+            tag = tag.getParent();
+        }
+
+        HashSet<EventTag> tags = new HashSet<>();
+        return validateTreeInner(tag, tags);
+    }
+
     @Override
     public void deleteById(Long id) {
         findById(id).ifPresent(t -> {
@@ -75,6 +97,8 @@ public class EventTagService extends InternalService<EventTag, Long> {
 
     @Override
     public <S extends EventTag> Optional<S> create(S tag) {
+        if (!validateTree(tag)) return Optional.empty();
+
         Optional<S> res = super.create(tag);
         if (res.isPresent()) {
             addEvents   (res.get(), toIds(tag.getTagged()));
@@ -86,6 +110,8 @@ public class EventTagService extends InternalService<EventTag, Long> {
 
     @Override
     public <S extends EventTag> Optional<S> update(S tag) {
+        if (!validateTree(tag)) return Optional.empty();
+
         Optional<EventTag> current = findById(tag.getId());
 
         if (current.isEmpty()) return Optional.empty();
