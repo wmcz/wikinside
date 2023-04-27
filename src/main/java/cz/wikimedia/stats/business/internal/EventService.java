@@ -2,25 +2,20 @@ package cz.wikimedia.stats.business.internal;
 
 import cz.wikimedia.stats.dao.EventRepository;
 import cz.wikimedia.stats.model.Event;
-import cz.wikimedia.stats.model.Impact;
 import cz.wikimedia.stats.model.Revision;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class EventService extends InternalService<Event, Long> {
-    private final ImpactService impactService;
 
-    public EventService(EventRepository repository, ImpactService impactService) {
+    public EventService(EventRepository repository) {
         super(repository);
-        this.impactService = impactService;
     }
 
     private boolean isWithinDateRange(Instant timestamp, LocalDate start, LocalDate end) {
@@ -33,20 +28,6 @@ public class EventService extends InternalService<Event, Long> {
                                 .plusDays(1)
                                 .atStartOfDay(ZoneId.systemDefault())
                                 .toInstant());
-    }
-
-    public Impact getImpact(Event event) {
-        return impactService.getImpact(new HashSet<>(event.getRevisions()));
-    }
-
-    public Impact getImpact(Collection<Event> events) {
-        return impactService.getImpact(
-                events
-                        .stream()
-                        .map(Event::getRevisions)
-                        .reduce(new HashSet<>(),
-                                (acc, revs) -> {acc.addAll(revs); return acc;},
-                                (acc, acc2) -> {acc.addAll(acc2); return acc;}));
     }
 
     public void removeNonConformingRevs(Event event) {

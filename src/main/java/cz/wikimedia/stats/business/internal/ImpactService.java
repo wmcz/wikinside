@@ -1,8 +1,6 @@
 package cz.wikimedia.stats.business.internal;
 
-import cz.wikimedia.stats.model.Impact;
-import cz.wikimedia.stats.model.Page;
-import cz.wikimedia.stats.model.Revision;
+import cz.wikimedia.stats.model.*;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -45,5 +43,20 @@ public class ImpactService {
                               getEditedPages(revs),
                               Long.valueOf(revs.size()),
                               getDiff(revs));
+        }
+
+        public Impact getImpact(Event event) {
+            return getImpact(event.getRevisions());
+        }
+
+        private void addRevs(EventTag tag, Set<Revision> revs) {
+            revs.addAll(tag.getTagged().stream().flatMap(e -> e.getRevisions().stream()).toList());
+            tag.getChildren().forEach(t -> addRevs(t, revs));
+        }
+
+        public Impact getImpact(EventTag tag) {
+            Set<Revision> revs = new HashSet<>();
+            addRevs(tag, revs);
+            return getImpact(revs);
         }
 }
