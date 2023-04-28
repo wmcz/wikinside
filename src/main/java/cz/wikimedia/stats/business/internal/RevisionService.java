@@ -62,7 +62,6 @@ public class RevisionService extends InternalService<Revision, Long> {
     }
 
     private Revision updateOrCreate(Revision rev) {
-        System.out.println(rev.getRevId());
         Optional<Revision> original = revisionRepository.findRevisionByRevIdAndProject(rev.getRevId(), rev.getProject());
 
         if (original.isPresent()) {
