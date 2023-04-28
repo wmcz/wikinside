@@ -39,6 +39,7 @@ public class User implements IdAble<Long> {
         this.username = username;
         this.tags = new HashSet<>();
         this.events = new HashSet<>();
+        this.revisions = new HashSet<>();
     }
 
     public User(Long id, Long localId, String username, Instant registration, Set<UserTag> tags, Set<Event> events) {
@@ -48,6 +49,7 @@ public class User implements IdAble<Long> {
         this.tags = tags;
         this.events = events;
         this.registration = registration;
+        this.revisions = new HashSet<>();
     }
 
 
