@@ -30,7 +30,7 @@ public class EventService extends InternalService<Event, Long> {
                                 .toInstant());
     }
 
-    public void removeNonConformingRevs(Event event) {
+    private void removeNonConformingRevs(Event event) {
         event
                 .getRevisions()
                 .stream()
