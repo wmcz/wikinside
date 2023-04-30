@@ -1,5 +1,5 @@
 <template>
-  <q-select :label="$t('user.many') + $t('optional')" multiple use-chips use-input counter v-model="selected" :options="useroptions" option-value="id" option-label="username" @filter="filterUsers"/>
+  <q-select menu-self="bottom start" menu-anchor="top start" :label="$t('user.many') + $t('optional')" multiple use-chips use-input counter v-model="selected" :options="useroptions" option-value="id" option-label="username" @filter="filterUsers"/>
 </template>
 
 <script>

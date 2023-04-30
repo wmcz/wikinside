@@ -1,5 +1,5 @@
 <template>
-  <q-select :label="$t('project.many') + ' *'" multiple use-chips use-input counter v-model="selected" :rules="[val => val && val.length > 0]" :options="options" option-value="id" option-label="name" @filter="filterProjects"/>
+  <q-select menu-self="bottom start" menu-anchor="top start" :label="$t('project.many') + ' *'" multiple use-chips use-input counter v-model="selected" :rules="[val => val && val.length > 0]" :options="options" option-value="id" option-label="name" @filter="filterProjects"/>
 </template>
 
 <script>
