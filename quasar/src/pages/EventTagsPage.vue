@@ -2,13 +2,18 @@
   <q-page class="flex flex-center">
     <div class="q-gutter-md">
     <q-list top bordered class="rounded-borders">
-      <q-item-label header>{{ $t('tag.event') }}</q-item-label>
-      <q-input class="q-pa-md" ref="filterRef" v-model="filter" :label="$t('filter')">
-        <template v-slot:append>
-          <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
-        </template>
-      </q-input>
-        <q-tree :class=" tree.length ? '' :'q-pa-md'"
+      <q-item class="q-py-none q-pl-none">
+        <q-item-label header>{{ $t('tag.event') }}</q-item-label>
+        <q-space />
+        <q-input  side dense input-class="text-right" style="float: right" class="q-pt-xs" v-model="filter" :label="$t('filter')">
+          <template v-slot:append>
+            <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
+            <q-icon v-else name="search"/>
+          </template>
+        </q-input>
+      </q-item>
+        <q-tree
+          :class=" tree.length ? '' :'q-pa-md'"
           :nodes="tree"
           node-key="id"
           :filter="filter"
@@ -95,8 +100,7 @@ export default defineComponent({
       return res
     },
     resetFilter: function() {
-      this.filter.value = ''
-      this.filterRef.value.focus()
+      this.filter = ''
     },
     deleteTag: function(id) {
       api

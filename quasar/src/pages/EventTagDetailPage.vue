@@ -44,12 +44,16 @@
      <ImpactList :url="'tags/event-tags/' + $route.params.id"/>
 
      <q-list top bordered class="rounded-borders">
-       <q-item-label header>{{ $t('event.many') }}</q-item-label>
-       <q-input class="q-pa-md" ref="filterRef" v-model="filter" :label="$t('filter')">
-         <template v-slot:append>
-           <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
-         </template>
-       </q-input>
+       <q-item class="q-py-none q-pl-none">
+         <q-item-label header>{{ $t('event.many') }}</q-item-label>
+         <q-space />
+         <q-input  side dense input-class="text-right" style="float: right" class="q-pt-xs" v-model="filter" :label="$t('filter')">
+           <template v-slot:append>
+             <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
+             <q-icon v-else name="search"/>
+           </template>
+         </q-input>
+       </q-item>
        <q-table :rows="list" :row-key="name" grid :loading="loading" :filter="filter" :pagination="{ rowsPerPage: 10}">
          <template v-slot:item="props">
            <EventLink :key="props.row.name" supressnotag v-bind="props.row" right-icon="clear" @deleteEvent="(id) => removeEvent(id)"/>

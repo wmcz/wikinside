@@ -49,12 +49,16 @@
      <ImpactList :url="'events/' + $route.params.id" ref="impactref"/>
 
      <q-list top bordered class="rounded-borders">
-       <q-item-label header>{{ $t('tag.many') }}</q-item-label>
-       <q-input class="q-pa-md" ref="tagFilterRef" v-model="tagfilter" :label="$t('filter')">
-         <template v-slot:append>
-           <q-icon v-if="tagfilter !== ''" name="clear" class="cursor-pointer" @click="resetTagFilter" />
-         </template>
-       </q-input>
+       <q-item class="q-py-none q-pl-none">
+         <q-item-label header>{{ $t('tag.many') }}</q-item-label>
+         <q-space />
+         <q-input  side dense input-class="text-right" style="float: right" class="q-pt-xs" v-model="tagfilter" :label="$t('filter')">
+           <template v-slot:append>
+             <q-icon v-if="tagfilter !== ''" name="clear" class="cursor-pointer" @click="resetTagFilter" />
+             <q-icon v-else name="search"/>
+           </template>
+         </q-input>
+       </q-item>
        <q-table :rows="taglist" :row-key="name" grid  :loading="tagloading" :filter="tagfilter" :pagination="{ rowsPerPage: 10}">
          <template v-slot:item="props">
            <TagLink elemtype="event" :key="props.row.name" suppresselems v-bind="props.row" right-icon="clear" @deleteTag="(id) => removeTag(id)"/>
@@ -72,12 +76,16 @@
      </q-list>
 
      <q-list top bordered class="rounded-borders">
-       <q-item-label header>{{ $t('user.many') }}</q-item-label>
-       <q-input class="q-pa-md" ref="userFilterRef" v-model="userfilter" :label="$t('filter')">
-         <template v-slot:append>
-           <q-icon v-if="userfilter !== ''" name="clear" class="cursor-pointer" @click="resetUserFilter" />
-         </template>
-       </q-input>
+       <q-item class="q-py-none q-pl-none">
+         <q-item-label header>{{ $t('user.many') }}</q-item-label>
+         <q-space />
+         <q-input  side dense input-class="text-right" style="float: right" class="q-pt-xs" v-model="userfilter" :label="$t('filter')">
+           <template v-slot:append>
+             <q-icon v-if="userfilter !== ''" name="clear" class="cursor-pointer" @click="resetUserFilter" />
+             <q-icon v-else name="search"/>
+           </template>
+         </q-input>
+       </q-item>
        <q-table :rows="userlist" :row-key="name" grid :loading="userloading" :filter="userfilter" :pagination="{ rowsPerPage: 10}">
          <template v-slot:item="props">
            <UserLink :key="props.row.username" supresstags v-bind="props.row" right-icon="clear" @deleteUser="(id) => removeUser(id)"/>
