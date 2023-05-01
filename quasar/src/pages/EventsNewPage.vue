@@ -71,7 +71,7 @@ export default defineComponent({
         .then((response) => this.eventdata.push({
           name: response.data.name,
           id: response.data.id,
-          tags: response.data.tagIds.map(i => this.tagdata.find(e => e.id === i))
+          tags: response.data.tagIds.map(i => this.$refs.tagSelect.tagdata.find(e => e.id === i))
         }))
         .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))
     },
