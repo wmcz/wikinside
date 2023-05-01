@@ -75,6 +75,9 @@ public class UserTagService extends InternalService<UserTag, Long> {
         if (tag.equals(tag.getParent())) return false;
 
         UserTag root = getRoot(tag);
+
+        if (root.equals(tag) && tag.getParent() != null) return false;
+
         Collection<UserTag> children = tag.getChildren();
 
         return children
