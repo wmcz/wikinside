@@ -10,9 +10,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 
 @Service
@@ -66,23 +64,23 @@ public class UserTagService extends InternalService<UserTag, Long> {
         return applyChildren(tag, childrenIds, null);
     }
 
-    private boolean validateTreeInner(UserTag tag, Set<UserTag> tags) {
-        if (!tags.add(tag)) return false;
-        else return tag
-                .getChildren()
-                .stream()
-                .map(t -> validateTreeInner(t, tags))
-                .reduce(true, (acc, val) -> acc && val);
+    private UserTag getRoot(UserTag tag) {
+        while (tag.getParent() != null) {
+            tag = tag.getParent();
+        }
+        return tag;
     }
 
     private boolean validateTree(UserTag tag) {
-        while (tag.getParent() != null) {
-            if (tag.equals(tag.getParent())) return false;
-            tag = tag.getParent();
-        }
+        if (tag.equals(tag.getParent())) return false;
 
-        HashSet<UserTag> tags = new HashSet<>();
-        return validateTreeInner(tag, tags);
+        UserTag root = getRoot(tag);
+        Collection<UserTag> children = tag.getChildren();
+
+        return children
+                .stream()
+                .map(t -> (t != tag && t != root))
+                .reduce(true, (acc, val) -> acc && val);
     }
 
     @Override
