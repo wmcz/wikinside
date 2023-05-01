@@ -15,11 +15,8 @@
           {{ $t('app_name')}}
         </q-toolbar-title>
 
-        <div>0.2a</div>
+        <div>0.2</div>
       </q-toolbar>
-      <div>
-        <div class="text-subtitle1 q-pa-sm" >{{ today }}</div>
-      </div>
     </q-header>
 
     <q-drawer

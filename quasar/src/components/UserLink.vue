@@ -4,7 +4,6 @@
   <q-item-section top>
     <q-item-label lines="1">
       <span class="text-h6 q-pr-xs">{{ username }}</span>
-      <span class="text-caption">{{ id }}</span>
 
     </q-item-label>
     <q-item-label v-if="!supresstags" caption lines="1">
