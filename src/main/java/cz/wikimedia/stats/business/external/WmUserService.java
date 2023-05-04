@@ -47,7 +47,10 @@ public class WmUserService extends WmService {
                     users.stream().map(User::getLocalId).toList(),
                     ids -> client.getUsersById(ClientUtils.collect(ids)).query().contents());
 
-            users.forEach(u -> {
+            users
+                    .stream()
+                    .filter(u -> u.getLocalId() != null)
+                    .forEach(u -> {
                 var i = updated.iterator();
                 while (i.hasNext()) {
                     var id = i.next();
