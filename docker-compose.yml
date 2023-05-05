@@ -5,10 +5,12 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MARIADB_ROOT_PASSWORD: example
+      MARIADB_USER: ${DATABASE_USERNAME}
+      MARIADB_PASSWORD: ${DATABASE_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
       MARIADB_DATABASE: metrics
     healthcheck:
-      test: ["CMD", "mysqladmin", "-pexample", "ping"]
+      test: ["CMD", "mysqladmin", "-p${DATABASE_ROOT_PASSWORD}", "ping"]
       timeout: 5s
       interval: 5s
       retries: 12
@@ -21,7 +23,3 @@ services:
         condition: service_healthy
     ports:
       - "8080:8080"
-    environment:
-      - "SPRING_DATASOURCE_URL=jdbc:mariadb://db:3306/metrics"
-      - "SPRING_DATASOURCE_USERNAME=root"
-      - "SPRING_DATASOURCE_PASSWORD=example"
