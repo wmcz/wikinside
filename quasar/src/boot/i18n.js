@@ -4,7 +4,7 @@ import messages from 'src/i18n'
 
 export default boot(({ app }) => {
   const i18n = createI18n({
-    locale: 'cs-CZ',
+    locale: process.env.DEFAULT_LOCALE,
     globalInjection: true,
     messages
   })

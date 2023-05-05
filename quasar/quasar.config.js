@@ -11,6 +11,7 @@
 
 const { configure } = require('quasar/wrappers');
 const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env')})
 
 module.exports = configure(function (/* ctx */) {
   return {
@@ -70,7 +71,10 @@ module.exports = configure(function (/* ctx */) {
 
       // publicPath: '/',
       // analyze: true,
-      // env: {},
+       env: {
+        BACKEND_URL: process.env.BACKEND_URL,
+        DEFAULT_LOCALE: process.env.DEFAULT_LOCALE
+       },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
