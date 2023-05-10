@@ -8,8 +8,6 @@ import java.util.Set;
 @Entity
 public class Event implements IdAble<Long> {
 
-    /* ATTRIBUTES */
-
     @Id
     @GeneratedValue
     private Long id;
@@ -34,9 +32,6 @@ public class Event implements IdAble<Long> {
 
     private String hashtag;
 
-
-    /* CONSTRUCTORS */
-
     protected Event() {}
 
     public Event(String name) {
@@ -58,11 +53,6 @@ public class Event implements IdAble<Long> {
     public Long getId() {
         return id;
     }
-
-
-
-    /* GETTERS */
-
 
     public Set<EventTag> getTags() {
         return tags;

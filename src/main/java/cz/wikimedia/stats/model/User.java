@@ -84,9 +84,6 @@ public class User implements IdAble<Long> {
         return revisions;
     }
 
-
-    /* SETTERS */
-
     public User setUsername(String username) {
         this.username = username;
         return this;

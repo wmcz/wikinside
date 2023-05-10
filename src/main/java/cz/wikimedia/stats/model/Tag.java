@@ -45,9 +45,6 @@ public abstract class Tag<E> implements IdAble<Long> {
     public abstract Tag<E> getParent();
 
     public abstract Collection<? extends Tag<E>> getChildren();
-
-    /* SETTERS */
-
     public abstract Tag<E> setName(String name);
 
     public abstract Tag<E> addTagged(E tagged);
