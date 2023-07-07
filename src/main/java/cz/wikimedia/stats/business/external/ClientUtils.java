@@ -3,6 +3,7 @@ package cz.wikimedia.stats.business.external;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.function.Function;
 
 public class ClientUtils {
@@ -26,6 +27,7 @@ public class ClientUtils {
         Collection<T> result = new HashSet<>();
 
         while (elems.size() > 0) {
+            elems = elems.stream().filter(Objects::nonNull).toList();
             result.addAll(
                     func.apply(
                             elems.stream().limit(limit).toList()));
