@@ -8,7 +8,18 @@
       <q-input :rules="[ val => val && val.length > 0 || '']" v-model="name" :label="$t('tag.name') + ' *'" />
 
       <UserSelect ref="userSelect"/>
+
       <TagSelect ref="parentSelect" parent url="tags/user-tags"/>
+
+      <q-input v-model="color" :label="$t('tag.color') + $t('optional')">
+        <template v-slot:append>
+          <q-icon name="colorize" class="cursor-pointer">
+            <q-popup-proxy>
+              <q-color v-model="color"/>
+            </q-popup-proxy>
+          </q-icon>
+        </template>
+      </q-input>
 
       <q-btn color="primary" type="submit">{{ $t('submit') }}</q-btn>
     </q-form>
@@ -32,6 +43,7 @@ export default defineComponent({
   data() {
     return {
       name: null,
+      color: null,
       tagdata: [],
       parent: null,
       parentdata: null,
@@ -44,6 +56,7 @@ export default defineComponent({
         .post('/tags/user-tags', {
           name: this.name,
           id: null,
+          color: this.color,
           elementIds: this.$refs.userSelect.selected.map(s => s.id),
           parentId: this.$refs.parentSelect.selected ? this.$refs.parentSelect.selected.id : null,
           childrenIds: []

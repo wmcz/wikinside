@@ -4,6 +4,7 @@
   <q-item-section top>
     <q-item-label lines="1">
       <span class="text-h6 q-pr-xs ellipsis fit">{{ name }}</span>
+      <q-badge v-if="color" :style="`background: ${color}`"/>
     </q-item-label>
     <q-item-label v-if="!suppresselems" caption lines="1">
       {{ elems.length }} {{ $t(elemtype + '.many').toLowerCase() }}
@@ -43,6 +44,9 @@ export default {
     },
     suppresselems: {
       type: Boolean
+    },
+    color: {
+      type: String
     }
   }
 }

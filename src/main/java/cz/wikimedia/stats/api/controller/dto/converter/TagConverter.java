@@ -34,6 +34,7 @@ public class TagConverter {
         return new TagDto(tag.getName(),
                           tag.getId(),
                           tag.getParent() == null ? null : tag.getParent().getId(),
+                          tag.getColor(),
                           ConverterUtils.getIds(tag.getChildren()),
                           ConverterUtils.getIds(tag.getTagged()));
     }
@@ -41,6 +42,7 @@ public class TagConverter {
     public UserTag toUserTag(TagDto dto) {
         return new UserTag(dto.id(),
                            dto.name(),
+                           dto.color(),
                            ConverterUtils.getElems(dto.elementIds(), userService),
                            getParent(dto.parentId(), userTagService),
                            ConverterUtils.getElems(dto.childrenIds(), userTagService));
@@ -51,6 +53,7 @@ public class TagConverter {
     public EventTag toEventTag(TagDto dto) {
         return new EventTag(dto.id(),
                             dto.name(),
+                            dto.color(),
                             ConverterUtils.getElems(dto.elementIds(), eventService),
                             getParent(dto.parentId(), eventTagService),
                             ConverterUtils.getElems(dto.childrenIds(), eventTagService));

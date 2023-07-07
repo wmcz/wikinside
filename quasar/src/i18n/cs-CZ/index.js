@@ -41,7 +41,9 @@ export default {
     add: 'Přidat tagy',
     parent: 'Nadtag',
     no_children: 'Žádné podtagy',
-    no_parent: 'Žádný nadtag'
+    no_parent: 'Žádný nadtag',
+    color: 'Barva',
+    assign_color: 'Přiřadit barvu'
   },
   project: {
     one: 'Projekt',

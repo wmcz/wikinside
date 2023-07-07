@@ -11,6 +11,15 @@
 
       <TagSelect ref="parentSelect" parent url="tags/event-tags"/>
 
+      <q-input v-model="color" :label="$t('tag.color') + $t('optional')">
+        <template v-slot:append>
+        <q-icon name="colorize" class="cursor-pointer">
+          <q-popup-proxy>
+            <q-color v-model="color"/>
+          </q-popup-proxy>
+        </q-icon>
+        </template>
+      </q-input>
       <q-btn color="primary" type="submit">{{ $t('submit') }}</q-btn>
     </q-form>
     <q-list v-if="tagdata.length" bottom bordered class="rounded-borders">
@@ -33,6 +42,7 @@ export default defineComponent({
   data() {
     return {
       name: null,
+      color: null,
       tagdata: [],
     }
   },
@@ -42,6 +52,7 @@ export default defineComponent({
         .post('/tags/event-tags', {
           name: this.name,
           id: null,
+          color: this.color,
           elementIds: this.$refs.eventSelect.selected.map(s => s.id),
           parentId: this.$refs.parentSelect.selected ? this.$refs.parentSelect.selected.id : null,
           childrenIds: []

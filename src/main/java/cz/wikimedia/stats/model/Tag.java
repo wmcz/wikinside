@@ -19,6 +19,15 @@ public abstract class Tag<E> implements IdAble<Long> {
     @GeneratedValue
     private Long id;
 
+    @Nullable
+    private String color;
+
+    protected Tag(Long id, String name, String color) {
+        this.id = id;
+        this.name = name;
+        this.color = color;
+    }
+
     protected Tag(Long id, String name) {
         this.id = id;
         this.name = name;
@@ -38,6 +47,10 @@ public abstract class Tag<E> implements IdAble<Long> {
 
     public String getName() {
         return name;
+    }
+
+    public String getColor() {
+        return color;
     }
 
     public abstract Collection<E> getTagged();

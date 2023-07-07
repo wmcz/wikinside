@@ -1,7 +1,17 @@
 <template>
  <q-page class="flex flex-center">
    <div class="q-gutter-md">
-     <h3 class="q-mb-sm">{{ data.name }}</h3>
+     <h3 class="q-mb-sm">
+       {{ data.name }}
+       <q-avatar v-if="data.color" rounded :style="`background: ${data.color}`">
+         <q-icon name="edit" size="xs" class="q-mt-lg q-ml-lg" color="white"/>
+         <q-popup-proxy>
+           <q-color v-model="data.color"
+                    @change="onColorSubmit"/>
+         </q-popup-proxy>
+       </q-avatar>
+       <q-btn flat color="primary" class="q-mr-md q-mb-none q-mt-lg" style="position: relative; float: right" v-else @click="assignColor" :label="$t('tag.assign_color')"/>
+     </h3>
      <q-list bordered class="rounded-borders">
        <q-item>
          <q-item-section avatar>
@@ -79,12 +89,16 @@ import UserLink from "components/UserLink.vue";
 import TagBadge from "components/TagBadge.vue";
 import {getErrorMessage} from "src/util";
 import TagSelect from "components/TagSelect.vue";
+import { colors } from 'quasar'
+
+const { getPaletteColor } = colors
 
 function update(self, response) {
   api
     .put('tags/user-tags', {
       name: self.data.name,
       id: self.data.id,
+      color: self.data.color,
       childrenIds: self.data.children.map(c => c.id),
       elementIds: self.data.elems.map(e => e.id),
       parentId: self.data.parent === null ? null : self.data.parent.id
@@ -131,6 +145,12 @@ function updateChildren(self) {
   })
 }
 
+function updateColor(self) {
+  update(self, (response) => {
+    self.data.color = response.data.color
+  })
+}
+
 export default {
   name: "UserTagDetailPage",
   components: {
@@ -146,7 +166,8 @@ export default {
         name: '',
         elems: [],
         children: [],
-        parent: null
+        parent: null,
+        color: null
       },
       filter: '',
       userinput: false,
@@ -194,6 +215,12 @@ export default {
       this.data.children = this.$refs.childSelect.selected
       updateChildren(this)
       this.childinput = false
+    },
+    assignColor() {
+      this.data.color = getPaletteColor('primary');
+    },
+    onColorSubmit() {
+      updateColor(this)
     },
     resetFilter() {
       this.filter = ''

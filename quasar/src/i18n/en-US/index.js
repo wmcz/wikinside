@@ -41,7 +41,9 @@ export default {
     add: 'Add tags',
     parent: 'Parent tag',
     no_children: 'No children',
-    no_parent: 'No parent tag'
+    no_parent: 'No parent tag',
+    color: 'Color',
+    assign_color: 'Assign color',
   },
   project: {
     one: 'Project',

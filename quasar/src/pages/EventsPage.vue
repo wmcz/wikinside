@@ -50,7 +50,7 @@ export default defineComponent({
     api
       .get('/tags/event-tags')
       .then((response) => {
-      this.tagdata = response.data.map(function(item) {return {name: item.name, id: item.id}})})
+      this.tagdata = response.data.map(function(item) {return {name: item.name, id: item.id, color: item.color}})})
       .catch(error => this.$q.notify(this.$t(getErrorMessage(error)))),
     api
       .get('/events')

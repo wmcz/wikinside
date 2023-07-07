@@ -9,11 +9,15 @@ import java.util.Set;
 @Entity
 public class UserTag extends Tag<User> {
 
-    public UserTag(Long id, String name, Set<User> tagged, UserTag parent, Set<UserTag> children) {
-        super(id, name);
+    public UserTag(Long id, String name, String color, Set<User> tagged, UserTag parent, Set<UserTag> children) {
+        super(id, name, color);
         this.tagged = tagged;
         this.parent = parent;
         this.children = children;
+    }
+
+    public UserTag(Long id, String name, Set<User> tagged, UserTag parent, Set<UserTag> children) {
+        this(id, name, null, tagged, parent, children);
     }
     public UserTag() {
         super();
