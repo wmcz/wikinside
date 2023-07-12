@@ -1,9 +1,20 @@
 <template>
  <q-page class="flex flex-center">
    <div class="q-gutter-md">
-     <h3 class="q-mb-sm">
+     <div style="display: flex">
+     <h3 v-if="!nameinput" class="q-mb-sm" @dblclick="nameinput = !nameinput;name=data.name">
        {{ data.name }}
-       <q-avatar v-if="data.color" rounded :style="`background: ${data.color}`">
+       </h3>
+       <div v-else>
+         <q-input class="text-h3 q-mt-xl" v-model="name">
+           <template v-slot:after>
+             <q-btn color="primary" :label="$t('submit')" @click="onNameSubmit"/>
+             <q-btn color="primary" flat :label="$t('cancel')" @click="nameinput = !nameinput"/>
+           </template>
+         </q-input>
+       </div>
+
+       <q-avatar class="q-mt-xl q-ml-md" v-if="data.color" rounded :style="`background: ${data.color}`">
          <q-icon name="edit" size="xs" class="q-mt-lg q-ml-lg" color="white"/>
          <q-popup-proxy>
            <q-color v-model="data.color"
@@ -11,8 +22,9 @@
          </q-popup-proxy>
        </q-avatar>
        <q-btn flat color="primary" class="q-mr-md q-mb-none q-mt-lg" style="position: relative; float: right" v-else @click="assignColor" :label="$t('tag.assign_color')"/>
-     </h3>
-     <q-list bordered class="rounded-borders">
+       </div>
+
+       <q-list bordered class="rounded-borders">
        <q-item>
          <q-item-section avatar>
             <q-icon color="primary" name="north_west"/>
@@ -151,6 +163,13 @@ function updateColor(self) {
   })
 }
 
+function updateName(self) {
+  update(self, (response) => {
+    self.data.name = response.data.name
+    self.nameinput = false;
+  })
+}
+
 export default {
   name: "UserTagDetailPage",
   components: {
@@ -173,6 +192,8 @@ export default {
       userinput: false,
       parentinput: false,
       childinput: false,
+      nameinput:false,
+      name: '',
       userdata: null,
       list: [],
       loading: true,
@@ -221,6 +242,10 @@ export default {
     },
     onColorSubmit() {
       updateColor(this)
+    },
+    onNameSubmit() {
+      this.data.name = this.name
+      updateName(this)
     },
     resetFilter() {
       this.filter = ''
