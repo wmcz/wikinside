@@ -1,7 +1,19 @@
 <template>
  <q-page class="flex flex-center">
    <div class="q-gutter-md">
-     <h3 class="q-mb-sm">{{ eventdata.name }}</h3>
+     <div style="display: flex">
+       <h3 v-if="!nameinput" class="q-mb-sm" @dblclick="nameinput = !nameinput;name=eventdata.name">
+         {{ eventdata.name }}
+       </h3>
+       <div v-else>
+         <q-input class="text-h3 q-mt-xl" v-model="name">
+           <template v-slot:after>
+             <q-btn color="primary" :label="$t('submit')" @click="onNameSubmit"/>
+             <q-btn color="primary" flat :label="$t('cancel')" @click="nameinput = !nameinput"/>
+           </template>
+         </q-input>
+       </div>
+     </div>
      <q-list bordered class="rounded-borders">
        <q-item>
          <q-item-section avatar>
@@ -135,6 +147,13 @@ function updateTags(self) {
     self.taglist = self.tagdata.filter(t => self.eventdata.tagIds.includes(t.id))})
 }
 
+function updateName(self) {
+  submit(self, (response) => {
+    self.eventdata.name = response.data.name
+    self.nameinput = false;
+  })
+}
+
 export default {
   name: "EventDetailPage",
   components: {
@@ -164,6 +183,8 @@ export default {
       userinput: false,
       dateinput: false,
       projectinput: false,
+      nameinput:false,
+      name: '',
     }
   },
   mounted() {
@@ -236,6 +257,10 @@ export default {
         this.projects = this.projectdata.filter(p => response.data.projectIds.includes(p.id))
       })
       this.projectinput = false
+    },
+    onNameSubmit() {
+      this.eventdata.name = this.name
+      updateName(this)
     },
     resetTagFilter() {
       this.tagfilter = ''
