@@ -37,12 +37,19 @@ public class ImpactService {
             revs.forEach(r -> pages.add(new Page(r.getProject(), r.getPageId())));
             return Long.valueOf(pages.size());
         }
+
+        private Long getUsers(Set<Revision> revs) {
+            Set<User> users = new HashSet<>();
+            revs.forEach(r -> users.add(r.getUser()));
+            return Long.valueOf(users.size());
+        }
         public Impact getImpact(Set<Revision> revs) {
 
             return new Impact(getCreatedPages(revs),
                               getEditedPages(revs),
                               Long.valueOf(revs.size()),
-                              getDiff(revs));
+                              getDiff(revs),
+                              getUsers(revs));
         }
 
         public Impact getImpact(Event event) {
