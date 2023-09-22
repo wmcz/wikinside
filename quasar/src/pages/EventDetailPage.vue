@@ -20,7 +20,7 @@
             <q-icon color="primary" name="date_range"/>
          </q-item-section>
          <q-item-section>
-           {{ eventdata.startDate }} — {{ eventdata.endDate }}
+           {{ new Date(Date.parse(eventdata.startDate)).toLocaleDateString() }} — {{ new Date(Date.parse(eventdata.endDate)).toLocaleDateString() }}
          </q-item-section>
          <q-item-section side>
            <q-btn color="primary" flat :label="dateinput ? $t('cancel') : $t('edit')" @click="dateinput=!dateinput"/>
