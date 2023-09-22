@@ -28,6 +28,7 @@ public class UserConverter {
     private UserDto toDtoInner(User user) {
        return new UserDto(user.getId(),
                           user.getUsername(),
+                          user.getRegistration(),
                           ConverterUtils.getIds(user.getTags()),
                           ConverterUtils.getIds(user.getEvents()));
     }

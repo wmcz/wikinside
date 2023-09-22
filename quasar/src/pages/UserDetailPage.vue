@@ -2,6 +2,17 @@
   <q-page class="flex flex-center">
     <div class="q-gutter-md">
       <h3>{{ userdata.username }}</h3>
+
+      <q-list bordered class="rounded-borders">
+        <q-item>
+          <q-item-section avatar>
+            <q-icon color="primary" name="perm_contact_calendar"/>
+          </q-item-section>
+          <q-item-section>
+            {{ new Date(Date.parse(userdata.registration)).toLocaleString() }}
+          </q-item-section>
+        </q-item>
+      </q-list>
     <q-list top bordered class="rounded-borders">
       <q-item class="q-py-none q-pl-none">
         <q-item-label header>{{ $t('tag.user') }}</q-item-label>
