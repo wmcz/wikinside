@@ -32,28 +32,47 @@ public class ImpactService {
             return revs.stream().filter(Revision::isPageCreation).count();
         }
 
+        private <E> Long enumerate(Set<Revision> revs, Function<Revision, E> forEach) {
+            Set<E> set = new HashSet<>();
+            revs.forEach(r -> set.add(forEach.apply(r)));
+            return Long.valueOf(set.size());
+        }
+
         private Long getEditedPages(Set<Revision> revs) {
-            Set<Page> pages = new HashSet<>();
-            revs.forEach(r -> pages.add(new Page(r.getProject(), r.getPageId())));
-            return Long.valueOf(pages.size());
+            return enumerate(revs, r -> new Page(r.getProject(), r.getPageId()));
         }
 
         private Long getUsers(Set<Revision> revs) {
-            Set<User> users = new HashSet<>();
-            revs.forEach(r -> users.add(r.getUser()));
-            return Long.valueOf(users.size());
+            return enumerate(revs, Revision::getUser);
         }
-        public Impact getImpact(Set<Revision> revs) {
+
+        private Long getEvents(Set<Revision> revs) {
+            Set<Event> events = new HashSet<>();
+            revs.forEach(r -> events.addAll(r.getEvents()));
+            return Long.valueOf(events.size());
+        }
+        public Impact getEventImpact(Set<Revision> revs) {
 
             return new Impact(getCreatedPages(revs),
                               getEditedPages(revs),
                               Long.valueOf(revs.size()),
                               getDiff(revs),
-                              getUsers(revs));
+                              getUsers(revs),
+                              null);
+        }
+
+        public Impact getUserImpact(Set<Revision> revs) {
+
+            return new Impact(getCreatedPages(revs),
+                              getEditedPages(revs),
+                              Long.valueOf(revs.size()),
+                              getDiff(revs),
+                              null,
+                              getEvents(revs));
         }
 
         public Impact getImpact(Event event) {
-            return getImpact(event.getRevisions());
+            return getEventImpact(event.getRevisions());
         }
 
         private void addRevs(EventTag tag, Set<Revision> revs) {
@@ -64,6 +83,10 @@ public class ImpactService {
         public Impact getImpact(EventTag tag) {
             Set<Revision> revs = new HashSet<>();
             addRevs(tag, revs);
-            return getImpact(revs);
+            return getEventImpact(revs);
+        }
+
+        public Impact getImpact(User user) {
+            return getUserImpact(user.getRevisions());
         }
 }

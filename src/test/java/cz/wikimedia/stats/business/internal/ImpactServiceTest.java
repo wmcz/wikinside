@@ -29,8 +29,8 @@ class ImpactServiceTest extends BaseTest {
         Event event = new Event(1L, null, null, null, null, null, null, null, revs);
         EventTag tag = new EventTag(2L, null, Set.of(event), null, Collections.emptySet());
 
-        Assertions.assertEquals(service.getImpact(event.getRevisions()), service.getImpact(event));
-        Assertions.assertEquals(service.getImpact(event.getRevisions()), service.getImpact(tag));
+        Assertions.assertEquals(service.getEventImpact(event.getRevisions()), service.getImpact(event));
+        Assertions.assertEquals(service.getEventImpact(event.getRevisions()), service.getImpact(tag));
 
         //20 revs overlap
         Set<Revision> firstRevs = revs.stream().limit(60).collect(Collectors.toSet());
@@ -41,7 +41,7 @@ class ImpactServiceTest extends BaseTest {
 
         EventTag tagWithBoth = new EventTag(2L, null, Set.of(event1, event2), null, Collections.emptySet());
 
-        Assertions.assertEquals(service.getImpact(revs), service.getImpact(tagWithBoth));
+        Assertions.assertEquals(service.getEventImpact(revs), service.getImpact(tagWithBoth));
 
     }
 

@@ -58,6 +58,7 @@ export default {
     edits: 'edits',
     byteDiff: 'added bytes',
     users: 'active participants',
+    events: 'events participated',
     disclaimer: 'Impact is not automatically updated after changes to events. To recalculate, please wait a moment, and then refresh the page. Processing the changes usually does not take more than a few seconds, but may take longer in some cases.'
   },
   notification: {

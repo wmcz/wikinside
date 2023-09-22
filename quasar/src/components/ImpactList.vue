@@ -37,7 +37,7 @@ export default {
     api
       .get(this.url + "/impact")
       .then(response => {
-        Object.entries(response.data).forEach(([k, v]) => this.items.push({name: k, val: v}))
+        Object.entries(response.data).forEach(([k, v]) => { if (v != null) this.items.push({name: k, val: v}) })
         if (this.items.every(i => i.val === 0)) this.showDisclaimer = true})
       .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))
   }

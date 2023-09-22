@@ -13,6 +13,9 @@
           </q-item-section>
         </q-item>
       </q-list>
+
+      <ImpactList :url="'users/' + $route.params.id" ref="impactref"/>
+
     <q-list top bordered class="rounded-borders">
       <q-item class="q-py-none q-pl-none">
         <q-item-label header>{{ $t('tag.user') }}</q-item-label>
@@ -79,8 +82,10 @@ import TagLink from "components/TagLink.vue";
 import TagSelect from "components/TagSelect.vue";
 import EventSelect from "components/EventSelect.vue";
 import {getErrorMessage} from "src/util";
+import ImpactList from "components/ImpactList.vue";
 
 function updateEvents(self) {
+  self.$refs.impactref.showDisclaimer = true
   api
     .put('users', self.userdata)
     .then((response) => {
@@ -126,6 +131,7 @@ export default defineComponent({
   },
   name: 'UserDetailPage',
   components: {
+    ImpactList,
     TagSelect,
     EventLink,
     TagLink,

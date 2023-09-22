@@ -58,6 +58,7 @@ export default {
     edits: 'editací',
     byteDiff: 'přidaných bajtů',
     users: 'aktivních účastníků',
+    events: 'zúčastněných událostí',
     disclaimer: 'Změny se neprojevují na dopadu automaticky. Pro přepočet po změně vlastností prosím chvíli vyčkejte, a poté obnovte stránku. Zpracování změn obvykle netrvá déle než několik vteřin, ale v některých případech může být pomalejší.'
   },
   notification: {
