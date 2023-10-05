@@ -105,9 +105,11 @@ public class RevisionService extends InternalService<Revision, Long> {
     }
 
     public Collection<Revision> generateRevs(Event event) {
-        if (event.getHashtag() == null)
-             return generateFromUserList(event);
-        else return generateFromHashTags(event);
+        return switch (event.getStrategy()) {
+            case MANUAL  -> generateFromUserList(event);
+            case HASHTAG -> generateFromHashTags(event);
+            case PHOTO   -> generateFromPhotoCategory(event);
+        };
     }
 
     @Async

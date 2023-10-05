@@ -8,6 +8,12 @@ import java.util.Set;
 @Entity
 public class Event implements IdAble<Long> {
 
+    public enum DataCollectionStrategy {
+        MANUAL,
+        HASHTAG,
+        PHOTO
+    }
+
     @Id
     @GeneratedValue
     private Long id;
@@ -30,7 +36,9 @@ public class Event implements IdAble<Long> {
     @ManyToMany
     private Set<Revision> revisions;
 
-    private String hashtag;
+    private DataCollectionStrategy strategy;
+
+    private String category;
 
     protected Event() {}
 
@@ -38,11 +46,11 @@ public class Event implements IdAble<Long> {
         this.name = name;
     }
 
-    public Event(Long id, Set<EventTag> tags, String name, String hashtag, LocalDate startDate, LocalDate endDate, Set<User> participants, Set<Project> projects, Set<Revision> revisions) {
+    public Event(Long id, Set<EventTag> tags, String name, String category, LocalDate startDate, LocalDate endDate, Set<User> participants, Set<Project> projects, Set<Revision> revisions) {
         this.id = id;
         this.tags = tags;
         this.name = name;
-        this.hashtag = hashtag;
+        this.category = category;
         this.startDate = startDate;
         this.endDate = endDate;
         this.participants = participants;
@@ -78,8 +86,11 @@ public class Event implements IdAble<Long> {
         return projects;
     }
 
-    public String getHashtag() {
-        return hashtag;
+    public DataCollectionStrategy getStrategy() {
+        return strategy;
+    }
+    public String getCategory() {
+        return category;
     }
 
     public Set<Revision> getRevisions() {
@@ -106,8 +117,8 @@ public class Event implements IdAble<Long> {
         return this;
     }
 
-    public Event setHashtag(String hashtag) {
-        this.hashtag = hashtag;
+    public Event setCategory(String hashtag) {
+        this.category = hashtag;
         return this;
     }
 

@@ -35,7 +35,7 @@ public class HashtagsService {
             revs.addAll(
                     wmRevisionService.addDiffs(
                             hashtagsInfoConverter.fromInfo(
-                                    hashtagsClient.getFromHashtag(event.getHashtag(), p, start, end).rows(), p, event),
+                                    hashtagsClient.getFromHashtag(event.getCategory(), p, start, end).rows(), p, event),
                             p));
         }
         return revs;

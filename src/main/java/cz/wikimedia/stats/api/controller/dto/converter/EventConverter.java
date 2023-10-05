@@ -27,7 +27,7 @@ public class EventConverter {
         return new EventDto(event.getId(),
                             ConverterUtils.getIds(event.getTags()),
                             event.getName(),
-                            event.getHashtag(),
+                            event.getCategory(),
                             event.getStartDate(),
                             event.getEndDate(),
                             ConverterUtils.getIds(event.getParticipants()),

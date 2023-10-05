@@ -11,6 +11,8 @@ import java.time.ZoneId;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static cz.wikimedia.stats.model.Event.DataCollectionStrategy.HASHTAG;
+
 @Service
 public class EventService extends InternalService<Event, Long> {
 
@@ -42,7 +44,7 @@ public class EventService extends InternalService<Event, Long> {
                 .toList()
                 .forEach(event::removeRevision);
 
-        if (event.getHashtag() != null)
+        if (event.getStrategy() == HASHTAG)
             // for automatically generated users, remove them if they have no revisions
             event
                     .getParticipants()

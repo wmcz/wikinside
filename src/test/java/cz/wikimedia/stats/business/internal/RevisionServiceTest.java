@@ -111,7 +111,7 @@ class RevisionServiceTest {
         Collection<Revision> gen = service.generateRevs(event);
         Mockito.verify(wmRevisionService, Mockito.atLeastOnce()).getUserContribs(ArgumentMatchers.any(), ArgumentMatchers.any());
         Mockito.verifyNoInteractions(hashtagsService);
-        event.setHashtag("hashtag");
+        event.setCategory("hashtag");
         Assertions.assertEquals(gen, service.generateRevs(event));
         Mockito.verifyNoMoreInteractions(wmRevisionService);
         Mockito.verify(hashtagsService, Mockito.atLeastOnce()).getRevisions(event, LocalDate.EPOCH, LocalDate.EPOCH);

@@ -58,7 +58,7 @@ class EventTest extends BaseTest {
 
         Event event = new Event(null, null, null, tag, null, null, null, null, null);
 
-        Assertions.assertEquals(tag, event.getHashtag());
+        Assertions.assertEquals(tag, event.getCategory());
     }
 
     @Test
@@ -95,8 +95,8 @@ class EventTest extends BaseTest {
     void setHashtag() {
         String tag = randomString();
         Event event = new Event(null, null, null, randomString(), null, null, null, null, null);
-        event = event.setHashtag(tag);
-        Assertions.assertEquals(tag, event.getHashtag());
+        event = event.setCategory(tag);
+        Assertions.assertEquals(tag, event.getCategory());
     }
 
     @Test
