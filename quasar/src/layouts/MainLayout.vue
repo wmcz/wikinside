@@ -43,6 +43,15 @@
         <router-view class="q-ma-md" />
       </Suspense>
     </q-page-container>
+    <q-footer class="transparent text-grey-8 text-center">
+      {{ $t('footer.first') }}
+      <a href="https://www.wikimedia.cz/" class="text-primary" v-text="$t('footer.wmLink')"></a>
+      {{ $t('footer.second') }}
+      <a href="https://github.com/wmcz/statistics-tool" class="text-primary" v-text="$t('footer.gitHubLink')"></a>
+      {{ $t('footer.third') }}
+      <a href="https://github.com/wmcz/statistics-tool/issues" class="text-primary" v-text="$t('footer.reportLink')"></a>
+      {{ $t('footer.fourth') }}
+    </q-footer>
   </q-layout>
 </template>
 

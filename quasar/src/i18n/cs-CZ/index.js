@@ -66,5 +66,14 @@ export default {
     500: 'ERROR: Chyba na straně serveru; zkuste obnovit stránku.',
     network_error: 'ERROR: Nelze se připojit k serveru.',
     generic_error: 'ERROR: Něco se pokazilo; zkuste obnovit stránku.'
+  },
+  footer: {
+    first: "Vytvořeno spolkem ",
+    wmLink: "Wikimedia Česká republika.",
+    second: " Náš zdrojový kód je volně dostupný na ",
+    gitHubLink: "GitHubu.",
+    third: "Nalezli jste chybu? ",
+    reportLink:"Ohlašte ji zde.",
+    fourth: ""
   }
 }

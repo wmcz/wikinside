@@ -66,5 +66,14 @@ export default {
     500: 'ERROR: Server-side error; try refreshing the website.',
     network_error: 'ERROR: Could not connect to server.',
     generic_error: 'ERROR: Something has gone wrong; try refreshing the website.'
+  },
+  footer: {
+    first: " Created by ",
+    wmLink: "Wikimedia Czech Republic.",
+    second: " Our source code is freely available on ",
+    gitHubLink: "GitHub.",
+    third: " Found an issue? ",
+    reportLink:"Report it here.",
+    fourth: ""
   }
 }
