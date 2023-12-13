@@ -1,5 +1,5 @@
 export default {
-  app_name: 'WMCZ Stats app',
+  app_name: 'WIKINSIDE',
   404: 'Page not found',
   add: 'Add',
   filter: 'Filter',

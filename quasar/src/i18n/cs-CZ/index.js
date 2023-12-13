@@ -1,5 +1,5 @@
 export default {
-  app_name: 'Statistická aplikace WMČR',
+  app_name: 'WIKINSIDE',
   404: 'Stránka nenalezena',
   add: 'Přidat',
   filter: 'Filtrovat',

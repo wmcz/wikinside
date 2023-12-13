@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh Lpr lFf">
+  <q-layout view="hHh Lpr lff">
     <q-header>
       <q-toolbar>
         <q-btn
@@ -11,11 +11,11 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title>
+        <q-toolbar-title class="logo-typography">
           {{ $t('app_name')}}
         </q-toolbar-title>
 
-        <div>0.2</div>
+        <div>0.3a</div>
       </q-toolbar>
     </q-header>
 
@@ -40,7 +40,7 @@
 
     <q-page-container>
       <Suspense>
-        <router-view class="q-ma-md" />
+        <router-view class="q-pa-md" />
       </Suspense>
     </q-page-container>
     <q-footer class="transparent text-grey-8 text-center">

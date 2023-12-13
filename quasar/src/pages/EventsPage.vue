@@ -3,7 +3,7 @@
     <div class="q-gutter-md">
     <q-list top bordered class="rounded-borders">
       <q-item class="q-py-none q-pl-none">
-        <q-item-label header>{{ $t('tag.user') }}</q-item-label>
+        <q-item-label header>{{ $t('event.many') }}</q-item-label>
         <q-space />
         <q-input  side dense input-class="text-right" style="float: right" class="q-pt-xs" v-model="filter" :label="$t('filter')">
           <template v-slot:append>
