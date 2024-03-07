@@ -2,11 +2,14 @@
  <q-page class="flex flex-center">
    <div class="q-gutter-md">
      <div style="display: flex">
-       <h3 v-if="!nameinput" class="q-mb-sm" @dblclick="nameinput = !nameinput;name=eventdata.name">
-         {{ eventdata.name }}
-       </h3>
-       <div v-else>
-         <q-input class="text-h3 q-mt-xl" v-model="name">
+       <q-item v-if="!nameinput">
+         <q-item-label class="text-h3">
+           {{ eventdata.name }}
+         </q-item-label>
+         <q-btn flat side class="q-ml-sm q-pa-none"><q-icon color="primary" class="q-mt-md" name="edit" @click="nameinput = !nameinput;name=eventdata.name"></q-icon></q-btn>
+         </q-item>
+         <div v-else>
+           <q-input class="text-h3 q-mx-md q-ml-sm" v-model="name">
            <template v-slot:after>
              <q-btn color="primary" :label="$t('submit')" @click="onNameSubmit"/>
              <q-btn color="primary" flat :label="$t('cancel')" @click="nameinput = !nameinput"/>

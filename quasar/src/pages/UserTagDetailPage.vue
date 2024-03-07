@@ -2,11 +2,14 @@
  <q-page class="flex flex-center">
    <div class="q-gutter-md">
      <div style="display: flex">
-     <h3 v-if="!nameinput" class="q-mb-sm" @dblclick="nameinput = !nameinput;name=data.name">
-       {{ data.name }}
-       </h3>
+       <q-item v-if="!nameinput">
+         <q-item-label class="text-h3">
+           {{ data.name }}
+         </q-item-label>
+         <q-btn flat side class="q-ml-sm q-pa-none"><q-icon color="primary" class="q-mt-md" name="edit" @click="nameinput = !nameinput;name=data.name"></q-icon></q-btn>
+       </q-item>
        <div v-else>
-         <q-input class="text-h3 q-mt-xl" v-model="name">
+         <q-input class="text-h3 q-mt-md" v-model="name">
            <template v-slot:after>
              <q-btn color="primary" :label="$t('submit')" @click="onNameSubmit"/>
              <q-btn color="primary" flat :label="$t('cancel')" @click="nameinput = !nameinput"/>
@@ -14,7 +17,7 @@
          </q-input>
        </div>
 
-       <q-avatar class="q-mt-xl q-ml-md" v-if="data.color" rounded :style="`background: ${data.color}`">
+       <q-avatar class="q-mt-md q-ml-md" v-if="data.color" rounded :style="`background: ${data.color};`">
          <q-icon name="edit" size="xs" class="q-mt-lg q-ml-lg" color="white"/>
          <q-popup-proxy>
            <q-color v-model="data.color"
