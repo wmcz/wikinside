@@ -87,7 +87,7 @@ export default defineComponent({
       },
       {
         title: t('tag.user'),
-        icon: 'sell',
+        icon: 'groups',
         link: '/user/tag'
       },
       {
@@ -97,7 +97,7 @@ export default defineComponent({
       },
       {
         title: t('tag.event'),
-        icon: 'sell',
+        icon: 'dashboard',
         link: '/event/tag'
       },
     ]
