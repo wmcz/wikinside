@@ -43,7 +43,8 @@ export default {
     no_children: 'Žádné podřazené kategorie',
     no_parent: 'Žádná nadřazená kategorie',
     color: 'Barva',
-    assign_color: 'Přiřadit barvu'
+    assign_color: 'Přiřadit barvu',
+    new_child: 'Vytvořit podkategorii'
   },
   project: {
     one: 'Projekt',

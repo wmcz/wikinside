@@ -64,6 +64,14 @@
            </div>
          </q-item-section>
        </q-item>
+       <q-item>
+         <q-item-section>
+           <q-input :rules="[ val => val && val.length > 0 || '']" v-if="newchildinput" :label="$t('tag.name')" v-model="childname"></q-input>
+         </q-item-section>
+         <q-item-section side>
+           <q-btn :size="newchildinput ? 'md' : 'xs'" :flat="!newchildinput" :label="newchildinput ? $t('submit') : $t('tag.new_child')" color="primary" @click="onChildClick"></q-btn>
+         </q-item-section>
+       </q-item>
      </q-list>
 
      <ImpactList :url="'tags/event-tags/' + $route.params.id"/>
@@ -199,8 +207,10 @@ export default {
       eventinput: false,
       parentinput: false,
       childinput: false,
+      newchildinput: false,
       nameinput:false,
       name: '',
+      childname: '',
       eventdata: null,
       list: [],
       loading: true,
@@ -254,6 +264,20 @@ export default {
       this.data.name = this.name
       updateName(this)
     },
+    onChildClick() {
+      if (this.newchildinput && this.childname !== '') {
+        api.post('/tags/event-tags', {
+          name: this.childname,
+          id: null,
+          color: this.data.color,
+          elementIds: [],
+          parentId: this.data.id,
+          childrenIds: []
+        }).then(() => changeTags(this, this.data.id, () => {}))
+      }
+      this.childname = ''
+      this.newchildinput = !this.newchildinput;
+    },
     resetFilter() {
       this.filter = ''
     },
@@ -269,6 +293,7 @@ export default {
     this.userinput = false
     this.parentinput = false
     this.childinput = false
+    this.newchildinput = false
   }
 }
 </script>

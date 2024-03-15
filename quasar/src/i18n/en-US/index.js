@@ -44,6 +44,7 @@ export default {
     no_parent: 'No parent category',
     color: 'Color',
     assign_color: 'Assign color',
+    new_child: 'Create child'
   },
   project: {
     one: 'Project',

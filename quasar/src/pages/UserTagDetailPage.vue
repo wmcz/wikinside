@@ -24,7 +24,7 @@
                     @change="onColorSubmit"/>
          </q-popup-proxy>
        </q-avatar>
-       <q-btn flat color="primary" class="q-mr-md q-mb-none q-mt-lg" style="position: relative; float: right" v-else @click="assignColor" :label="$t('tag.assign_color')"/>
+       <q-btn flat color="primary" class="q-ml-sm q-mt-md q-pa-none" style="position: relative; float: right" v-else @click="assignColor" :label="$t('tag.assign_color')"/>
        </div>
 
        <q-list bordered class="rounded-borders">
@@ -64,6 +64,14 @@
            </div>
          </q-item-section>
        </q-item>
+         <q-item>
+           <q-item-section>
+             <q-input :rules="[ val => val && val.length > 0 || '']" v-if="newchildinput" :label="$t('tag.name')" v-model="childname"></q-input>
+           </q-item-section>
+           <q-item-section side>
+             <q-btn :size="newchildinput ? 'md' : 'xs'" :flat="!newchildinput" :label="newchildinput ? $t('submit') : $t('tag.new_child')" color="primary" @click="onChildClick"></q-btn>
+           </q-item-section>
+         </q-item>
      </q-list>
 
      <q-list top bordered class="rounded-borders">
@@ -195,8 +203,10 @@ export default {
       userinput: false,
       parentinput: false,
       childinput: false,
+      newchildinput: false,
       nameinput:false,
       name: '',
+      childname: '',
       userdata: null,
       list: [],
       loading: true,
@@ -250,6 +260,20 @@ export default {
       this.data.name = this.name
       updateName(this)
     },
+    onChildClick() {
+      if (this.newchildinput && this.childname !== '') {
+        api.post('/tags/user-tags', {
+          name: this.childname,
+          id: null,
+          color: this.data.color,
+          elementIds: [],
+          parentId: this.data.id,
+          childrenIds: []
+        }).then(() => changeTags(this, this.data.id, () => {}))
+      }
+      this.childname = ''
+      this.newchildinput = !this.newchildinput;
+    },
     resetFilter() {
       this.filter = ''
     },
@@ -265,6 +289,7 @@ export default {
     this.userinput = false
     this.parentinput = false
     this.childinput = false
+    this.newchildinput = false
   }
 }
 </script>
