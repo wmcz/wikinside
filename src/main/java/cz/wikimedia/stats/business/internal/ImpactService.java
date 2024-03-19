@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class ImpactService {
@@ -71,11 +72,26 @@ public class ImpactService {
                               getEvents(revs));
         }
 
+    public Impact getUserTagImpact(Set<Revision> revs) {
+
+        return new Impact(getCreatedPages(revs),
+                getEditedPages(revs),
+                Long.valueOf(revs.size()),
+                getDiff(revs),
+                getUsers(revs),
+                getEvents(revs));
+    }
+
         public Impact getImpact(Event event) {
             return getEventImpact(event.getRevisions());
         }
 
         private void addRevs(EventTag tag, Set<Revision> revs) {
+            revs.addAll(tag.getTagged().stream().flatMap(e -> e.getRevisions().stream()).toList());
+            tag.getChildren().forEach(t -> addRevs(t, revs));
+        }
+
+        private void addRevs(UserTag tag, Set<Revision> revs) {
             revs.addAll(tag.getTagged().stream().flatMap(e -> e.getRevisions().stream()).toList());
             tag.getChildren().forEach(t -> addRevs(t, revs));
         }
@@ -86,7 +102,13 @@ public class ImpactService {
             return getEventImpact(revs);
         }
 
+    public Impact getImpact(UserTag tag) {
+        Set<Revision> revs = new HashSet<>();
+        addRevs(tag, revs);
+        return getUserTagImpact(revs);
+    }
+
         public Impact getImpact(User user) {
-            return getUserImpact(user.getRevisions());
+            return getUserImpact(user.getRevisions().stream().filter(r -> r.getEvents().size() > 0).collect(Collectors.toSet()));
         }
 }
