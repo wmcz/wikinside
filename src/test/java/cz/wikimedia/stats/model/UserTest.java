@@ -149,7 +149,7 @@ class UserTest extends BaseTest {
         Set<Event> events = new HashSet<>();
 
         while (events.size() < 10) {
-            events.add(new Event(randomLong(), null, randomString(), randomString(), randomDate(), randomDate(), null, null, null));
+            events.add(new Event(randomLong(), null, randomString(), null, randomString(), randomDate(), randomDate(), null, null, null, null));
         }
 
         User user = new User(null, null, null, null, null,events);

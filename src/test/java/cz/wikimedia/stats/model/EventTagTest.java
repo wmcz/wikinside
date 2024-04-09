@@ -46,7 +46,7 @@ class EventTagTest extends BaseTest {
     void getTagged() {
         Set<Event> tagged = new HashSet<>();
         while (tagged.size() < 10) {
-            tagged.add(new Event(randomLong(), null, randomString(), randomString(), randomDate(), randomDate(), null, null, null));
+            tagged.add(new Event(randomLong(), null, randomString(), null, randomString(), randomDate(), randomDate(), null, null, null, null));
         }
 
         EventTag tag = new EventTag(null, null, tagged, null, null);
@@ -85,7 +85,7 @@ class EventTagTest extends BaseTest {
 
         Set<Event> tagged = new HashSet<>();
         while (tagged.size() < 10) {
-            tagged.add(new Event(randomLong(), null, randomString(), randomString(), randomDate(), randomDate(), null, null, null));
+            tagged.add(new Event(randomLong(), null, randomString(), null, randomString(), randomDate(), randomDate(), null, null, null, null));
         }
 
         tagged.forEach(tag::addTagged);
@@ -98,7 +98,7 @@ class EventTagTest extends BaseTest {
     void removeTagged() {
         Set<Event> tagged = new HashSet<>();
         while (tagged.size() < 10) {
-            tagged.add(new Event(randomLong(), null, randomString(), randomString(), randomDate(), randomDate(), null, null, null));
+            tagged.add(new Event(randomLong(), null, randomString(), null, randomString(), randomDate(), randomDate(), null, null, null, null));
         }
 
         EventTag tag = new EventTag(null, null, new HashSet<>(), null, null);
@@ -170,19 +170,19 @@ class EventTagTest extends BaseTest {
         EventTag tag3 = new EventTag(id2, null, null, null, null);
         EventTag tag4 = new EventTag(id2, null, null, null, null);
 
-        Assertions.assertTrue(tag1.equals(tag2));
-        Assertions.assertTrue(tag2.equals(tag1));
+        Assertions.assertEquals(tag1, tag2);
+        Assertions.assertEquals(tag2, tag1);
 
-        Assertions.assertTrue(tag3.equals(tag4));
-        Assertions.assertTrue(tag4.equals(tag3));
+        Assertions.assertEquals(tag3, tag4);
+        Assertions.assertEquals(tag4, tag3);
 
-        Assertions.assertFalse(tag1.equals(tag3));
-        Assertions.assertFalse(tag3.equals(tag1));
+        Assertions.assertNotEquals(tag1, tag3);
+        Assertions.assertNotEquals(tag3, tag1);
 
-        Assertions.assertFalse(tag1.equals(tag4));
-        Assertions.assertFalse(tag4.equals(tag1));
+        Assertions.assertNotEquals(tag1, tag4);
+        Assertions.assertNotEquals(tag4, tag1);
 
-        Assertions.assertFalse(tag2.equals(tag4));
-        Assertions.assertFalse(tag4.equals(tag2));
+        Assertions.assertNotEquals(tag2, tag4);
+        Assertions.assertNotEquals(tag4, tag2);
     }
 }

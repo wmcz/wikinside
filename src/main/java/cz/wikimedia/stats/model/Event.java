@@ -36,6 +36,9 @@ public class Event implements IdAble<Long> {
     @ManyToMany
     private Set<Revision> revisions;
 
+    @ManyToMany
+    private Set<Image> images;
+
     private DataCollectionStrategy strategy;
 
     private String category;
@@ -45,17 +48,18 @@ public class Event implements IdAble<Long> {
     public Event(String name) {
         this.name = name;
     }
-
-    public Event(Long id, Set<EventTag> tags, String name, String category, LocalDate startDate, LocalDate endDate, Set<User> participants, Set<Project> projects, Set<Revision> revisions) {
+    public Event(Long id, Set<EventTag> tags, String name, DataCollectionStrategy strategy, String category, LocalDate startDate, LocalDate endDate, Set<User> participants, Set<Project> projects, Set<Revision> revisions, Set<Image> images) {
         this.id = id;
         this.tags = tags;
         this.name = name;
+        this.strategy = strategy;
         this.category = category;
         this.startDate = startDate;
         this.endDate = endDate;
         this.participants = participants;
         this.projects = projects;
         this.revisions = revisions;
+        this.images = images;
     }
 
     public Long getId() {
@@ -95,6 +99,10 @@ public class Event implements IdAble<Long> {
 
     public Set<Revision> getRevisions() {
         return revisions;
+    }
+
+    public Set<Image> getImages() {
+        return images;
     }
 
     public Event addTag(EventTag tag) {
@@ -139,6 +147,16 @@ public class Event implements IdAble<Long> {
 
     public Event removeRevision(Revision rev) {
         this.revisions.remove(rev);
+        return this;
+    }
+
+    public Event addImage(Image image) {
+        this.images.add(image);
+        return this;
+    }
+
+    public Event removeImage(Image image) {
+        this.images.remove(image);
         return this;
     }
 

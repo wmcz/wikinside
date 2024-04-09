@@ -177,7 +177,7 @@ class RevisionTest extends BaseTest {
         Set<Event> events = new HashSet<>();
 
         while (events.size() < 10) {
-            events.add(new Event(randomLong(), null, randomString(), null, randomDate(), randomDate(), null, null, null));
+            events.add(new Event(randomLong(), null, randomString(), null, null, randomDate(), randomDate(), null, null, null, null));
         }
 
         Revision rev = new Revision(null, null, null, null, null, null, events, null, null, null);
@@ -191,7 +191,7 @@ class RevisionTest extends BaseTest {
         Set<Event> events = new HashSet<>();
 
         while (events.size() < 10) {
-            events.add(new Event(randomLong(), null, randomString(), null, randomDate(), randomDate(), null, null, null));
+            events.add(new Event(randomLong(), null, randomString(), null, null, randomDate(), randomDate(), null, null, null, null));
         }
 
         Revision rev = new Revision(null, null, null, null, null, null, new HashSet<>(), null, null, null);

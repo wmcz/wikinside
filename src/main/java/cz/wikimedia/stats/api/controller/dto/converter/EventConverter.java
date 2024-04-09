@@ -27,6 +27,7 @@ public class EventConverter {
         return new EventDto(event.getId(),
                             ConverterUtils.getIds(event.getTags()),
                             event.getName(),
+                            event.getStrategy().name(),
                             event.getCategory(),
                             event.getStartDate(),
                             event.getEndDate(),
@@ -38,12 +39,14 @@ public class EventConverter {
         return new Event(dto.id(),
                          ConverterUtils.getElems(dto.tagIds(), eventTagService),
                          dto.name(),
-                         dto.hashtag(),
+                         Event.DataCollectionStrategy.valueOf(dto.strat()),
+                         dto.category(),
                          dto.startDate(),
                          dto.endDate(),
                          ConverterUtils.getElems(dto.userIds(), userService),
                          ConverterUtils.getElems(dto.projectIds(), projectService),
-                         dto.id() == null ? new HashSet<>() : eventService.findById(dto.id()).map(Event::getRevisions).orElse(new HashSet<>()));
+                         dto.id() == null ? new HashSet<>() : eventService.findById(dto.id()).map(Event::getRevisions).orElse(new HashSet<>()),
+                         dto.id() == null ? new HashSet<>() : eventService.findById(dto.id()).map(Event::getImages).orElse(new HashSet<>()));
     }
 
     public Collection<EventDto> toDto(Collection<Event> events) {
