@@ -4,10 +4,12 @@ import cz.wikimedia.stats.model.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ImpactService {
@@ -59,6 +61,15 @@ public class ImpactService {
             else return enumerate(images, Image::getUsage);
         }
 
+        private <E> Stream<E> getAll(Tag<E> tag) {
+            return Stream.concat(
+                    tag
+                            .getChildren()
+                            .stream()
+                            .flatMap(this::getAll),
+                    tag.getTagged().stream());
+        }
+
         public Impact getEventImpact(Set<Revision> revs, Set<Image> images) {
 
             return new Impact(getCreatedPages(revs),
@@ -69,6 +80,17 @@ public class ImpactService {
                               null,
                               images.isEmpty() ? null : Long.valueOf(images.size()),
                               collectUsage(images));
+        }
+
+        public Impact getPhotoOnlyEventImpact(Set<Image> images) {
+            return new Impact(null,
+                    null,
+                    null,
+                    null,
+                    getUsers(Collections.emptySet(), images),
+                    null,
+                    Long.valueOf(images.size()),
+                    collectUsage(images));
         }
 
         public Impact getUserImpact(Set<Revision> revs, Set<Image> images) {
@@ -96,7 +118,9 @@ public class ImpactService {
     }
 
         public Impact getImpact(Event event) {
-            return getEventImpact(event.getRevisions(), event.getImages());
+            return event.getStrategy() == Event.DataCollectionStrategy.PHOTO ?
+                    getPhotoOnlyEventImpact(event.getImages()) :
+                    getEventImpact(event.getRevisions(), event.getImages());
         }
 
         private <T, E> void populate(Tag<E> tag, Set<T> elems, Function<E, Collection<T>> getter) {
@@ -109,7 +133,9 @@ public class ImpactService {
             Set<Image> images = new HashSet<>();
             populate(tag, revs, Event::getRevisions);
             populate(tag, images, Event::getImages);
-            return getEventImpact(revs, images);
+            return getAll(tag).allMatch(e -> e.getStrategy() == Event.DataCollectionStrategy.PHOTO) ?
+                    getPhotoOnlyEventImpact(images) :
+                    getEventImpact(revs, images);
         }
 
         public Impact getImpact(UserTag tag) {
