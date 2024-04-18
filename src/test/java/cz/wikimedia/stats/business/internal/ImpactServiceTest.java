@@ -26,22 +26,22 @@ class ImpactServiceTest extends BaseTest {
             revs.add(new Revision(randomLong(), randomLong(), randomLong(), randomLong(), randomBool() ? 0 : randomLong(), null, null, project, randomInstant(), randomString()));
         }
 
-        Event event = new Event(1L, null, null, null, null, null, null, null, null, revs, null);
+        Event event = new Event(1L, null, null, null, null, null, null, null, null, revs, Collections.emptySet());
         EventTag tag = new EventTag(2L, null, Set.of(event), null, Collections.emptySet());
 
-        Assertions.assertEquals(service.getEventImpact(event.getRevisions()), service.getImpact(event));
-        Assertions.assertEquals(service.getEventImpact(event.getRevisions()), service.getImpact(tag));
+        Assertions.assertEquals(service.getEventImpact(event.getRevisions(), event.getImages()), service.getImpact(event));
+        Assertions.assertEquals(service.getEventImpact(event.getRevisions(), event.getImages()), service.getImpact(tag));
 
         //20 revs overlap
         Set<Revision> firstRevs = revs.stream().limit(60).collect(Collectors.toSet());
         Set<Revision> secondRevs = revs.stream().skip(40).collect(Collectors.toSet());
 
-        Event event1 = new Event(3L, null, null, null, null, null, null, null, null, firstRevs, null);
-        Event event2 = new Event(4L, null, null, null, null, null, null, null, null, secondRevs, null);
+        Event event1 = new Event(3L, null, null, null, null, null, null, null, null, firstRevs, Collections.emptySet());
+        Event event2 = new Event(4L, null, null, null, null, null, null, null, null, secondRevs, Collections.emptySet());
 
         EventTag tagWithBoth = new EventTag(2L, null, Set.of(event1, event2), null, Collections.emptySet());
 
-        Assertions.assertEquals(service.getEventImpact(revs), service.getImpact(tagWithBoth));
+        Assertions.assertEquals(service.getEventImpact(revs, Collections.emptySet()), service.getImpact(tagWithBoth));
 
     }
 

@@ -29,6 +29,8 @@ public class User implements IdAble<Long> {
     @OneToMany(mappedBy = "user")
     private Set<Revision> revisions;
 
+    @OneToMany(mappedBy = "user")
+    private Set<Image> images;
 
     /* CONSTRUCTORS */
 
@@ -82,6 +84,10 @@ public class User implements IdAble<Long> {
 
     public Set<Revision> getRevisions() {
         return revisions;
+    }
+
+    public Set<Image> getImages() {
+        return images;
     }
 
     public User setUsername(String username) {

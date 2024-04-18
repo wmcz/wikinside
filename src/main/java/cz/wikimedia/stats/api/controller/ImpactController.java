@@ -1,13 +1,7 @@
 package cz.wikimedia.stats.api.controller;
 
-import cz.wikimedia.stats.business.internal.EventService;
-import cz.wikimedia.stats.business.internal.EventTagService;
-import cz.wikimedia.stats.business.internal.ImpactService;
-import cz.wikimedia.stats.business.internal.UserService;
-import cz.wikimedia.stats.model.Event;
-import cz.wikimedia.stats.model.EventTag;
-import cz.wikimedia.stats.model.Impact;
-import cz.wikimedia.stats.model.User;
+import cz.wikimedia.stats.business.internal.*;
+import cz.wikimedia.stats.model.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,12 +15,14 @@ public class ImpactController {
     private final EventTagService eventTagService;
     private final UserService userService;
     private final ImpactService impactService;
+    private final UserTagService userTagService;
 
-    public ImpactController(EventService eventService, EventTagService eventTagService, UserService userService, ImpactService impactService) {
+    public ImpactController(EventService eventService, EventTagService eventTagService, UserService userService, ImpactService impactService, UserTagService userTagService) {
         this.eventService = eventService;
         this.eventTagService = eventTagService;
         this.userService = userService;
         this.impactService = impactService;
+        this.userTagService = userTagService;
     }
 
     @GetMapping("/events/{id}/impact")
@@ -51,6 +47,14 @@ public class ImpactController {
                 .findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         return impactService.getImpact(user);
+    }
+
+    @GetMapping("/tags/user-tags/{id}/impact")
+    Impact getUserTagImpact(@PathVariable Long id) {
+        UserTag tag = userTagService
+                .findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag not found"));
+        return impactService.getImpact(tag);
     }
 
 }

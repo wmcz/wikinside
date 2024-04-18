@@ -22,12 +22,15 @@ export default {
     add: 'Přidat události',
     name: 'Jméno události',
     strategy: {
-      label: 'Strategie výběru uživatel',
-      manual: 'Manuální',
-      auto: 'Automatická (z hashtagu)'
+      label: 'Typ události',
+      manual: 'S manuálním výběrem uživatel',
+      hashtag: 'S hashtagem',
+      photo: "Fotokategorie",
     },
     hashtag: 'Hashtag',
+    photo: 'Jméno kategorie',
     hashtag_hint: 'Funguje i bez symbolu #, tj. \'#WikiGap\' a \'WikiGap\' fungují stejně',
+    photo_hint: 'Musí obsahovat předponu \'Category:\'',
     dates: 'Data',
     dates_hint: 'Klikněte dvakrát pro jednodenní události'
   },
@@ -59,6 +62,8 @@ export default {
     byteDiff: 'přidaných bajtů',
     users: 'aktivních účastníků',
     events: 'zúčastněných událostí',
+    images: 'obrázků nahráno',
+    usages: 'stránek používajících nahrané obrázky',
     disclaimer: 'Změny se neprojevují na dopadu automaticky. Pro přepočet po změně vlastností prosím chvíli vyčkejte, a poté obnovte stránku. Zpracování změn obvykle netrvá déle než několik vteřin, ale v některých případech může být pomalejší.'
   },
   notification: {

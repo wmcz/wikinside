@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-public class Revision implements IdAble<Long> {
+public class Revision implements IdAble<Long>, Impactable {
     @Id
     @GeneratedValue
     private Long id;

@@ -2,7 +2,8 @@ package cz.wikimedia.stats.business.internal;
 
 import cz.wikimedia.stats.dao.EventRepository;
 import cz.wikimedia.stats.model.Event;
-import cz.wikimedia.stats.model.Revision;
+import cz.wikimedia.stats.model.ImageCategory;
+import cz.wikimedia.stats.model.Impactable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -11,7 +12,7 @@ import java.time.ZoneId;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static cz.wikimedia.stats.model.Event.DataCollectionStrategy.HASHTAG;
+import static cz.wikimedia.stats.model.Event.DataCollectionStrategy.MANUAL;
 
 @Service
 public class EventService extends InternalService<Event, Long> {
@@ -43,15 +44,25 @@ public class EventService extends InternalService<Event, Long> {
                 ))
                 .toList()
                 .forEach(event::removeRevision);
+        event
+                .getImages()
+                .stream()
+                .filter(i -> !(
+                        isWithinDateRange(i.getTimestamp(), event.getStartDate(), event.getEndDate()) &&
+                        i.getCategories().contains(new ImageCategory(event.getCategory()))
+                        ))
+                .toList()
+                .forEach(event::removeImage);
 
-        if (event.getStrategy() == HASHTAG)
-            // for automatically generated users, remove them if they have no revisions
+
+        if (event.getStrategy() != MANUAL)
+            // for automatically generated users, remove them if they have no impactables
             event
                     .getParticipants()
                     .retainAll(event
-                            .getRevisions()
+                            .getImpactables()
                             .stream()
-                            .map(Revision::getUser)
+                            .map(Impactable::getUser)
                             .collect(Collectors.toSet()));
     }
 

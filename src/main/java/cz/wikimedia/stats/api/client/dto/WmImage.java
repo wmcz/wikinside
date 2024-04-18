@@ -8,6 +8,6 @@ public record WmImage(@JsonProperty("pageid") Long pageId,
                       @JsonProperty("ns") int namespace,
                       @JsonProperty("title") String title,
                       @JsonProperty("imagerepository") String imageRepository,
-                      @JsonProperty("imageinfo") ImageInfo imageInfo,
+                      @JsonProperty("imageinfo") Collection<ImageInfo> imageInfo,
                       @JsonProperty("globalusage") Collection<GlobalUsage> globalUsage,
                       @JsonProperty("fileusage") Collection<WmPage> commonsUsage) {}

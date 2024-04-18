@@ -2,6 +2,7 @@ package cz.wikimedia.stats.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -86,6 +87,13 @@ public class Event implements IdAble<Long> {
         return participants;
     }
 
+    public Set<Impactable> getImpactables() {
+        Set<Impactable> res = new HashSet<>();
+        res.addAll(revisions);
+        res.addAll(images);
+        return res;
+    }
+
     public Set<Project> getProjects() {
         return projects;
     }
@@ -157,6 +165,15 @@ public class Event implements IdAble<Long> {
 
     public Event removeImage(Image image) {
         this.images.remove(image);
+        /*if (
+                this.strategy != DataCollectionStrategy.MANUAL &&
+                this
+                        .getImpactables()
+                        .stream()
+                        .map(Impactable::getUser)
+                        .collect(Collectors.toSet())
+                        .contains(image.getUser())
+        ) removeParticipant(image.getUser());*/
         return this;
     }
 

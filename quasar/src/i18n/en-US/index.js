@@ -22,12 +22,15 @@ export default {
     add: 'Add events',
     name: 'Event name',
     strategy: {
-      label: 'User selection strategy',
-      manual: 'Manual',
-      auto: 'Automatic (from hashtag)'
+      label: 'Event type',
+      manual: 'With manual user selection',
+      hashtag: 'With a hashtag',
+      photo: "Photo category"
     },
     hashtag: 'Hashtag',
+    photo: 'Category name',
     hashtag_hint: 'Works with or without the # sign, e.g. both \'#WikiGap\' and \'WikiGap\' are the same',
+    photo_hint: 'Must include the \'Category:\' prefix',
     dates: 'Dates',
     dates_hint: 'Double click for single day events'
   },
@@ -59,6 +62,8 @@ export default {
     byteDiff: 'added bytes',
     users: 'active participants',
     events: 'events participated',
+    images: 'images uploaded',
+    usages: 'pages using uploaded images',
     disclaimer: 'Impact is not automatically updated after changes to events. To recalculate, please wait a moment, and then refresh the page. Processing the changes usually does not take more than a few seconds, but may take longer in some cases.'
   },
   notification: {
