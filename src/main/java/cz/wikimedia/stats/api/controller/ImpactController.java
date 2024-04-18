@@ -14,15 +14,15 @@ public class ImpactController {
     private final EventService eventService;
     private final EventTagService eventTagService;
     private final UserService userService;
-    private final ImpactService impactService;
     private final UserTagService userTagService;
+    private final ImpactService impactService;
 
-    public ImpactController(EventService eventService, EventTagService eventTagService, UserService userService, ImpactService impactService, UserTagService userTagService) {
+    public ImpactController(EventService eventService, EventTagService eventTagService, UserService userService, UserTagService userTagService, ImpactService impactService) {
         this.eventService = eventService;
         this.eventTagService = eventTagService;
         this.userService = userService;
-        this.impactService = impactService;
         this.userTagService = userTagService;
+        this.impactService = impactService;
     }
 
     @GetMapping("/events/{id}/impact")

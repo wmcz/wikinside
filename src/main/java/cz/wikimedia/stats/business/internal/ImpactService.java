@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class ImpactService {
@@ -82,6 +83,18 @@ public class ImpactService {
                               collectUsage(images));
         }
 
+    public Impact getUserTagImpact(Set<Revision> revs, Set<Image> images) {
+
+        return new Impact(getCreatedPages(revs),
+                getEditedPages(revs),
+                Long.valueOf(revs.size()),
+                getDiff(revs),
+                getUsers(revs),
+                getEvents(revs),
+                images.isEmpty() ? null : Long.valueOf(images.size()),
+                collectUsage(images));
+    }
+
         public Impact getImpact(Event event) {
             return getEventImpact(event.getRevisions(), event.getImages());
         }
@@ -89,6 +102,11 @@ public class ImpactService {
         private <T, E> void populate(Tag<E> tag, Set<T> elems, Function<E, Collection<T>> getter) {
             elems.addAll(tag.getTagged().stream().flatMap(e -> getter.apply(e).stream()).toList());
             tag.getChildren().forEach(t -> populate(t, elems, getter));
+        }
+
+        private void addRevs(UserTag tag, Set<Revision> revs) {
+            revs.addAll(tag.getTagged().stream().flatMap(e -> e.getRevisions().stream()).toList());
+            tag.getChildren().forEach(t -> addRevs(t, revs));
         }
 
         public Impact getImpact(EventTag tag) {
@@ -104,10 +122,10 @@ public class ImpactService {
             Set<Image> images = new HashSet<>();
             populate(tag, revs, User::getRevisions);
             populate(tag, images, User::getImages);
-            return getUserImpact(revs, images);
+            return getUserTagImpact(revs, images);
         }
 
         public Impact getImpact(User user) {
-            return getUserImpact(user.getRevisions(), user.getImages());
+            return getUserImpact(user.getRevisions().stream().filter(r -> r.getEvents().size() > 0).collect(Collectors.toSet()), user.getImages().stream().filter(i -> !i.getEvents().isEmpty()));
         }
 }

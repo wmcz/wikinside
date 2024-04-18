@@ -1,5 +1,5 @@
 export default {
-  app_name: 'Statistická aplikace WMČR',
+  app_name: 'WIKINSIDE',
   404: 'Stránka nenalezena',
   add: 'Přidat',
   filter: 'Filtrovat',
@@ -35,18 +35,19 @@ export default {
     dates_hint: 'Klikněte dvakrát pro jednodenní události'
   },
   tag: {
-    one: 'Tag',
-    many: 'Tagy',
-    none: 'Žádné tagy',
-    user: 'Uživatelské tagy',
-    event: 'Tagy událostí',
-    name: 'Jméno tagu',
-    add: 'Přidat tagy',
-    parent: 'Nadtag',
-    no_children: 'Žádné podtagy',
-    no_parent: 'Žádný nadtag',
+    one: 'Kategorie',
+    many: 'Kategorie',
+    none: 'Žádné kategorie',
+    user: 'Uživatelské kategorie',
+    event: 'Kategorie událostí',
+    name: 'Jméno kategorie',
+    add: 'Přidat kategorie',
+    parent: 'Nadřazená kategorie',
+    no_children: 'Žádné podřazené kategorie',
+    no_parent: 'Žádná nadřazená kategorie',
     color: 'Barva',
-    assign_color: 'Přiřadit barvu'
+    assign_color: 'Přiřadit barvu',
+    new_child: 'Vytvořit podkategorii'
   },
   project: {
     one: 'Projekt',
@@ -71,5 +72,14 @@ export default {
     500: 'ERROR: Chyba na straně serveru; zkuste obnovit stránku.',
     network_error: 'ERROR: Nelze se připojit k serveru.',
     generic_error: 'ERROR: Něco se pokazilo; zkuste obnovit stránku.'
+  },
+  footer: {
+    first: "Vytvořeno spolkem ",
+    wmLink: "Wikimedia Česká republika.",
+    second: " Náš zdrojový kód je volně dostupný na ",
+    gitHubLink: "GitHubu.",
+    third: "Nalezli jste chybu? ",
+    reportLink:"Ohlašte ji zde.",
+    fourth: ""
   }
 }

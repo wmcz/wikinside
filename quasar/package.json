@@ -2,7 +2,7 @@
   "name": "quasar",
   "version": "0.0.1",
   "description": "A web interface to access the stats tool",
-  "productName": "WMCZ Stats Web App",
+    "productName": "WIKINSIDE",
   "author": "korinivo",
   "private": true,
   "scripts": {

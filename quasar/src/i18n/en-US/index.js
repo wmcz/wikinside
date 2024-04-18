@@ -1,5 +1,5 @@
 export default {
-  app_name: 'WMCZ Stats app',
+  app_name: 'WIKINSIDE',
   404: 'Page not found',
   add: 'Add',
   filter: 'Filter',
@@ -35,18 +35,19 @@ export default {
     dates_hint: 'Double click for single day events'
   },
   tag: {
-    one: 'Tag',
-    many: 'Tags',
-    user: 'User tags',
-    none: 'No tags',
-    event: 'Event tags',
-    name: 'Tag name',
-    add: 'Add tags',
-    parent: 'Parent tag',
-    no_children: 'No children',
-    no_parent: 'No parent tag',
+    one: 'Category',
+    many: 'Categories',
+    user: 'User categories',
+    none: 'No categories',
+    event: 'Event caegories',
+    name: 'Category name',
+    add: 'Add categories',
+    parent: 'Parent category',
+    no_children: 'No child categories',
+    no_parent: 'No parent category',
     color: 'Color',
     assign_color: 'Assign color',
+    new_child: 'Create child'
   },
   project: {
     one: 'Project',
@@ -71,5 +72,14 @@ export default {
     500: 'ERROR: Server-side error; try refreshing the website.',
     network_error: 'ERROR: Could not connect to server.',
     generic_error: 'ERROR: Something has gone wrong; try refreshing the website.'
+  },
+  footer: {
+    first: " Created by ",
+    wmLink: "Wikimedia Czech Republic.",
+    second: " Our source code is freely available on ",
+    gitHubLink: "GitHub.",
+    third: " Found an issue? ",
+    reportLink:"Report it here.",
+    fourth: ""
   }
 }

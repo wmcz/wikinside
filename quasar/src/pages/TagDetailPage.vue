@@ -2,11 +2,14 @@
  <q-page class="flex flex-center">
    <div class="q-gutter-md">
      <div style="display: flex">
-     <h3 v-if="!nameinput" class="q-mb-sm" @dblclick="nameinput = !nameinput;name=data.name">
-       {{ data.name }}
-     </h3>
+       <q-item v-if="!nameinput">
+         <q-item-label class="text-h3">
+           {{ data.name }}
+         </q-item-label>
+         <q-btn flat side class="q-ml-sm q-pa-none"><q-icon color="primary" class="q-mt-md" name="edit" @click="nameinput = !nameinput;name=data.name"></q-icon></q-btn>
+       </q-item>
      <div v-else>
-      <q-input class="text-h3 q-mt-xl" v-model="name">
+      <q-input class="text-h3 q-mt-md" v-model="name">
         <template v-slot:after>
        <q-btn color="primary" :label="$t('submit')" @click="onNameSubmit"/>
        <q-btn color="primary" flat :label="$t('cancel')" @click="nameinput = !nameinput"/>
@@ -14,14 +17,14 @@
       </q-input>
      </div>
 
-     <q-avatar class="q-mt-xl q-ml-md" v-if="data.color" rounded :style="`background: ${data.color};`">
+     <q-avatar class="q-mt-md q-ml-md" v-if="data.color" rounded :style="`background: ${data.color};`">
        <q-icon name="edit" size="xs" class="q-mt-lg q-ml-lg" color="white"/>
        <q-popup-proxy>
          <q-color v-model="data.color"
          @change="onColorSubmit"/>
        </q-popup-proxy>
      </q-avatar>
-     <q-btn flat color="primary" class="q-mr-md q-mb-none q-mt-lg" style="position: relative; float: right" v-else @click="assignColor" :label="$t('tag.assign_color')"/>
+     <q-btn flat color="primary" class="q-ml-sm q-mt-md q-pa-none" style="position: relative; float: right" v-else @click="assignColor" :label="$t('tag.assign_color')"/>
      </div>
 
      <q-list bordered class="rounded-borders">
@@ -30,9 +33,9 @@
             <q-icon color="primary" name="north_west"/>
          </q-item-section>
          <q-item-section>
-           <TagSelect parent url="tags/event-tags" :default-selected="data.parent" v-if="parentinput" ref="parentSelect"/>
+           <TagSelect parent :url="'tags/' + elemtype + '-tags'" :default-selected="data.parent" v-if="parentinput" ref="parentSelect"/>
            <q-item-label v-else-if="data.parent">
-            <TagBadge v-bind="data.parent" elemtype="event"/>
+            <TagBadge v-bind="data.parent" :elemtype="elemtype"/>
            </q-item-label>
            <q-item-label v-else caption> {{ $t('tag.no_parent') }} </q-item-label>
          </q-item-section>
@@ -48,9 +51,9 @@
            <q-icon color="primary" name="subdirectory_arrow_right"></q-icon>
          </q-item-section>
          <q-item-section class="text-weight-bold">
-           <TagSelect v-if="childinput" url="tags/event-tags" :default-selected="data.children" ref="childSelect"/>
+           <TagSelect v-if="childinput" :url="'tags/' + elemtype + '-tags'" :default-selected="data.children" ref="childSelect"/>
            <q-item-label v-else-if="data.children.length" lines="1">
-             <TagBadge class="q-mr-xs" v-for="tag in data.children" v-bind="tag" :key="tag.name" elemtype="event"/>
+             <TagBadge class="q-mr-xs" v-for="tag in data.children" v-bind="tag" :key="tag.name" :elemtype="elemtype"/>
            </q-item-label>
            <q-item-label v-else caption> {{ $t('tag.no_children') }} </q-item-label>
          </q-item-section>
@@ -61,13 +64,21 @@
            </div>
          </q-item-section>
        </q-item>
+       <q-item>
+         <q-item-section>
+           <q-input :rules="[ val => val && val.length > 0 || '']" v-if="newchildinput" :label="$t('tag.name')" v-model="childname"></q-input>
+         </q-item-section>
+         <q-item-section side>
+           <q-btn :size="newchildinput ? 'md' : 'xs'" :flat="!newchildinput" :label="newchildinput ? $t('submit') : $t('tag.new_child')" color="primary" @click="onChildClick"></q-btn>
+         </q-item-section>
+       </q-item>
      </q-list>
 
-     <ImpactList :url="'tags/event-tags/' + $route.params.id"/>
+     <ImpactList :url="'tags/' + elemtype + '-tags/' + $route.params.id" :key="$route.params.id"/>
 
      <q-list top bordered class="rounded-borders">
        <q-item class="q-py-none q-pl-none">
-         <q-item-label header>{{ $t('event.many') }}</q-item-label>
+         <q-item-label header>{{ $t(elemtype + '.many') }}</q-item-label>
          <q-space />
          <q-input  side dense input-class="text-right" style="float: right" class="q-pt-xs" v-model="filter" :label="$t('filter')">
            <template v-slot:append>
@@ -78,18 +89,18 @@
        </q-item>
        <q-table :rows="list" :row-key="name" grid :loading="loading" :filter="filter" :pagination="{ rowsPerPage: 10}">
          <template v-slot:item="props">
-           <EventLink :key="props.row.name" supressnotag v-bind="props.row" right-icon="clear" @deleteEvent="(id) => removeEvent(id)"/>
+           <component :is="linkFromElemType()" :key="props.row.name" supressnotag v-bind="props.row" right-icon="clear" @deleteElem="(id) => removeElem(id)"/>
          </template>
          <template v-slot:no-data>
-           {{ $t('event.none') }}
+           {{ $t(elemtype + '.none') }}
          </template>
        </q-table>
-       <div v-if="eventinput" class="q-mb-md q-mx-md q-mt-none">
-         <EventSelect :label="$t('event.add')" ref="eventSelect"/>
-         <q-btn class="q-mr-sm" color="primary" :label="$t('submit')" @click="onEventSubmit"/>
-         <q-btn outline color="primary" :label="$t('cancel')" @click="eventinput = false"/>
+       <div v-if="eleminput" class="q-mb-md q-mx-md q-mt-none">
+         <component :is="selectFromElemType()" :label="$t(elemtype + '.add')" ref="elemSelect"/>
+         <q-btn class="q-mr-sm" color="primary" :label="$t('submit')" @click="onElemSubmit"/>
+         <q-btn outline color="primary" :label="$t('cancel')" @click="eleminput = false"/>
        </div>
-       <q-btn v-else class="q-mb-md q-ml-md" color="primary" :label="$t('event.add')" @click="eventinput = true"/>
+       <q-btn v-else class="q-mb-md q-ml-md" color="primary" :label="$t(elemtype + '.add')" @click="eleminput = true"/>
      </q-list>
    </div>
  </q-page>
@@ -99,7 +110,9 @@
 import {api} from "boot/axios";
 import {useRoute} from "vue-router";
 import EventSelect from "components/EventSelect.vue";
+import UserSelect from "components/UserSelect.vue";
 import EventLink from "components/EventLink.vue";
+import UserLink from "components/UserLink.vue";
 import TagBadge from "components/TagBadge.vue";
 import {getErrorMessage} from "src/util";
 import TagSelect from "components/TagSelect.vue";
@@ -110,7 +123,7 @@ const { getPaletteColor } = colors
 
 function update(self, response) {
   api
-    .put('tags/event-tags', {
+    .put('tags/' + self.elemtype + '-tags', {
       name: self.data.name,
       id: self.data.id,
       color: self.data.color,
@@ -124,13 +137,13 @@ function update(self, response) {
 
 function changeTags(self, id, onFinish) {
   api
-    .get('tags/event-tags')
+    .get('tags/' + self.elemtype + '-tags')
     .then((response) => {
       self.tagdata = response.data
       self.data = self.tagdata.find(t => t.id == id)
       self.data.children = self.data.childrenIds.map(id => self.tagdata.find(t => t.id === id))
       self.data.parent = self.data.parentId === null ? null : self.tagdata.find(t => t.id === self.data.parentId)
-      self.data.elems = self.data.elementIds.map(id => self.eventdata.find(u => u.id === id))
+      self.data.elems = self.data.elementIds.map(id => self.elemdata.find(u => u.id === id))
       self.list = self.data.elems
       onFinish.call()
     })
@@ -141,9 +154,9 @@ function changeTags(self, id, onFinish) {
 
 }
 
-function updateEvents(self) {
+function updateElems(self) {
   update(self, (response) => {
-    self.data.elems = response.data.elementIds.map(id => self.eventdata.find(u => u.id === id))
+    self.data.elems = response.data.elementIds.map(id => self.elemdata.find(u => u.id === id))
     self.list = self.data.elems
   })
 }
@@ -174,13 +187,21 @@ function updateName(self) {
 }
 
 export default {
-  name: "EventTagDetailPage",
+  name: "TagDetailPage",
   components: {
     ImpactList,
     TagSelect,
     EventLink,
+    UserLink,
     EventSelect,
+    UserSelect,
     TagBadge
+  },
+  props: {
+    elemtype: {
+      type: String,
+      required: true
+    }
   },
   data() {
     return {
@@ -193,12 +214,14 @@ export default {
         color: null
       },
       filter: '',
-      eventinput: false,
+      eleminput: false,
       parentinput: false,
       childinput: false,
+      newchildinput: false,
       nameinput:false,
       name: '',
-      eventdata: null,
+      childname: '',
+      elemdata: null,
       list: [],
       loading: true,
     }
@@ -208,9 +231,9 @@ export default {
     const self = this
 
     api
-      .get('events')
+      .get(this.elemtype + 's')
       .then((response) => {
-        self.eventdata = response.data
+        self.elemdata = response.data
         changeTags(self, route.params.id, () => {self.loading = false})
         self.loading = false
       })
@@ -223,12 +246,12 @@ export default {
 
   },
   methods: {
-    onEventSubmit() {
+    onElemSubmit() {
       this.loading = true
-      this.data.elems.push(...this.$refs.eventSelect.selected)
-      updateEvents(this)
-      this.$refs.eventSelect.selected = []
-      this.eventinput = false
+      this.data.elems.push(...this.$refs.elemSelect.selected)
+      updateElems(this)
+      this.$refs.elemSelect.selected = []
+      this.eleminput = false
       this.loading = false
     },
     onParentSubmit() {
@@ -251,21 +274,48 @@ export default {
       this.data.name = this.name
       updateName(this)
     },
+    onChildClick() {
+      if (this.newchildinput && this.childname !== '') {
+        api.post('/tags/' + this.elemtype + '-tags', {
+          name: this.childname,
+          id: null,
+          color: this.data.color,
+          elementIds: [],
+          parentId: this.data.id,
+          childrenIds: []
+        }).then(() => changeTags(this, this.data.id, () => {}))
+      }
+      this.childname = ''
+      this.newchildinput = !this.newchildinput;
+    },
     resetFilter() {
       this.filter = ''
     },
-    removeEvent(id) {
-      this.eventloading = true
+    removeElem(id) {
+      this.loading = true
       this.data.elems.splice(this.data.elems.indexOf(id), 1)
-      updateEvents(this)
-      this.userloading = false
+      updateElems(this)
+      this.loading = false
+    },
+    linkFromElemType() {
+      switch (this.elemtype) {
+        case 'event': return 'EventLink'
+        case 'user':  return 'UserLink'
+      }
+    },
+    selectFromElemType() {
+      switch (this.elemtype) {
+        case 'event': return 'EventSelect'
+        case 'user':  return 'UserSelect'
+      }
     }
   },
   async beforeRouteUpdate(to, from) {
     changeTags(this, to.params.id, () => {})
-    this.userinput = false
+    this.eleminput = false
     this.parentinput = false
     this.childinput = false
+    this.newchildinput = false
   }
 }
 </script>
