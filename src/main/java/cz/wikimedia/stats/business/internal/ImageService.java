@@ -39,7 +39,6 @@ public class ImageService extends InternalService<Image, Long> {
     }
 
     private void updateOrCreate(Image image) {
-        System.out.println("image " + image.toString());
         Optional<Image> original = imageRepository.findById(image.getId());
 
         if (original.isPresent()) {

@@ -102,7 +102,6 @@ public class WmClient extends AbstractClient {
     }
 
     public ContinuableBatchResponse<ImageInfoUsageQuery, IIUContinue> getCategoryImageInfo(String name, Instant start, Instant end) {
-        System.out.println("getCategoryImageInfo");
         return get(uriBuilder -> uriBuilder
                         .queryParam("prop", "imageinfo|globalusage|fileusage")
                         .queryParam("generator", "categorymembers")

@@ -34,7 +34,7 @@
            </q-popup-proxy>
          </q-item-section>
        </q-item>
-       <q-item>
+       <q-item v-if="projects > 0">
          <q-item-section avatar>
            <q-icon color="primary" name="public"/>
          </q-item-section>
@@ -51,12 +51,12 @@
            </div>
          </q-item-section>
        </q-item>
-       <q-item v-if="eventdata.hashtag">
+       <q-item v-if="eventdata.category">
          <q-item-section avatar>
            <q-icon color="primary" class="text-weight-bolder">#</q-icon>
          </q-item-section>
          <q-item-section class="text-weight-bold">
-           {{ eventdata.hashtag }}
+           {{ eventdata.category }}
          </q-item-section>
        </q-item>
      </q-list>

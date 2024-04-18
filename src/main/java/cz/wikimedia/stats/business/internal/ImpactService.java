@@ -89,7 +89,7 @@ public class ImpactService {
                 getEditedPages(revs),
                 Long.valueOf(revs.size()),
                 getDiff(revs),
-                getUsers(revs),
+                getUsers(revs, images),
                 getEvents(revs),
                 images.isEmpty() ? null : Long.valueOf(images.size()),
                 collectUsage(images));
@@ -102,11 +102,6 @@ public class ImpactService {
         private <T, E> void populate(Tag<E> tag, Set<T> elems, Function<E, Collection<T>> getter) {
             elems.addAll(tag.getTagged().stream().flatMap(e -> getter.apply(e).stream()).toList());
             tag.getChildren().forEach(t -> populate(t, elems, getter));
-        }
-
-        private void addRevs(UserTag tag, Set<Revision> revs) {
-            revs.addAll(tag.getTagged().stream().flatMap(e -> e.getRevisions().stream()).toList());
-            tag.getChildren().forEach(t -> addRevs(t, revs));
         }
 
         public Impact getImpact(EventTag tag) {
@@ -126,6 +121,6 @@ public class ImpactService {
         }
 
         public Impact getImpact(User user) {
-            return getUserImpact(user.getRevisions().stream().filter(r -> r.getEvents().size() > 0).collect(Collectors.toSet()), user.getImages().stream().filter(i -> !i.getEvents().isEmpty()));
+            return getUserImpact(user.getRevisions().stream().filter(r -> !r.getEvents().isEmpty()).collect(Collectors.toSet()), user.getImages().stream().filter(i -> !i.getEvents().isEmpty()).collect(Collectors.toSet()));
         }
 }

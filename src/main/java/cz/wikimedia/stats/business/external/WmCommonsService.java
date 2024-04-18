@@ -26,7 +26,6 @@ public class WmCommonsService {
                 event.getCategory(),
                 event.getStartDate().atStartOfDay(ZoneId.systemDefault()).toInstant(),
                 event.getEndDate().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
-        System.out.println(response.toString());
         Collection<WmImage> images = response.query().contents();
 
         while (response.toContinue().gcmContinue() != null) {
@@ -35,7 +34,6 @@ public class WmCommonsService {
                     event.getStartDate().atStartOfDay(ZoneId.systemDefault()).toInstant(),
                     event.getEndDate().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant(),
                     response.toContinue().listContinue());
-            System.out.println(response.toContinue());
             images.addAll(response.query().contents());
         }
 
