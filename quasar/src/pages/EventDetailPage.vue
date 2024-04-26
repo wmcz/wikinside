@@ -56,7 +56,12 @@
            <q-icon color="primary" class="text-weight-bolder">#</q-icon>
          </q-item-section>
          <q-item-section class="text-weight-bold">
-           {{ eventdata.category }}
+           <a style='color: black' v-if="eventdata.strat === 'PHOTO'" :href="'https://commons.wikimedia.org/wiki/' + eventdata.category">
+             {{ eventdata.category.substring(eventdata.category.indexOf(':') + 1) }}
+           </a>
+           <div v-else>
+             {{ eventdata.category }}
+           </div>
          </q-item-section>
        </q-item>
      </q-list>
