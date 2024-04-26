@@ -89,7 +89,7 @@
        </q-item>
        <q-table :rows="list" :row-key="name" grid :loading="loading" :filter="filter" :pagination="{ rowsPerPage: 10}">
          <template v-slot:item="props">
-           <component :is="linkFromElemType()" :key="props.row.name" supressnotag v-bind="props.row" right-icon="clear" @deleteElem="(id) => removeElem(id)"/>
+           <component :is="linkFromElemType()" :key="props.row.name" supresstags v-bind="props.row" right-icon="clear" @deleteElem="(id) => removeElem(id)"/>
          </template>
          <template v-slot:no-data>
            {{ $t(elemtype + '.none') }}
