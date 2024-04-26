@@ -39,7 +39,7 @@ export default {
     many: 'Categories',
     user: 'User categories',
     none: 'No categories',
-    event: 'Event caegories',
+    event: 'Event categories',
     name: 'Category name',
     add: 'Add categories',
     parent: 'Parent category',
