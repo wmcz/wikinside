@@ -28,7 +28,7 @@ export default {
       photo: "Photo category"
     },
     hashtag: 'Hashtag',
-    photo: 'Category name',
+    photo: 'Photo category name',
     hashtag_hint: 'Works with or without the # sign, e.g. both \'#WikiGap\' and \'WikiGap\' are the same',
     photo_hint: 'Must include the \'Category:\' prefix',
     dates: 'Dates',

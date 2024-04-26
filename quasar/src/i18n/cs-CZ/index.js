@@ -28,7 +28,7 @@ export default {
       photo: "Fotokategorie",
     },
     hashtag: 'Hashtag',
-    photo: 'Jméno kategorie',
+    photo: 'Jméno fotokategorie',
     hashtag_hint: 'Funguje i bez symbolu #, tj. \'#WikiGap\' a \'WikiGap\' fungují stejně',
     photo_hint: 'Musí obsahovat předponu \'Category:\'',
     dates: 'Data',
