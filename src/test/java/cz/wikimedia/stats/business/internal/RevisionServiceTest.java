@@ -1,6 +1,7 @@
 package cz.wikimedia.stats.business.internal;
 
 import cz.wikimedia.stats.business.external.HashtagsService;
+import cz.wikimedia.stats.business.external.WmCommonsService;
 import cz.wikimedia.stats.business.external.WmRevisionService;
 import cz.wikimedia.stats.business.external.WmUserService;
 import cz.wikimedia.stats.dao.EventRepository;
@@ -41,6 +42,9 @@ class RevisionServiceTest {
     @MockBean
     EventService eventService;
 
+    @MockBean
+    WmCommonsService wmCommonsService;
+
     RevisionService service;
     Event event;
     Collection<Revision> revs;
@@ -51,7 +55,7 @@ class RevisionServiceTest {
         User user3 = new User(1003L, "user3");
 
         Project project = new Project(2001L, "project", "path");
-        event = new Event(2002L, Collections.emptySet(), "event", null, LocalDate.EPOCH, LocalDate.EPOCH, Set.of(user1, user2, user3), Set.of(project), new HashSet<>());
+        event = new Event(2002L, Collections.emptySet(), "event", Event.DataCollectionStrategy.MANUAL, null, LocalDate.EPOCH, LocalDate.EPOCH, Set.of(user1, user2, user3), Set.of(project), new HashSet<>(), new HashSet<>());
 
         Revision rev0 = new Revision(0L, 420045L, -112L, 255L, 700500L, user1, Set.of(event), project, Instant.EPOCH, "summary");
         Revision rev1 = new Revision(1L, 253565L, 144L,  256L, 0L,      user2, Set.of(event), project, Instant.EPOCH, "summary");
@@ -67,7 +71,7 @@ class RevisionServiceTest {
         revs = List.of(rev0, rev1, rev2, rev3, rev4, rev5, rev6, rev7, rev8, rev9);
         revs.forEach(event::addRevision);
 
-        service = new RevisionService(revisionRepository, wmRevisionService, wmUserService, hashtagsService, eventService, eventRepository);
+        service = new RevisionService(revisionRepository, eventRepository);
 
         Mockito.when(wmRevisionService.getUserContribs(ArgumentMatchers.eq(event), ArgumentMatchers.any())).thenReturn(revs);
         Mockito.when(wmUserService.updateNames(List.of(user1, user2, user3))).thenReturn(List.of(user1, user2, user3));
@@ -104,17 +108,6 @@ class RevisionServiceTest {
         Mockito.when(revisionRepository.save(ArgumentMatchers.any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
 
         Mockito.when(eventService.findById(2002L)).thenReturn(Optional.of(event));
-    }
-
-    @Test
-    void generateRevs() {
-        Collection<Revision> gen = service.generateRevs(event);
-        Mockito.verify(wmRevisionService, Mockito.atLeastOnce()).getUserContribs(ArgumentMatchers.any(), ArgumentMatchers.any());
-        Mockito.verifyNoInteractions(hashtagsService);
-        event.setHashtag("hashtag");
-        Assertions.assertEquals(gen, service.generateRevs(event));
-        Mockito.verifyNoMoreInteractions(wmRevisionService);
-        Mockito.verify(hashtagsService, Mockito.atLeastOnce()).getRevisions(event, LocalDate.EPOCH, LocalDate.EPOCH);
     }
 
     @Test

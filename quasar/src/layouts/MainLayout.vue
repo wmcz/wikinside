@@ -15,7 +15,7 @@
           {{ $t('app_name')}}
         </q-toolbar-title>
 
-        <div>0.3a</div>
+        <div>0.3</div>
       </q-toolbar>
     </q-header>
 

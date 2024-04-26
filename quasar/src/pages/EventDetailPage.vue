@@ -34,7 +34,7 @@
            </q-popup-proxy>
          </q-item-section>
        </q-item>
-       <q-item>
+       <q-item v-if="projects > 0">
          <q-item-section avatar>
            <q-icon color="primary" name="public"/>
          </q-item-section>
@@ -51,12 +51,17 @@
            </div>
          </q-item-section>
        </q-item>
-       <q-item v-if="eventdata.hashtag">
+       <q-item v-if="eventdata.category">
          <q-item-section avatar>
            <q-icon color="primary" class="text-weight-bolder">#</q-icon>
          </q-item-section>
          <q-item-section class="text-weight-bold">
-           {{ eventdata.hashtag }}
+           <a style='color: black' v-if="eventdata.strat === 'PHOTO'" :href="'https://commons.wikimedia.org/wiki/' + eventdata.category">
+             {{ eventdata.category.substring(eventdata.category.indexOf(':') + 1) }}
+           </a>
+           <div v-else>
+             {{ eventdata.category }}
+           </div>
          </q-item-section>
        </q-item>
      </q-list>

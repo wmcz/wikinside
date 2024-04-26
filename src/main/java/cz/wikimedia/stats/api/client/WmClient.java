@@ -100,4 +100,27 @@ public class WmClient extends AbstractClient {
                         .queryParam("revids", revIds),
                 new ParameterizedTypeReference<BatchResponse<PageQuery>>() {});
     }
+
+    public ContinuableBatchResponse<ImageInfoUsageQuery, IIUContinue> getCategoryImageInfo(String name, Instant start, Instant end) {
+        return get(uriBuilder -> uriBuilder
+                        .queryParam("prop", "imageinfo|globalusage|fileusage")
+                        .queryParam("generator", "categorymembers")
+                        .queryParam("gcmtitle", name)
+                        .queryParam("gcmsort", "timestamp")
+                        .queryParam("gcmstart", start)
+                        .queryParam("gcmend", end),
+                new ParameterizedTypeReference<ContinuableBatchResponse<ImageInfoUsageQuery, IIUContinue>>() {});
+    }
+
+    public ContinuableBatchResponse<ImageInfoUsageQuery, IIUContinue> getMoreCategoryImageInfo(String name, Instant start, Instant end, String gcmContinue) {
+        return get(uriBuilder -> uriBuilder
+                        .queryParam("gcmcontinue", gcmContinue)
+                        .queryParam("prop", "imageinfo|globalusage|fileusage")
+                        .queryParam("generator", "categorymembers")
+                        .queryParam("gcmtitle", name)
+                        .queryParam("gcmsort", "timestamp")
+                        .queryParam("gcmstart", start)
+                        .queryParam("gcmend", end),
+                new ParameterizedTypeReference<ContinuableBatchResponse<ImageInfoUsageQuery, IIUContinue>>() {});
+    }
 }

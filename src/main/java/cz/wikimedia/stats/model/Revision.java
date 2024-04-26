@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"revId", "project_id"})})
-public class Revision implements IdAble<Long> {
+public class Revision implements IdAble<Long>, Impactable {
     @Id
     @GeneratedValue
     private Long id;

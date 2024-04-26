@@ -5,4 +5,6 @@ public record Impact(Long createdPages,
                      Long edits,
                      Long byteDiff,
                      Long users,
-                     Long events) {}
+                     Long events,
+                     Long images,
+                     Long usages) {}

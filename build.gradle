@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'cz.wikimedia.stats'
-version = '0.2'
+version = '0.3'
 sourceCompatibility = '18'
 
 repositories {

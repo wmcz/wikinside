@@ -6,16 +6,11 @@
       class="q-gutter-md"
     >
       <q-input :rules="[ val => val && val.length > 0 || '']" v-model="name" :label="$t('event.name') + ' *'" />
-      <ProjectSelect ref="projectSelect"/>
+      <StratSelect ref="stratSelect" v-model="strat"/>
+      <ProjectSelect :style="{visibility: strat === 'PHOTO' ? 'hidden' : 'visible'}" ref="projectSelect"/>
+      <UserSelect ref="userSelect" v-if="strat === 'MANUAL'"/>
+      <q-input :rules="[ val => val && val.length > 0 || '']" v-else :label="$t('event.' + strat.toLowerCase()) + ' *'" v-model="hashtag" :hint="$t('event.'+ strat.toLowerCase() + '_hint')"/>
       <TagSelect  ref="tagSelect" url="tags/event-tags"/>
-
-      <div class="q-field__bottom q-pl-none">{{ $t('event.strategy.label') }}</div>
-      <div class="q-mt-none">
-        <span>{{ $t('event.strategy.manual') }}</span>
-        <q-toggle color="primary" keep-color v-model="fromHashtag" name="fromHashtag" :label="$t('event.strategy.auto')"/>
-      </div>
-      <UserSelect ref="userSelect" v-if="!fromHashtag"/>
-      <q-input :rules="[ val => val && val.length > 0 || '']" v-else :label="$t('event.hashtag') + ' *'" v-model="hashtag" :hint="$t('event.hashtag_hint')"/>
 
       <div>
         <q-field :label="$t('event.dates')" :hint="$t('event.dates_hint')" stack-label borderless>
@@ -36,13 +31,14 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import {defineComponent} from 'vue'
 import EventLink from "components/EventLink.vue";
 import {api} from "boot/axios";
 import UserSelect from "components/UserSelect.vue";
 import TagSelect from "components/TagSelect.vue";
 import ProjectSelect from "components/ProjectSelect.vue";
 import {getErrorMessage} from "src/util";
+import StratSelect from "components/StratSelect.vue";
 
 export default defineComponent({
   name: 'EventsNewPage',
@@ -51,8 +47,9 @@ export default defineComponent({
       name: null,
       eventdata: [],
       date: null,
-      fromHashtag: false,
-      hashtag: null
+      strat: 'HASHTAG',
+      hashtag: null,
+      showProject: true,
     }
   },
   methods: {
@@ -63,8 +60,9 @@ export default defineComponent({
           id: null,
           tagIds: this.$refs.tagSelect.selected === null ? [] : this.$refs.tagSelect.selected.map(s => s.id),
           projectIds: this.$refs.projectSelect.selected.map(p => p.id),
-          userIds: this.fromHashtag || this.$refs.userSelect.selected === null ? [] : this.$refs.userSelect.selected.map(s => s.id),
-          hashtag: this.fromHashtag ? this.hashtag : null,
+          userIds: this.strat !== 'MANUAL' || this.$refs.userSelect.selected === null ? [] : this.$refs.userSelect.selected.map(s => s.id),
+          strat: this.strat,
+          category: this.hashtag,
           startDate: typeof this.date === "string" ? this.date : this.date.from,
           endDate: typeof this.date === "string" ? this.date : this.date.to
         })
@@ -77,6 +75,7 @@ export default defineComponent({
     },
   },
   components: {
+    StratSelect,
     ProjectSelect,
     TagSelect,
     UserSelect,

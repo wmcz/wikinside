@@ -1,15 +1,7 @@
 package cz.wikimedia.stats.api.controller;
 
-import cz.wikimedia.stats.business.internal.EventService;
-import cz.wikimedia.stats.business.internal.EventTagService;
-import cz.wikimedia.stats.business.internal.ImpactService;
-import cz.wikimedia.stats.business.internal.UserService;
-import cz.wikimedia.stats.business.internal.UserTagService;
-import cz.wikimedia.stats.model.Event;
-import cz.wikimedia.stats.model.EventTag;
-import cz.wikimedia.stats.model.Impact;
-import cz.wikimedia.stats.model.User;
-import cz.wikimedia.stats.model.UserTag;
+import cz.wikimedia.stats.business.internal.*;
+import cz.wikimedia.stats.model.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

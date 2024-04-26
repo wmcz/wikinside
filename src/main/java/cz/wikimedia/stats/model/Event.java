@@ -2,11 +2,18 @@ package cz.wikimedia.stats.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
 public class Event implements IdAble<Long> {
+
+    public enum DataCollectionStrategy {
+        MANUAL,
+        HASHTAG,
+        PHOTO
+    }
 
     @Id
     @GeneratedValue
@@ -30,24 +37,30 @@ public class Event implements IdAble<Long> {
     @ManyToMany
     private Set<Revision> revisions;
 
-    private String hashtag;
+    @ManyToMany
+    private Set<Image> images;
+
+    private DataCollectionStrategy strategy;
+
+    private String category;
 
     protected Event() {}
 
     public Event(String name) {
         this.name = name;
     }
-
-    public Event(Long id, Set<EventTag> tags, String name, String hashtag, LocalDate startDate, LocalDate endDate, Set<User> participants, Set<Project> projects, Set<Revision> revisions) {
+    public Event(Long id, Set<EventTag> tags, String name, DataCollectionStrategy strategy, String category, LocalDate startDate, LocalDate endDate, Set<User> participants, Set<Project> projects, Set<Revision> revisions, Set<Image> images) {
         this.id = id;
         this.tags = tags;
         this.name = name;
-        this.hashtag = hashtag;
+        this.strategy = strategy;
+        this.category = category;
         this.startDate = startDate;
         this.endDate = endDate;
         this.participants = participants;
         this.projects = projects;
         this.revisions = revisions;
+        this.images = images;
     }
 
     public Long getId() {
@@ -74,16 +87,30 @@ public class Event implements IdAble<Long> {
         return participants;
     }
 
+    public Set<Impactable> getImpactables() {
+        Set<Impactable> res = new HashSet<>();
+        res.addAll(revisions);
+        res.addAll(images);
+        return res;
+    }
+
     public Set<Project> getProjects() {
         return projects;
     }
 
-    public String getHashtag() {
-        return hashtag;
+    public DataCollectionStrategy getStrategy() {
+        return strategy;
+    }
+    public String getCategory() {
+        return category;
     }
 
     public Set<Revision> getRevisions() {
         return revisions;
+    }
+
+    public Set<Image> getImages() {
+        return images;
     }
 
     public Event addTag(EventTag tag) {
@@ -106,8 +133,8 @@ public class Event implements IdAble<Long> {
         return this;
     }
 
-    public Event setHashtag(String hashtag) {
-        this.hashtag = hashtag;
+    public Event setCategory(String hashtag) {
+        this.category = hashtag;
         return this;
     }
 
@@ -128,6 +155,25 @@ public class Event implements IdAble<Long> {
 
     public Event removeRevision(Revision rev) {
         this.revisions.remove(rev);
+        return this;
+    }
+
+    public Event addImage(Image image) {
+        this.images.add(image);
+        return this;
+    }
+
+    public Event removeImage(Image image) {
+        this.images.remove(image);
+        /*if (
+                this.strategy != DataCollectionStrategy.MANUAL &&
+                this
+                        .getImpactables()
+                        .stream()
+                        .map(Impactable::getUser)
+                        .collect(Collectors.toSet())
+                        .contains(image.getUser())
+        ) removeParticipant(image.getUser());*/
         return this;
     }
 
