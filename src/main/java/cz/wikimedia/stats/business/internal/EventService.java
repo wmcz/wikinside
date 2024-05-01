@@ -3,16 +3,12 @@ package cz.wikimedia.stats.business.internal;
 import cz.wikimedia.stats.dao.EventRepository;
 import cz.wikimedia.stats.model.Event;
 import cz.wikimedia.stats.model.ImageCategory;
-import cz.wikimedia.stats.model.Impactable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static cz.wikimedia.stats.model.Event.DataCollectionStrategy.MANUAL;
 
 @Service
 public class EventService extends InternalService<Event, Long> {
@@ -42,7 +38,6 @@ public class EventService extends InternalService<Event, Long> {
                         event.getProjects().contains(r.getProject()) &&
                         event.getParticipants().contains(r.getUser())
                 ))
-                .toList()
                 .forEach(event::removeRevision);
         event
                 .getImages()
@@ -51,19 +46,7 @@ public class EventService extends InternalService<Event, Long> {
                         isWithinDateRange(i.getTimestamp(), event.getStartDate(), event.getEndDate()) &&
                         i.getCategories().contains(new ImageCategory(event.getCategory()))
                         ))
-                .toList()
                 .forEach(event::removeImage);
-
-
-        if (event.getStrategy() != MANUAL)
-            // for automatically generated users, remove them if they have no impactables
-            event
-                    .getParticipants()
-                    .retainAll(event
-                            .getImpactables()
-                            .stream()
-                            .map(Impactable::getUser)
-                            .collect(Collectors.toSet()));
     }
 
     @Override

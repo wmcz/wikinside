@@ -31,11 +31,9 @@ public class ImageConverter {
     }
 
     public Image fromWmImage(WmImage image, Event event) {
-        User author = userService.processUser(image.imageInfo().stream().findAny().get().username());
-        event.addParticipant(author);
         return new Image(
                 image.pageId(),
-                author,
+                userService.processUser(image.imageInfo().stream().findAny().get().username()),
                 new HashSet<>(Collections.singleton(event)),
                 image.imageInfo().stream().findAny().get().timestamp(),
                 image.title(),

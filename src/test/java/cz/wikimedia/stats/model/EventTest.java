@@ -26,7 +26,7 @@ class EventTest extends BaseTest {
     void getName() {
         String name = randomString();
 
-        Event event = new Event(name);
+        Event event = new Event(null, null, name, null, null, null, null, null, null, null, null);
 
         Assertions.assertEquals(name, event.getName());
     }
@@ -58,44 +58,6 @@ class EventTest extends BaseTest {
 
         Event event = new Event(null, null, null, null, tag, null, null, null, null, null, null);
 
-        Assertions.assertEquals(tag, event.getCategory());
-    }
-
-    @Test
-    @Repeat(TEST_REPEATS)
-    void setName() {
-        String newName = randomString();
-
-
-        Event event = new Event(randomString());
-        event = event.setName(newName);
-
-        Assertions.assertEquals(newName, event.getName());
-    }
-
-    @Test
-    @Repeat(TEST_REPEATS)
-    void setStartDate() {
-        LocalDate date = randomDate();
-        Event event = new Event(null, null, null, null, null, randomDate(), null, null, null, null, null);
-        event = event.setStartDate(date);
-        Assertions.assertEquals(date, event.getStartDate());
-    }
-
-    @Test
-    @Repeat(TEST_REPEATS)
-    void setEndDate() {
-        LocalDate date = randomDate();
-        Event event = new Event(null, null, null, null, null, null, randomDate(), null, null, null, null);
-        event = event.setStartDate(date);
-        Assertions.assertEquals(date, event.getStartDate());
-    }
-    @Test
-    @Repeat(TEST_REPEATS)
-    void setHashtag() {
-        String tag = randomString();
-        Event event = new Event(null, null, null, null, randomString(), null, null, null, null, null, null);
-        event = event.setCategory(tag);
         Assertions.assertEquals(tag, event.getCategory());
     }
 
@@ -215,7 +177,7 @@ class EventTest extends BaseTest {
             users.add(new User(randomLong(), randomString()));
         }
 
-        Event event = new Event(null, null, null, null, null, null, null, new HashSet<>(), null, null, null);
+        Event event = new Event(null, null, null, Event.DataCollectionStrategy.MANUAL, null, null, null, new HashSet<>(), null, null, null);
 
         users.forEach(event::addParticipant);
 
@@ -229,7 +191,7 @@ class EventTest extends BaseTest {
             users.add(new User(randomLong(), randomString()));
         }
 
-        Event event = new Event(null, null, null, null, null, null, null, new HashSet<>(users), null, null, null);
+        Event event = new Event(null, null, null, Event.DataCollectionStrategy.MANUAL, null, null, null, new HashSet<>(users), null, null, null);
 
         users.forEach(event::removeParticipant);
 
@@ -259,7 +221,7 @@ class EventTest extends BaseTest {
             revisions.add(new Revision(randomLong(), randomLong(), randomLong(), randomLong(), null, null, null, project, null, null));
         }
 
-        Event event = new Event(null, null, null, null, null, null, null, null, null, new HashSet<>(revisions), null);
+        Event event = new Event(null, null, null, null, null, null, null, new HashSet<>(), null, new HashSet<>(revisions), new HashSet<>());
 
         revisions.forEach(event::removeRevision);
 
