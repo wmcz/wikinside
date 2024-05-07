@@ -104,8 +104,11 @@ public class WmClient extends AbstractClient {
     public ContinuableBatchResponse<ImageInfoUsageQuery, IIUContinue> getCategoryImageInfo(String name, Instant start, Instant end) {
         return get(uriBuilder -> uriBuilder
                         .queryParam("prop", "imageinfo|globalusage|fileusage")
+                        .queryParam("gulimit", "max")
+                        .queryParam("fulimit", "max")
                         .queryParam("generator", "categorymembers")
                         .queryParam("gcmtitle", name)
+                        .queryParam("gcmnamespace", 6)
                         .queryParam("gcmsort", "timestamp")
                         .queryParam("gcmstart", start)
                         .queryParam("gcmend", end),
@@ -116,8 +119,11 @@ public class WmClient extends AbstractClient {
         return get(uriBuilder -> uriBuilder
                         .queryParam("gcmcontinue", gcmContinue)
                         .queryParam("prop", "imageinfo|globalusage|fileusage")
+                        .queryParam("gulimit", "max")
+                        .queryParam("fulimit", "max")
                         .queryParam("generator", "categorymembers")
                         .queryParam("gcmtitle", name)
+                        .queryParam("gcmnamespace", 6)
                         .queryParam("gcmsort", "timestamp")
                         .queryParam("gcmstart", start)
                         .queryParam("gcmend", end),

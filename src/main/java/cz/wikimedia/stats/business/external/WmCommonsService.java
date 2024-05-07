@@ -28,7 +28,7 @@ public class WmCommonsService {
                 event.getEndDate().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
         Collection<WmImage> images = response.query().contents();
 
-        while (response.toContinue().gcmContinue() != null) {
+        while (response.toContinue() != null && response.toContinue().gcmContinue() != null) {
             response = client.getMoreCategoryImageInfo(
                     event.getCategory(),
                     event.getStartDate().atStartOfDay(ZoneId.systemDefault()).toInstant(),
