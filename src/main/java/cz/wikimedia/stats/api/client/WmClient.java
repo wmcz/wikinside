@@ -109,9 +109,9 @@ public class WmClient extends AbstractClient {
                         .queryParam("generator", "categorymembers")
                         .queryParam("gcmtitle", name)
                         .queryParam("gcmnamespace", 6)
-                        .queryParam("gcmsort", "timestamp")
-                        .queryParam("gcmstart", start)
-                        .queryParam("gcmend", end),
+                        .queryParam("gcmlimit", 100)
+                        .queryParam("iistart", end)
+                        .queryParam("iiend", start),
                 new ParameterizedTypeReference<ContinuableBatchResponse<ImageInfoUsageQuery, IIUContinue>>() {});
     }
 
@@ -124,9 +124,9 @@ public class WmClient extends AbstractClient {
                         .queryParam("generator", "categorymembers")
                         .queryParam("gcmtitle", name)
                         .queryParam("gcmnamespace", 6)
-                        .queryParam("gcmsort", "timestamp")
-                        .queryParam("gcmstart", start)
-                        .queryParam("gcmend", end),
+                        .queryParam("gcmlimit", 100)
+                        .queryParam("iistart", end)
+                        .queryParam("iiend", start),
                 new ParameterizedTypeReference<ContinuableBatchResponse<ImageInfoUsageQuery, IIUContinue>>() {});
     }
 }

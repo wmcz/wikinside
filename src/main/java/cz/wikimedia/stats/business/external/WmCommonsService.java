@@ -37,7 +37,7 @@ public class WmCommonsService {
             images.addAll(response.query().contents());
         }
 
-        return images.stream().map(i -> imageConverter.fromWmImage(i, event)).toList();
+        return images.stream().filter(i -> i.imageInfo() != null).map(i -> imageConverter.fromWmImage(i, event)).toList();
 
     }
 }
