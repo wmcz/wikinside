@@ -30,7 +30,7 @@ export default {
     hashtag: 'Hashtag',
     photo: 'Jméno fotokategorie',
     hashtag_hint: 'Funguje i bez symbolu #, tj. \'#WikiGap\' a \'WikiGap\' fungují stejně',
-    photo_hint: 'Musí obsahovat předponu \'Category:\'',
+    photo_hint: 'Například \'Category:Cows\'',
     dates: 'Data',
     dates_hint: 'Klikněte dvakrát pro jednodenní události'
   },

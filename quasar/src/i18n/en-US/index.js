@@ -30,7 +30,7 @@ export default {
     hashtag: 'Hashtag',
     photo: 'Photo category name',
     hashtag_hint: 'Works with or without the # sign, e.g. both \'#WikiGap\' and \'WikiGap\' are the same',
-    photo_hint: 'Must include the \'Category:\' prefix',
+    photo_hint: 'E.g. \'Category:Cows\'',
     dates: 'Dates',
     dates_hint: 'Double click for single day events'
   },

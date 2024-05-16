@@ -62,7 +62,7 @@ export default defineComponent({
           projectIds: this.$refs.projectSelect.selected.map(p => p.id),
           userIds: this.strat !== 'MANUAL' || this.$refs.userSelect.selected === null ? [] : this.$refs.userSelect.selected.map(s => s.id),
           strat: this.strat,
-          category: this.hashtag,
+          category: this.strat === 'PHOTO' && !this.hashtag.startsWith('Category:') ? 'Category:' + this.hashtag : this.hashtag,
           startDate: typeof this.date === "string" ? this.date : this.date.from,
           endDate: typeof this.date === "string" ? this.date : this.date.to
         })
