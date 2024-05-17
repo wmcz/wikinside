@@ -71,7 +71,9 @@ public class User implements IdAble<Long> {
     }
 
     public Set<UserTag> getTags() {
-        return tags;
+        Set<UserTag> res = new HashSet<>(tags);
+        events.forEach(e -> res.addAll(e.getUserTags()));
+        return res;
     }
 
     public Set<Event> getEvents() {

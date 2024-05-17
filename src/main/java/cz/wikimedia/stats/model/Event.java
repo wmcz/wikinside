@@ -23,6 +23,9 @@ public class Event implements IdAble<Long> {
     @ManyToMany
     private Set<EventTag> tags;
 
+    @ManyToMany
+    private Set<UserTag> userTags;
+
     @Column(unique=true, nullable = false)
     private String name;
 
@@ -47,9 +50,10 @@ public class Event implements IdAble<Long> {
 
     protected Event() {}
 
-    public Event(Long id, Set<EventTag> tags, String name, DataCollectionStrategy strategy, String category, LocalDate startDate, LocalDate endDate, Set<User> participants, Set<Project> projects, Set<Revision> revisions, Set<Image> images) {
+    public Event(Long id, Set<EventTag> tags, Set<UserTag> userTags, String name, DataCollectionStrategy strategy, String category, LocalDate startDate, LocalDate endDate, Set<User> participants, Set<Project> projects, Set<Revision> revisions, Set<Image> images) {
         this.id = id;
         this.tags = tags;
+        this.userTags = userTags;
         this.name = name;
         this.strategy = strategy;
         this.category = category;
@@ -82,6 +86,10 @@ public class Event implements IdAble<Long> {
 
     public Set<EventTag> getTags() {
         return tags;
+    }
+
+    public Set<UserTag> getUserTags() {
+        return userTags;
     }
 
     public String getName() {

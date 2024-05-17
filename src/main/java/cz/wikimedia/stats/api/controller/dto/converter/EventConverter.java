@@ -15,17 +15,20 @@ public class EventConverter {
     private final UserService userService;
     private final ProjectService projectService;
     private final EventService eventService;
+    private final UserTagService userTagService;
 
-    public EventConverter(EventTagService eventTagService, UserService userService, ProjectService projectService, EventService eventService) {
+    public EventConverter(EventTagService eventTagService, UserService userService, ProjectService projectService, EventService eventService, UserTagService userTagService) {
         this.eventTagService = eventTagService;
         this.userService = userService;
         this.projectService = projectService;
         this.eventService = eventService;
+        this.userTagService = userTagService;
     }
 
     public EventDto toDto(Event event) {
         return new EventDto(event.getId(),
                             ConverterUtils.getIds(event.getTags()),
+                            ConverterUtils.getIds(event.getUserTags()),
                             event.getName(),
                             event.getStrategy().name(),
                             event.getCategory(),
@@ -38,6 +41,7 @@ public class EventConverter {
     public Event fromDto(EventDto dto) {
         return new Event(dto.id(),
                          ConverterUtils.getElems(dto.tagIds(), eventTagService),
+                         ConverterUtils.getElems(dto.userTagIds(), userTagService),
                          dto.name(),
                          Event.DataCollectionStrategy.valueOf(dto.strat()),
                          dto.category(),

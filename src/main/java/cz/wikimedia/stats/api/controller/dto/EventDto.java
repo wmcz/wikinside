@@ -5,6 +5,7 @@ import java.util.Collection;
 
 public record EventDto(Long id,
                        Collection<Long> tagIds,
+                       Collection<Long> userTagIds,
                        String name,
                        String strat,
                        String category,
