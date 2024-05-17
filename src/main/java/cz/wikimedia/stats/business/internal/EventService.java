@@ -38,6 +38,7 @@ public class EventService extends InternalService<Event, Long> {
                         event.getProjects().contains(r.getProject()) &&
                         event.getParticipants().contains(r.getUser())
                 ))
+                .toList() // to ensure things don't run in parallel
                 .forEach(event::removeRevision);
         event
                 .getImages()
@@ -46,6 +47,7 @@ public class EventService extends InternalService<Event, Long> {
                         isWithinDateRange(i.getTimestamp(), event.getStartDate(), event.getEndDate()) &&
                         i.getCategories().contains(new ImageCategory(event.getCategory()))
                         ))
+                .toList() // to ensure things don't run in parallel
                 .forEach(event::removeImage);
     }
 

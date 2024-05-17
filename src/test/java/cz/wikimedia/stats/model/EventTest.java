@@ -206,7 +206,7 @@ class EventTest extends BaseTest {
             revisions.add(new Revision(randomLong(), randomLong(), randomLong(), randomLong(), null, null, null, project, null, null));
         }
 
-        Event event = new Event(null, null, null, null, null, null, null, null, null, new HashSet<>(), null);
+        Event event = new Event(null, null, null, null, null, null, null, new HashSet<>(), null, new HashSet<>(), null);
 
         revisions.forEach(event::addRevision);
 

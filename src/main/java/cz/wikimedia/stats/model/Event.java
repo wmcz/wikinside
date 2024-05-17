@@ -152,7 +152,7 @@ public class Event implements IdAble<Long> {
     public Event addRevision(Revision rev) {
         revisions.add(rev);
         if (getStrategy() != DataCollectionStrategy.MANUAL)
-            addParticipant(rev.getUser());
+            participants.add(rev.getUser());
         return this;
     }
 
@@ -165,7 +165,7 @@ public class Event implements IdAble<Long> {
     public Event addImage(Image image) {
         images.add(image);
         if (getStrategy() != DataCollectionStrategy.MANUAL)
-            addParticipant(image.getUser());
+            participants.add(image.getUser());
         return this;
     }
 
