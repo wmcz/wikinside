@@ -32,7 +32,8 @@ export default {
     hashtag_hint: 'Works with or without the # sign, e.g. both \'#WikiGap\' and \'WikiGap\' are the same',
     photo_hint: 'Must include the \'Category:\' prefix',
     dates: 'Dates',
-    dates_hint: 'Double click for single day events'
+    dates_hint: 'Double click for single day events',
+    new_usertag: 'Assign tags to participants'
   },
   tag: {
     one: 'Category',
