@@ -7,7 +7,8 @@ import java.util.Collection;
 public record UserDto(Long id,
                       String username,
                       Instant registration,
-                      Collection<Long> tagIds,
+                      Collection<Long> inherentTagIds,
+                      Collection<Long> eventTagIds,
                       Collection<Long> eventIds) {}
 
 

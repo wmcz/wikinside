@@ -191,7 +191,7 @@ class EventTest extends BaseTest {
             users.add(new User(randomLong(), randomString()));
         }
 
-        Event event = new Event(null, null, null, null, Event.DataCollectionStrategy.MANUAL, null, null, null, new HashSet<>(users), null, null, null);
+        Event event = new Event(null, null, null, null, Event.DataCollectionStrategy.MANUAL, null, null, null, new HashSet<>(users), null, new HashSet<>(), new HashSet<>());
 
         users.forEach(event::removeParticipant);
 

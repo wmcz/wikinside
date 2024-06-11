@@ -34,7 +34,7 @@
            </q-popup-proxy>
          </q-item-section>
        </q-item>
-       <q-item v-if="projects > 0">
+       <q-item v-if="projects.length > 0">
          <q-item-section avatar>
            <q-icon color="primary" name="public"/>
          </q-item-section>
@@ -63,6 +63,14 @@
              {{ eventdata.category }}
            </div>
          </q-item-section>
+       </q-item>
+       <q-item v-if="usertaglist.length > 0">
+          <q-item-section avatar>
+            <q-icon color="primary" name="groups"/>
+          </q-item-section>
+         <q-item-label style="align-content:center">
+           <TagBadge class="q-mr-xs" v-for="tag in usertaglist" :key="tag.name" :id="tag.id" :name="tag.name" v-bind="tag" elemtype="user"/>
+         </q-item-label>
        </q-item>
      </q-list>
 
@@ -134,6 +142,7 @@ import TagLink from "components/TagLink.vue";
 import UserLink from "components/UserLink.vue";
 import {getErrorMessage} from "src/util";
 import ImpactList from "components/ImpactList.vue";
+import TagBadge from "components/TagBadge.vue";
 
 function submit(self, then) {
   self.$refs.impactref.showDisclaimer = true
@@ -165,6 +174,7 @@ function updateName(self) {
 export default {
   name: "EventDetailPage",
   components: {
+    TagBadge,
     ImpactList,
     UserLink,
     TagLink,
@@ -178,6 +188,8 @@ export default {
       eventdata: {},
       tagdata: [],
       taglist: [],
+      usertagdata: [],
+      usertaglist: [],
       userdata: [],
       userlist: [],
       date: null,
@@ -230,6 +242,12 @@ export default {
             this.projectdata = projectresponse.data
             this.projects = this.projectdata.filter(p => response.data.projectIds.includes(p.id))
             this.projectselect = this.projects
+          })
+        api
+          .get('tags/user-tags')
+          .then((usertagresponse) => {
+            this.usertagdata = usertagresponse.data
+            this.usertaglist = this.usertagdata.filter(t => response.data.userTagIds.includes(t.id))
           })
       })
       .catch(error => {

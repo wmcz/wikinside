@@ -76,6 +76,16 @@ public class User implements IdAble<Long> {
         return res;
     }
 
+    public Set<UserTag> getInherentTags() {
+        return tags;
+    }
+
+    public Set<UserTag> getEventTags() {
+        Set<UserTag> res = new HashSet<>();
+        events.forEach(e -> res.addAll(e.getUserTags()));
+        return res;
+    }
+
     public Set<Event> getEvents() {
         return events;
     }

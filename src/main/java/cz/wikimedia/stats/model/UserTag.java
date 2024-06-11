@@ -33,7 +33,6 @@ public class UserTag extends Tag<User> {
     @OneToMany(mappedBy = "parent")
     private Set<UserTag> children;
 
-
     @Override
     public Collection<User> getTagged() {
         return tagged;

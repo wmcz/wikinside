@@ -152,8 +152,12 @@ public class Event implements IdAble<Long> {
     }
 
     public Event removeParticipant(User participant) {
-        if (getStrategy() == DataCollectionStrategy.MANUAL)
+        if (getStrategy() == DataCollectionStrategy.MANUAL) {
             participants.remove(participant);
+            revisions.removeIf(r -> r.getUser().equals(participant));
+            images.removeIf(i -> i.getUser().equals(participant));
+
+        }
         return this;
     }
 
