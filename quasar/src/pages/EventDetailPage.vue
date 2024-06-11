@@ -39,7 +39,7 @@
            <q-icon color="primary" name="public"/>
          </q-item-section>
          <q-item-section class="text-weight-bold">
-           <q-select v-if="projectinput" :label="$t('project.many')" multiple use-chips use-input:counter v-model="projectselect" :options="projectoptions" option-value="id" option-label="name" @filter="filterProjects"/>
+           <q-select v-if="projectinput" :label="$t('project.many')" multiple use-chips use-input counter v-model="projectselect" :options="projectoptions" option-value="id" option-label="name" @filter="filterProjects"/>
            <q-item-label lines="1" v-else>
              <q-badge class="q-mr-xs" rounded v-for="project in projects" :label="project.name" :key="project.name"/>
            </q-item-label>
@@ -70,7 +70,7 @@
           </q-item-section>
           <q-item-section>
             <q-item-label style="align-content:center">
-              <q-select v-if="usertaginput" :label="$t('tag.many')" multiple use-chips use-input:counter v-model="usertagselect" :options="usertagoptions" option-value="id" option-label="name" @filter="filterUserTags"/>
+              <q-select v-if="usertaginput" :label="$t('tag.many')" multiple use-chips use-input counter v-model="usertagselect" :options="usertagoptions" option-value="id" option-label="name" @filter="filterUserTags"/>
               <TagBadge v-else class="q-mr-xs" v-for="tag in usertaglist" :key="tag.name" :id="tag.id" :name="tag.name" v-bind="tag" elemtype="user"/>
             </q-item-label>
           </q-item-section>

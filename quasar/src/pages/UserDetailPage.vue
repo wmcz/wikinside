@@ -28,7 +28,12 @@
         </q-input>
       </q-item>
       <q-item>
-        <TagBadge class="q-mr-xs" v-for="tag in eventtaglist" :key="tag.name" :id="tag.id" :name="tag.name" v-bind="tag" elemtype="user"/>
+        <q-item-label caption class="q-pr-xs" style="align-content: center">
+          {{ $t('tag.from_event') }}
+        </q-item-label>
+        <q-item-label>
+          <TagBadge class="q-mr-xs" v-for="tag in eventtaglist" :key="tag.name" :id="tag.id" :name="tag.name" v-bind="tag" elemtype="user"/>
+        </q-item-label>
       </q-item>
       <q-table :rows="taglist" :row-key="name" grid :loading="tagloading" :filter="tagfilter" :pagination="{ rowsPerPage: 10}">
         <template v-slot:item="props">

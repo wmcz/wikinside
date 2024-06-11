@@ -48,7 +48,8 @@ export default {
     no_parent: 'No parent category',
     color: 'Color',
     assign_color: 'Assign color',
-    new_child: 'Create child'
+    new_child: 'Create child',
+    from_event: 'From events: '
   },
   project: {
     one: 'Project',
