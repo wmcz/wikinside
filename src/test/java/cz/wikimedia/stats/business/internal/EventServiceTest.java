@@ -54,10 +54,10 @@ class EventServiceTest {
 
         Set<Revision> revs = Set.of(rev0, rev1, rev2, rev3, rev4, rev5, rev6, rev7, rev8, rev9);
 
-        Event event1 = new Event(1L, null, "one", Event.DataCollectionStrategy.MANUAL,  null, LocalDate.of(2000, 1, 1), LocalDate.of(2000, 12, 31), new HashSet<>(Set.of(user1, user2)), new HashSet<>(Set.of(project1)), new HashSet<>(revs), new HashSet<>());
-        Event event2 = new Event(2L, null, "one", Event.DataCollectionStrategy.MANUAL,  null, LocalDate.of(2000, 1, 1), LocalDate.of(2000, 12, 31), new HashSet<>(Set.of(user2, user3)), new HashSet<>(Set.of(project2)), new HashSet<>(revs), new HashSet<>());
-        Event event3 = new Event(3L, null, "one", Event.DataCollectionStrategy.MANUAL,  null, LocalDate.of(1999, 1, 1), LocalDate.of(2001, 12, 31), new HashSet<>(Set.of(user1, user2, user3)), new HashSet<>(Set.of(project1, project2)), new HashSet<>(revs), new HashSet<>());
-        Event event4 = new Event(4L, null, "one", Event.DataCollectionStrategy.HASHTAG, "##", LocalDate.of(1999, 1, 1), LocalDate.of(1999, 12, 31), new HashSet<>(Set.of(user1, user2, user3)), new HashSet<>(Set.of(project1)), new HashSet<>(revs), new HashSet<>());
+        Event event1 = new Event(1L, null, null, "one", Event.DataCollectionStrategy.MANUAL,  null, LocalDate.of(2000, 1, 1), LocalDate.of(2000, 12, 31), new HashSet<>(Set.of(user1, user2)), new HashSet<>(Set.of(project1)), new HashSet<>(revs), new HashSet<>());
+        Event event2 = new Event(2L, null, null, "one", Event.DataCollectionStrategy.MANUAL,  null, LocalDate.of(2000, 1, 1), LocalDate.of(2000, 12, 31), new HashSet<>(Set.of(user2, user3)), new HashSet<>(Set.of(project2)), new HashSet<>(revs), new HashSet<>());
+        Event event3 = new Event(3L, null, null, "one", Event.DataCollectionStrategy.MANUAL,  null, LocalDate.of(1999, 1, 1), LocalDate.of(2001, 12, 31), new HashSet<>(Set.of(user1, user2, user3)), new HashSet<>(Set.of(project1, project2)), new HashSet<>(revs), new HashSet<>());
+        Event event4 = new Event(4L, null, null, "one", Event.DataCollectionStrategy.HASHTAG, "##", LocalDate.of(1999, 1, 1), LocalDate.of(1999, 12, 31), new HashSet<>(Set.of(user1, user2, user3)), new HashSet<>(Set.of(project1)), new HashSet<>(revs), new HashSet<>());
 
         Mockito.when(repository.existsById(ArgumentMatchers.any())).thenReturn(true);
         Mockito.when(repository.findById(1L)).thenReturn(Optional.of(event1));

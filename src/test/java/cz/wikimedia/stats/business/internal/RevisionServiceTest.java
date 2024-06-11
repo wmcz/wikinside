@@ -55,7 +55,7 @@ class RevisionServiceTest {
         User user3 = new User(1003L, "user3");
 
         Project project = new Project(2001L, "project", "path");
-        event = new Event(2002L, Collections.emptySet(), "event", Event.DataCollectionStrategy.MANUAL, null, LocalDate.EPOCH, LocalDate.EPOCH, Set.of(user1, user2, user3), Set.of(project), new HashSet<>(), new HashSet<>());
+        event = new Event(2002L, Collections.emptySet(), null, "event", Event.DataCollectionStrategy.MANUAL, null, LocalDate.EPOCH, LocalDate.EPOCH, Set.of(user1, user2, user3), Set.of(project), new HashSet<>(), new HashSet<>());
 
         Revision rev0 = new Revision(0L, 420045L, -112L, 255L, 700500L, user1, Set.of(event), project, Instant.EPOCH, "summary");
         Revision rev1 = new Revision(1L, 253565L, 144L,  256L, 0L,      user2, Set.of(event), project, Instant.EPOCH, "summary");

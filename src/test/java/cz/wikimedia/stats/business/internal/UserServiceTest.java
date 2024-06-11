@@ -41,8 +41,8 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        Event event1 = new Event(1001L, null, null, null, "one", null, null, new HashSet<>(), null, null, null);
-        Event event2 = new Event(1002L, null, null, null, "two", null, null, new HashSet<>(), null, null, null);
+        Event event1 = new Event(1001L, null, null, null, null, "one", null, null, new HashSet<>(), null, null, null);
+        Event event2 = new Event(1002L, null, null, null, null, "two", null, null, new HashSet<>(), null, null, null);
 
         User user1 = new User(1L, 1L, "one",   Instant.EPOCH, new HashSet<>(), new HashSet<>());
         User user2 = new User(2L, 2L, "two",   Instant.EPOCH, new HashSet<>(), new HashSet<>());
@@ -135,9 +135,9 @@ class UserServiceTest {
         Assertions.assertTrue(service.create(new User(5L, "five")).isPresent());
         Mockito.verify(repository, Mockito.atLeastOnce()).save(new User(5L, "five"));
 
-        Assertions.assertTrue(service.create(new User(6L, 6L, "six",  Instant.EPOCH, new HashSet<>(), new HashSet<>(List.of(new Event(1001L, null, null, null, null, null, null, new HashSet<>(), null, null, null))))).isPresent());
+        Assertions.assertTrue(service.create(new User(6L, 6L, "six",  Instant.EPOCH, new HashSet<>(), new HashSet<>(List.of(new Event(1001L, null, null, null, null, null, null, null, new HashSet<>(), null, null, null))))).isPresent());
         Mockito.verify(repository, Mockito.atLeastOnce()).save(new User(6L, "six"));
-        Mockito.verify(eventRepository, Mockito.atLeastOnce()).save(new Event(1001L, null, null, null, null, null, null, null, null, null, null));
+        Mockito.verify(eventRepository, Mockito.atLeastOnce()).save(new Event(1001L, null, null, null, null, null, null, null, null, null, null, null));
     }
 
     @Test
@@ -150,8 +150,8 @@ class UserServiceTest {
 
         Assertions.assertTrue(service.update(new User(3L, 3L, "six",  Instant.EPOCH, new HashSet<>(), new HashSet<>())).isPresent());
         Mockito.verify(repository, Mockito.atLeastOnce()).save(new User(3L, "three"));
-        Mockito.verify(eventRepository, Mockito.atLeastOnce()).save(new Event(1001L, null, null, null, null, null, null, null, null, null, null));
-        Mockito.verify(eventRepository, Mockito.atLeastOnce()).save(new Event(1002L, null, null, null, null, null, null, null, null, null, null));
+        Mockito.verify(eventRepository, Mockito.atLeastOnce()).save(new Event(1001L, null, null, null, null, null, null, null, null, null, null, null));
+        Mockito.verify(eventRepository, Mockito.atLeastOnce()).save(new Event(1002L, null, null, null, null, null, null, null, null, null, null, null));
     }
 
     @Test

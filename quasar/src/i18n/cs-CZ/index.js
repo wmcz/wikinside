@@ -32,7 +32,8 @@ export default {
     hashtag_hint: 'Funguje i bez symbolu #, tj. \'#WikiGap\' a \'WikiGap\' fungují stejně',
     photo_hint: 'Například \'Category:Cows\'',
     dates: 'Data',
-    dates_hint: 'Klikněte dvakrát pro jednodenní události'
+    dates_hint: 'Klikněte dvakrát pro jednodenní události',
+    new_usertag: 'Přiřadit účastníkům tag'
   },
   tag: {
     one: 'Kategorie',
@@ -47,7 +48,8 @@ export default {
     no_parent: 'Žádná nadřazená kategorie',
     color: 'Barva',
     assign_color: 'Přiřadit barvu',
-    new_child: 'Vytvořit podkategorii'
+    new_child: 'Vytvořit podkategorii',
+    from_event: 'Z událostí: '
   },
   project: {
     one: 'Projekt',

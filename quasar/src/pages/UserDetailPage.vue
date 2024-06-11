@@ -27,6 +27,14 @@
           </template>
         </q-input>
       </q-item>
+      <q-item>
+        <q-item-label caption class="q-pr-xs" style="align-content: center">
+          {{ $t('tag.from_event') }}
+        </q-item-label>
+        <q-item-label>
+          <TagBadge class="q-mr-xs" v-for="tag in eventtaglist" :key="tag.name" :id="tag.id" :name="tag.name" v-bind="tag" elemtype="user"/>
+        </q-item-label>
+      </q-item>
       <q-table :rows="taglist" :row-key="name" grid :loading="tagloading" :filter="tagfilter" :pagination="{ rowsPerPage: 10}">
         <template v-slot:item="props">
           <TagLink elemtype="user" :key="props.row.name" suppresselems v-bind="props.row" right-icon="clear" @deleteTag="(id) => removeTag(id)"/>
@@ -35,6 +43,7 @@
           {{ $t('tag.none') }}
         </template>
       </q-table>
+
       <div v-if="taginput" class="q-mb-md q-mx-md q-mt-none">
         <TagSelect  url="tags/user-tags" :label="$t('tag.add')" ref="tagSelect"/>
         <q-btn class="q-mr-sm" color="primary" :label="$t('submit')" @click="onTagSubmit"/>
@@ -83,6 +92,7 @@ import TagSelect from "components/TagSelect.vue";
 import EventSelect from "components/EventSelect.vue";
 import {getErrorMessage} from "src/util";
 import ImpactList from "components/ImpactList.vue";
+import TagBadge from "components/TagBadge.vue";
 
 function updateEvents(self) {
   self.$refs.impactref.showDisclaimer = true
@@ -106,7 +116,7 @@ function updateTags(self) {
     .put('users', self.userdata)
     .then((response) => {
       self.userdata = response.data
-      self.taglist = self.tagdata.filter(t => self.userdata.tagIds.includes(t.id))
+      self.taglist = self.tagdata.filter(t => self.userdata.inherentTagIds.includes(t.id))
     })
     .catch(error => self.$q.notify(self.$t(getErrorMessage(error))))
 
@@ -121,6 +131,7 @@ export default defineComponent({
       userdata: {},
       tagdata: [],
       taglist: [],
+      eventtaglist: [],
       eventdata: [],
       eventlist: [],
       tagloading: true,
@@ -131,6 +142,7 @@ export default defineComponent({
   },
   name: 'UserDetailPage',
   components: {
+    TagBadge,
     ImpactList,
     TagSelect,
     EventLink,
@@ -146,7 +158,8 @@ export default defineComponent({
           .get('tags/user-tags')
           .then((tagresponse) => {
             this.tagdata = tagresponse.data
-            this.taglist = this.tagdata.filter(t => response.data.tagIds.includes(t.id))
+            this.taglist = this.tagdata.filter(t => response.data.inherentTagIds.includes(t.id))
+            this.eventtaglist = this.tagdata.filter(t => response.data.eventTagIds.includes(t.id))
             this.tagloading = false
           })
           .catch(error => {
@@ -186,7 +199,7 @@ export default defineComponent({
     },
     onTagSubmit() {
       this.tagloading = true
-      this.userdata.tagIds.push(...this.$refs.tagSelect.selected.map(t => t.id))
+      this.userdata.inherentTagIds.push(...this.$refs.tagSelect.selected.map(t => t.id))
       updateTags(this)
       this.tagloading = false
     },
@@ -204,7 +217,7 @@ export default defineComponent({
     },
     removeTag(id) {
       this.tagloading = true
-      this.userdata.tagIds.splice(this.userdata.tagIds.indexOf(id), 1)
+      this.userdata.inherentTagIds.splice(this.userdata.inherentTagIds.indexOf(id), 1)
       updateTags(this)
       this.tagloading = false
     }

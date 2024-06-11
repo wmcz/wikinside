@@ -46,7 +46,7 @@ class EventTagTest extends BaseTest {
     void getTagged() {
         Set<Event> tagged = new HashSet<>();
         while (tagged.size() < 10) {
-            tagged.add(new Event(randomLong(), null, randomString(), null, randomString(), randomDate(), randomDate(), null, null, null, null));
+            tagged.add(new Event(randomLong(), null, null, randomString(), null, randomString(), randomDate(), randomDate(), null, null, null, null));
         }
 
         EventTag tag = new EventTag(null, null, tagged, null, null);
@@ -85,7 +85,7 @@ class EventTagTest extends BaseTest {
 
         Set<Event> tagged = new HashSet<>();
         while (tagged.size() < 10) {
-            tagged.add(new Event(randomLong(), null, randomString(), null, randomString(), randomDate(), randomDate(), null, null, null, null));
+            tagged.add(new Event(randomLong(), null, null, randomString(), null, randomString(), randomDate(), randomDate(), null, null, null, null));
         }
 
         tagged.forEach(tag::addTagged);
@@ -98,7 +98,7 @@ class EventTagTest extends BaseTest {
     void removeTagged() {
         Set<Event> tagged = new HashSet<>();
         while (tagged.size() < 10) {
-            tagged.add(new Event(randomLong(), null, randomString(), null, randomString(), randomDate(), randomDate(), null, null, null, null));
+            tagged.add(new Event(randomLong(), null, null, randomString(), null, randomString(), randomDate(), randomDate(), null, null, null, null));
         }
 
         EventTag tag = new EventTag(null, null, new HashSet<>(), null, null);

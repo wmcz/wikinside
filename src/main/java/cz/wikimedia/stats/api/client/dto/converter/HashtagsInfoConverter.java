@@ -7,7 +7,6 @@ import cz.wikimedia.stats.business.internal.UserService;
 import cz.wikimedia.stats.model.Event;
 import cz.wikimedia.stats.model.Project;
 import cz.wikimedia.stats.model.Revision;
-import cz.wikimedia.stats.model.User;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -25,23 +24,19 @@ public class HashtagsInfoConverter {
 
     private Revision fromOneInfo(HashtagsInfo info, Project project, Event event, Map<Long, WmPage> pages) {
         WmPage page = pages.get(info.revId());
-        User author = userService.processUser(info.username());
 
         if (page == null) return null;
-        else {
-            event.addParticipant(author);
-            return new Revision(
+        else return new Revision(
                     null,
                     info.revId(),
                     null,
                     page.pageId(),
                     page.revs().iterator().next().parentId(),
-                    author,
+                    userService.processUser(info.username()),
                     new HashSet<>(Collections.singleton(event)),
                     project,
                     info.timestamp(),
                     info.summary());
-        }
     }
 
     public Collection<Revision> fromInfo(Collection<HashtagsInfo> info, Project project, Event event) {

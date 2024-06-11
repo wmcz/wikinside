@@ -34,12 +34,12 @@
            </q-popup-proxy>
          </q-item-section>
        </q-item>
-       <q-item v-if="projects > 0">
+       <q-item v-if="projects.length > 0">
          <q-item-section avatar>
            <q-icon color="primary" name="public"/>
          </q-item-section>
          <q-item-section class="text-weight-bold">
-           <q-select v-if="projectinput" :label="$t('project.many')" multiple use-chips use-input:counter v-model="projectselect" :options="projectoptions" option-value="id" option-label="name" @filter="filterProjects"/>
+           <q-select v-if="projectinput" :label="$t('project.many')" multiple use-chips use-input counter v-model="projectselect" :options="projectoptions" option-value="id" option-label="name" @filter="filterProjects"/>
            <q-item-label lines="1" v-else>
              <q-badge class="q-mr-xs" rounded v-for="project in projects" :label="project.name" :key="project.name"/>
            </q-item-label>
@@ -62,6 +62,29 @@
            <div v-else>
              {{ eventdata.category }}
            </div>
+         </q-item-section>
+       </q-item>
+       <q-item v-if="usertaglist.length > 0 || usertaginput">
+          <q-item-section avatar>
+            <q-icon color="primary" name="groups"/>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label style="align-content:center">
+              <q-select v-if="usertaginput" :label="$t('tag.many')" multiple use-chips use-input counter v-model="usertagselect" :options="usertagoptions" option-value="id" option-label="name" @filter="filterUserTags"/>
+              <TagBadge v-else class="q-mr-xs" v-for="tag in usertaglist" :key="tag.name" :id="tag.id" :name="tag.name" v-bind="tag" elemtype="user"/>
+            </q-item-label>
+          </q-item-section>
+         <q-item-section side>
+           <div>
+             <q-btn v-if="usertaginput" color="primary" :label="$t('submit')" @click="onUserTagSubmit"/>
+             <q-btn flat color="primary" :label="usertaginput ? $t('cancel') : $t('edit')" @click="usertaginput=!usertaginput"/>
+           </div>
+         </q-item-section>
+       </q-item>
+       <q-item v-else>
+         <q-item-section/>
+         <q-item-section side>
+           <q-btn size='xs' flat :label="$t('event.new_usertag')" color="primary" @click="usertaginput = true"></q-btn>
          </q-item-section>
        </q-item>
      </q-list>
@@ -134,6 +157,7 @@ import TagLink from "components/TagLink.vue";
 import UserLink from "components/UserLink.vue";
 import {getErrorMessage} from "src/util";
 import ImpactList from "components/ImpactList.vue";
+import TagBadge from "components/TagBadge.vue";
 
 function submit(self, then) {
   self.$refs.impactref.showDisclaimer = true
@@ -165,6 +189,7 @@ function updateName(self) {
 export default {
   name: "EventDetailPage",
   components: {
+    TagBadge,
     ImpactList,
     UserLink,
     TagLink,
@@ -178,6 +203,11 @@ export default {
       eventdata: {},
       tagdata: [],
       taglist: [],
+      usertagdata: [],
+      usertaglist: [],
+      usertagselect: [],
+      usertagoptions: [],
+      usertaginput: false,
       userdata: [],
       userlist: [],
       date: null,
@@ -231,6 +261,13 @@ export default {
             this.projects = this.projectdata.filter(p => response.data.projectIds.includes(p.id))
             this.projectselect = this.projects
           })
+        api
+          .get('tags/user-tags')
+          .then((usertagresponse) => {
+            this.usertagdata = usertagresponse.data
+            this.usertaglist = this.usertagdata.filter(t => response.data.userTagIds.includes(t.id))
+            this.usertagselect = this.usertaglist
+          })
       })
       .catch(error => {
         this.tagloading = false
@@ -266,6 +303,13 @@ export default {
       })
       this.projectinput = false
     },
+    onUserTagSubmit() {
+      this.eventdata.userTagIds = this.usertagselect.map(t => t.id);
+      submit(this, (response) => {
+        this.usertaglist = this.usertagdata.filter(t => response.data.userTagIds.includes(t.id))
+      })
+      this.usertaginput = false;
+    },
     onNameSubmit() {
       this.eventdata.name = this.name
       updateName(this)
@@ -290,6 +334,9 @@ export default {
     },
     filterProjects(val, update, abort) {
       update(() => this.projectoptions = this.projectdata.filter((u) => u.name.toLowerCase().includes(val.toLowerCase())))
+    },
+    filterUserTags(val, update, abort) {
+      update(() => this.usertagoptions = this.usertagdata.filter((u) => u.name.toLowerCase().includes(val.toLowerCase())))
     }
   }
 }
