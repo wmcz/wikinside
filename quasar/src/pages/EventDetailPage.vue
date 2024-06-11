@@ -108,7 +108,7 @@
        </q-item>
        <q-table :rows="userlist" :row-key="name" grid :loading="userloading" :filter="userfilter" :pagination="{ rowsPerPage: 10}">
          <template v-slot:item="props">
-           <UserLink :key="props.row.username" supresstags v-bind="props.row" right-icon="clear" @deleteUser="(id) => removeUser(id)"/>
+           <UserLink :key="props.row.username" supresstags v-bind="props.row" right-icon="clear" @deleteElem="(id) => removeUser(id)"/>
          </template>
          <template v-slot:no-data>
            {{ $t('user.none') }}

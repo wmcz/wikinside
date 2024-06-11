@@ -56,7 +56,7 @@
       </q-item>
       <q-table :rows="eventlist" :row-key="name" grid :loading="eventloading" :filter="eventfilter" :pagination="{ rowsPerPage: 10}">
         <template v-slot:item="props">
-          <EventLink :key="props.row.name" supresstags v-bind="props.row" right-icon="clear" @deleteEvent="(id) => removeEvent(id)"/>
+          <EventLink :key="props.row.name" supresstags v-bind="props.row" right-icon="clear" @deleteElem="(id) => removeEvent(id)"/>
         </template>
         <template v-slot:no-data>
           {{ $t('event.none') }}

@@ -14,7 +14,7 @@
       </q-item>
       <q-table :rows="userdata" :row-key="username" grid :loading="loading" :filter="filter" :pagination="{ rowsPerPage: 10}">
         <template v-slot:item="props">
-          <UserLink :key="props.row.username" v-bind="props.row" @deleteUser="(id) => deleteUser(id)"/>
+          <UserLink :key="props.row.username" v-bind="props.row" @deleteElem="(id) => deleteUser(id)"/>
         </template>
       </q-table>
     </q-list>

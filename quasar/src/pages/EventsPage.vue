@@ -14,7 +14,7 @@
       </q-item>
       <q-table :rows="eventdata" :row-key="name" grid :loading="loading" :filter="filter" :pagination="{ rowsPerPage: 10}">
         <template v-slot:item="props">
-          <EventLink :key="props.row.name" v-bind="props.row" @deleteEvent="(id) => deleteEvent(id)"/>
+          <EventLink :key="props.row.name" v-bind="props.row" @deleteElem="(id) => deleteEvent(id)"/>
         </template>
       </q-table>
     </q-list>
