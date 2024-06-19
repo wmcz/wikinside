@@ -12,16 +12,16 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAsync
 @EnableScheduling
 @SpringBootApplication
-public class WikimetricApplication {
+public class WikinsideApp {
 
 	private final ProjectRepository projectRepository;
 
-	public WikimetricApplication(ProjectRepository projectRepository) {
+	public WikinsideApp(ProjectRepository projectRepository) {
 		this.projectRepository = projectRepository;
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(WikimetricApplication.class, args);
+		SpringApplication.run(WikinsideApp.class, args);
 	}
 
 	@Bean
