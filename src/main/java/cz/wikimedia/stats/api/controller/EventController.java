@@ -3,6 +3,7 @@ package cz.wikimedia.stats.api.controller;
 import cz.wikimedia.stats.api.controller.dto.EventDto;
 import cz.wikimedia.stats.api.controller.dto.converter.EventConverter;
 import cz.wikimedia.stats.business.internal.EventService;
+import cz.wikimedia.stats.business.internal.RetrievalService;
 import cz.wikimedia.stats.business.internal.RevisionService;
 import cz.wikimedia.stats.model.Event;
 import org.springframework.http.HttpStatus;
@@ -17,12 +18,12 @@ import java.util.Collection;
 public class EventController {
     private final EventService eventService;
     private final EventConverter eventConverter;
-    private final RevisionService revisionService;
+    private final RetrievalService retrievalService;
 
-    public EventController(EventService eventService, EventConverter eventConverter, RevisionService revisionService) {
+    public EventController(EventService eventService, EventConverter eventConverter, RetrievalService retrievalService) {
         this.eventService = eventService;
         this.eventConverter = eventConverter;
-        this.revisionService = revisionService;
+        this.retrievalService = retrievalService;
     }
 
     @PostMapping("/events")
@@ -30,7 +31,7 @@ public class EventController {
         Event result = eventService
                 .create(eventConverter.fromDto(event))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Event already exists"));
-        revisionService.asyncGenerateRevs(result.getId());
+        retrievalService.asyncRetrieve(result.getId());
         return eventConverter.toDto(result);
     }
 
@@ -54,7 +55,7 @@ public class EventController {
         Event result = eventService
                 .update(eventConverter.fromDto(event))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event does not exist"));
-        revisionService.asyncGenerateRevs(result.getId());
+        retrievalService.asyncRetrieve(result.getId());
         return eventConverter.toDto(result);
 
     }

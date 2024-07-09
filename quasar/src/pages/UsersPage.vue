@@ -14,7 +14,7 @@
       </q-item>
       <q-table :rows="userdata" :row-key="username" grid :loading="loading" :filter="filter" :pagination="{ rowsPerPage: 10}">
         <template v-slot:item="props">
-          <UserLink :key="props.row.username" v-bind="props.row" @deleteUser="(id) => deleteUser(id)"/>
+          <UserLink :key="props.row.username" v-bind="props.row" @deleteElem="(id) => deleteUser(id)"/>
         </template>
       </q-table>
     </q-list>
@@ -57,7 +57,7 @@ export default defineComponent({
           function(item) {return {
             username: item.username,
             id: item.id,
-            tags: item.tagIds.map(id => self.$data.tagdata.find(e => id === e.id))}})
+            tags: item.inherentTagIds.concat(item.eventTagIds).map(id => self.$data.tagdata.find(e => id === e.id))}})
         this.loading = false
       })
       .catch(error => {

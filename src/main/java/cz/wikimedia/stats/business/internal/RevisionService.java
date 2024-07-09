@@ -1,41 +1,27 @@
 package cz.wikimedia.stats.business.internal;
 
-import cz.wikimedia.stats.business.external.HashtagsService;
-import cz.wikimedia.stats.business.external.WmRevisionService;
-import cz.wikimedia.stats.business.external.WmUserService;
 import cz.wikimedia.stats.dao.EventRepository;
 import cz.wikimedia.stats.dao.RevisionRepository;
 import cz.wikimedia.stats.model.Event;
 import cz.wikimedia.stats.model.Revision;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
 
 @Service
 public class RevisionService extends InternalService<Revision, Long> {
-    private final WmRevisionService wmRevisionService;
-    private final WmUserService wmUserService;
     private final RevisionRepository revisionRepository;
-    private final HashtagsService hashtagsService;
     private final EventRepository eventRepository;
-    private final EventService eventService;
 
-    public RevisionService(RevisionRepository repository, WmRevisionService wmRevisionService, WmUserService wmUserService, HashtagsService hashtagsService, EventService eventService, EventRepository eventRepository) {
+    public RevisionService(RevisionRepository repository, EventRepository eventRepository) {
         super(repository);
-        this.wmRevisionService = wmRevisionService;
-        this.wmUserService = wmUserService;
         this.revisionRepository = repository;
-        this.hashtagsService = hashtagsService;
         this.eventRepository = eventRepository;
-        this.eventService = eventService;
     }
 
     private Collection<Event> applyEvents(Revision rev, Collection<Long> eventIds, Function<Event, Event> function) {
@@ -54,13 +40,6 @@ public class RevisionService extends InternalService<Revision, Long> {
         updateNonOwningField(rev, updated, Revision::getEvents, this::addEvents, this::removeEvents);
     }
 
-    private Collection<Revision> getEventRevisions(Event event) {
-        return eventService
-                .findById(event.getId())
-                .map(Event::getRevisions)
-                .orElse(Collections.emptySet());
-    }
-
     private Revision updateOrCreate(Revision rev) {
         Optional<Revision> original = revisionRepository.findRevisionByRevIdAndProject(rev.getRevId(), rev.getProject());
 
@@ -73,23 +52,11 @@ public class RevisionService extends InternalService<Revision, Long> {
         } else return create(rev).orElse(null);
     }
 
-    private Collection<Revision> updateOrCreate(Collection<Revision> revs) {
+    public Collection<Revision> updateOrCreate(Collection<Revision> revs) {
         return revs
                 .stream()
                 .map(this::updateOrCreate) // save if not already present
                 .toList();
-    }
-
-    private Collection<Revision> generateFromUserList(Event event) {
-        wmUserService.updateNames(event.getParticipants());
-        updateOrCreate(wmRevisionService.getUserContribs(event, event.getStartDate().atStartOfDay(ZoneId.systemDefault()).toInstant()).stream().map(r -> r.addEvent(event)).toList());
-        eventService.update(event);
-        return getEventRevisions(event);
-    }
-
-    private Collection<Revision> generateFromHashTags(Event event) {
-        updateOrCreate(hashtagsService.getRevisions(event, event.getStartDate(), event.getEndDate()));
-        return getEventRevisions(event);
     }
 
     private Instant getLastTimeStamp(Event event) {
@@ -102,18 +69,6 @@ public class RevisionService extends InternalService<Revision, Long> {
                         .getStartDate()
                         .atStartOfDay(ZoneId.systemDefault())
                         .toInstant());
-    }
-
-    public Collection<Revision> generateRevs(Event event) {
-        if (event.getHashtag() == null)
-             return generateFromUserList(event);
-        else return generateFromHashTags(event);
-    }
-
-    @Async
-    @Transactional
-    public void asyncGenerateRevs(Long eventId) {
-        eventService.findById(eventId).ifPresent(this::generateRevs);
     }
 
     @Override
@@ -132,7 +87,7 @@ public class RevisionService extends InternalService<Revision, Long> {
 
         if (current.isEmpty()) return Optional.empty();
         else {
-            if (rev.getEvents().size() == 0) {
+            if (rev.getEvents().isEmpty()) {
                 deleteById(rev.getId());
                 return Optional.of(rev);
             }

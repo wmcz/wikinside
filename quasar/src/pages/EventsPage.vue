@@ -3,7 +3,7 @@
     <div class="q-gutter-md">
     <q-list top bordered class="rounded-borders">
       <q-item class="q-py-none q-pl-none">
-        <q-item-label header>{{ $t('tag.user') }}</q-item-label>
+        <q-item-label header>{{ $t('event.many') }}</q-item-label>
         <q-space />
         <q-input  side dense input-class="text-right" style="float: right" class="q-pt-xs" v-model="filter" :label="$t('filter')">
           <template v-slot:append>
@@ -14,7 +14,7 @@
       </q-item>
       <q-table :rows="eventdata" :row-key="name" grid :loading="loading" :filter="filter" :pagination="{ rowsPerPage: 10}">
         <template v-slot:item="props">
-          <EventLink :key="props.row.name" v-bind="props.row" @deleteEvent="(id) => deleteEvent(id)"/>
+          <EventLink :key="props.row.name" v-bind="props.row" @deleteElem="(id) => deleteEvent(id)"/>
         </template>
       </q-table>
     </q-list>

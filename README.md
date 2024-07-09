@@ -1,4 +1,4 @@
-# WMCZ Stats Tool
+# Wikinside
 
 This project gathers important metrics about Wikimedia project revisions made at various WMCZ events. 
 

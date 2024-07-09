@@ -5,8 +5,10 @@ import java.util.Collection;
 
 public record EventDto(Long id,
                        Collection<Long> tagIds,
+                       Collection<Long> userTagIds,
                        String name,
-                       String hashtag,
+                       String strat,
+                       String category,
                        LocalDate startDate,
                        LocalDate endDate,
                        Collection<Long> userIds,

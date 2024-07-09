@@ -10,7 +10,7 @@ services:
       MARIADB_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
       MARIADB_DATABASE: metrics
     healthcheck:
-      test: ["CMD", "mysqladmin", "-p${DATABASE_ROOT_PASSWORD}", "ping"]
+      test: ["CMD", "mariadb-admin", "-p${DATABASE_ROOT_PASSWORD}", "ping"]
       timeout: 5s
       interval: 5s
       retries: 12

@@ -138,7 +138,7 @@ class UserTest extends BaseTest {
             tags.add(new UserTag(randomLong(), randomString(), null, null, null));
         }
 
-        User user = new User(null, null, null, null, tags,null);
+        User user = new User(null, null, null, null, tags, new HashSet<>());
 
         Assertions.assertEquals(tags, user.getTags());
     }
@@ -149,7 +149,7 @@ class UserTest extends BaseTest {
         Set<Event> events = new HashSet<>();
 
         while (events.size() < 10) {
-            events.add(new Event(randomLong(), null, randomString(), randomString(), randomDate(), randomDate(), null, null, null));
+            events.add(new Event(randomLong(), null, null, randomString(), null, randomString(), randomDate(), randomDate(), null, null, null, null));
         }
 
         User user = new User(null, null, null, null, null,events);
@@ -166,7 +166,7 @@ class UserTest extends BaseTest {
             tags.add(new UserTag(randomLong(), randomString(), new HashSet<>(), null, null));
         }
 
-        User user = new User(null, null, null, null, new HashSet<>(),null);
+        User user = new User(null, null, null, null, new HashSet<>(), new HashSet<>());
 
         tags.forEach(user::addTag);
 
@@ -182,7 +182,7 @@ class UserTest extends BaseTest {
             tags.add(new UserTag(randomLong(), randomString(), new HashSet<>(), null, null));
         }
 
-        User user = new User(null, null, null, null, new HashSet<>(tags),null);
+        User user = new User(null, null, null, null, new HashSet<>(tags), new HashSet<>());
 
         tags.forEach(user::removeTag);
 

@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh Lpr lFf">
+  <q-layout view="hHh Lpr lff">
     <q-header>
       <q-toolbar>
         <q-btn
@@ -11,11 +11,11 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title>
+        <q-toolbar-title class="logo-typography">
           {{ $t('app_name')}}
         </q-toolbar-title>
 
-        <div>0.2</div>
+        <div>0.3</div>
       </q-toolbar>
     </q-header>
 
@@ -40,9 +40,18 @@
 
     <q-page-container>
       <Suspense>
-        <router-view class="q-ma-md" />
+        <router-view class="q-pa-md" />
       </Suspense>
     </q-page-container>
+    <q-footer class="transparent text-grey-8 text-center">
+      {{ $t('footer.first') }}
+      <a href="https://www.wikimedia.cz/" class="text-primary" v-text="$t('footer.wmLink')"></a>
+      {{ $t('footer.second') }}
+      <a href="https://github.com/wmcz/statistics-tool" class="text-primary" v-text="$t('footer.gitHubLink')"></a>
+      {{ $t('footer.third') }}
+      <a href="https://github.com/wmcz/statistics-tool/issues" class="text-primary" v-text="$t('footer.reportLink')"></a>
+      {{ $t('footer.fourth') }}
+    </q-footer>
   </q-layout>
 </template>
 
@@ -78,7 +87,7 @@ export default defineComponent({
       },
       {
         title: t('tag.user'),
-        icon: 'sell',
+        icon: 'groups',
         link: '/user/tag'
       },
       {
@@ -88,7 +97,7 @@ export default defineComponent({
       },
       {
         title: t('tag.event'),
-        icon: 'sell',
+        icon: 'dashboard',
         link: '/event/tag'
       },
     ]

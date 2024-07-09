@@ -1,5 +1,5 @@
 export default {
-  app_name: 'WMCZ Stats app',
+  app_name: 'WIKINSIDE',
   404: 'Page not found',
   add: 'Add',
   filter: 'Filter',
@@ -22,28 +22,34 @@ export default {
     add: 'Add events',
     name: 'Event name',
     strategy: {
-      label: 'User selection strategy',
-      manual: 'Manual',
-      auto: 'Automatic (from hashtag)'
+      label: 'Event type',
+      manual: 'With manual user selection',
+      hashtag: 'With a hashtag',
+      photo: "Photo category"
     },
     hashtag: 'Hashtag',
+    photo: 'Photo category name',
     hashtag_hint: 'Works with or without the # sign, e.g. both \'#WikiGap\' and \'WikiGap\' are the same',
+    photo_hint: 'E.g. \'Category:Cows\'',
     dates: 'Dates',
-    dates_hint: 'Double click for single day events'
+    dates_hint: 'Double click for single day events',
+    new_usertag: 'Assign tags to participants'
   },
   tag: {
-    one: 'Tag',
-    many: 'Tags',
-    user: 'User tags',
-    none: 'No tags',
-    event: 'Event tags',
-    name: 'Tag name',
-    add: 'Add tags',
-    parent: 'Parent tag',
-    no_children: 'No children',
-    no_parent: 'No parent tag',
+    one: 'Category',
+    many: 'Categories',
+    user: 'User categories',
+    none: 'No categories',
+    event: 'Event categories',
+    name: 'Category name',
+    add: 'Add categories',
+    parent: 'Parent category',
+    no_children: 'No child categories',
+    no_parent: 'No parent category',
     color: 'Color',
     assign_color: 'Assign color',
+    new_child: 'Create child',
+    from_event: 'From events: '
   },
   project: {
     one: 'Project',
@@ -57,6 +63,10 @@ export default {
     editedPages: 'edited pages (including newly created ones)',
     edits: 'edits',
     byteDiff: 'added bytes',
+    users: 'active participants',
+    events: 'events participated',
+    images: 'images uploaded',
+    usages: 'pages using uploaded images',
     disclaimer: 'Impact is not automatically updated after changes to events. To recalculate, please wait a moment, and then refresh the page. Processing the changes usually does not take more than a few seconds, but may take longer in some cases.'
   },
   notification: {
@@ -64,5 +74,14 @@ export default {
     500: 'ERROR: Server-side error; try refreshing the website.',
     network_error: 'ERROR: Could not connect to server.',
     generic_error: 'ERROR: Something has gone wrong; try refreshing the website.'
+  },
+  footer: {
+    first: " Created by ",
+    wmLink: "Wikimedia Czech Republic.",
+    second: " Our source code is freely available on ",
+    gitHubLink: "GitHub.",
+    third: " Found an issue? ",
+    reportLink:"Report it here.",
+    fourth: ""
   }
 }
