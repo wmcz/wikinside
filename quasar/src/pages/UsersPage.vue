@@ -57,7 +57,7 @@ export default defineComponent({
           function(item) {return {
             username: item.username,
             id: item.id,
-            tags: item.inherentTagIds.concat(item.eventTagIds).map(id => self.$data.tagdata.find(e => id === e.id))}})
+            tags: [...new Set(item.inherentTagIds.concat(item.eventTagIds))].map(id => self.$data.tagdata.find(e => id === e.id))}})
         this.loading = false
       })
       .catch(error => {

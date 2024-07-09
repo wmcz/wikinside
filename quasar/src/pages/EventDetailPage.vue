@@ -131,7 +131,7 @@
        </q-item>
        <q-table :rows="userlist" :row-key="name" grid :loading="userloading" :filter="userfilter" :pagination="{ rowsPerPage: 10}">
          <template v-slot:item="props">
-           <UserLink :key="props.row.username" supresstags v-bind="props.row" right-icon="clear" @deleteElem="(id) => removeUser(id)"/>
+           <UserLink :key="props.row.username" v-bind="props.row" right-icon="clear" @deleteElem="(id) => removeUser(id)"/>
          </template>
          <template v-slot:no-data>
            {{ $t('user.none') }}
@@ -243,30 +243,38 @@ export default {
             this.$q.notify(this.$t(getErrorMessage(error)))
           })
         !response.data.userIds.length ? this.userloading = false :
-        api
-          .get('users')
-          .then((userresponse) => {
-            this.userdata = userresponse.data
-            this.userlist = this.userdata.filter(u => response.data.userIds.includes(u.id))
-            this.userloading = false
-          })
-          .catch(error => {
-            this.userloading = false
-            this.$q.notify(this.$t(getErrorMessage(error)))
-          })
+          api
+            .get('tags/user-tags')
+            .then((usertagresponse) => {
+              this.usertagdata = usertagresponse.data
+              this.usertaglist = this.usertagdata.filter(t => response.data.userTagIds.includes(t.id))
+              this.usertagselect = this.usertaglist
+
+              api
+                .get('users')
+                .then((userresponse) => {
+                  this.userdata = userresponse.data
+                  this.userlist = this.userdata.filter(u => response.data.userIds.includes(u.id)).map(
+                    function (item) { return {
+                      username: item.username,
+                      id: item.id,
+                      tags: [...new Set(item.inherentTagIds.concat(item.eventTagIds))].map(id => usertagresponse.data.find(e => id === e.id))
+                    }}
+                  )
+                  this.userloading = false
+                })
+                .catch(error => {
+                  console.log(error)
+                  this.userloading = false
+                  this.$q.notify(this.$t(getErrorMessage(error)))
+                })
+            })
         api
           .get('projects')
           .then((projectresponse) => {
             this.projectdata = projectresponse.data
             this.projects = this.projectdata.filter(p => response.data.projectIds.includes(p.id))
             this.projectselect = this.projects
-          })
-        api
-          .get('tags/user-tags')
-          .then((usertagresponse) => {
-            this.usertagdata = usertagresponse.data
-            this.usertaglist = this.usertagdata.filter(t => response.data.userTagIds.includes(t.id))
-            this.usertagselect = this.usertaglist
           })
       })
       .catch(error => {
