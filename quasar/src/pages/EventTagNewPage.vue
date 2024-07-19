@@ -23,7 +23,7 @@
       <q-btn color="primary" type="submit">{{ $t('submit') }}</q-btn>
     </q-form>
     <q-list v-if="tagdata.length" bottom bordered class="rounded-borders">
-      <TagLink v-for="tag in tagdata" :key="tag.name" elemtype="event" v-bind="tag" :elems="tag.elementIds"/>
+      <TagLink v-for="tag in tagdata" :key="tag.name" elemtype="event" v-bind="tag" :elems="tag.eventIds"/>
     </q-list>
     </div>
   </q-page>
@@ -53,7 +53,7 @@ export default defineComponent({
           name: this.name,
           id: null,
           color: this.color,
-          elementIds: this.$refs.eventSelect.selected.map(s => s.id),
+          eventIds: this.$refs.eventSelect.selected.map(s => s.id),
           parentId: this.$refs.parentSelect.selected ? this.$refs.parentSelect.selected.id : null,
           childrenIds: []
         })

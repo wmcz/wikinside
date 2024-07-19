@@ -81,7 +81,7 @@ export default defineComponent({
       .then((response) => {
         this.tree = this.treeify(response.data.map(function(item) {return {name: item.name,
                                                                            id: item.id,
-                                                                           users: new Set(item.elementIds),
+                                                                           users: new Set(item.userIds),
                                                                            color: item.color,
                                                                            children: [],
                                                                            childrenIds: item.childrenIds,

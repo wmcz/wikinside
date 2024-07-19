@@ -76,32 +76,11 @@
 
      <ImpactList :url="'tags/' + elemtype + '-tags/' + $route.params.id" :key="$route.params.id"/>
 
-     <q-list top bordered class="rounded-borders">
-       <q-item class="q-py-none q-pl-none">
-         <q-item-label header>{{ $t(elemtype + '.many') }}</q-item-label>
-         <q-space />
-         <q-input  side dense input-class="text-right" style="float: right" class="q-pt-xs" v-model="filter" :label="$t('filter')">
-           <template v-slot:append>
-             <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
-             <q-icon v-else name="search"/>
-           </template>
-         </q-input>
-       </q-item>
-       <q-table :rows="list" :row-key="name" grid :loading="loading" :filter="filter" :pagination="{ rowsPerPage: 10}">
-         <template v-slot:item="props">
-           <component :is="linkFromElemType()" :key="props.row.name" supresstags v-bind="props.row" right-icon="clear" @deleteElem="(id) => removeElem(id)"/>
-         </template>
-         <template v-slot:no-data>
-           {{ $t(elemtype + '.none') }}
-         </template>
-       </q-table>
-       <div v-if="eleminput" class="q-mb-md q-mx-md q-mt-none">
-         <component :is="selectFromElemType()" :label="$t(elemtype + '.add')" ref="elemSelect"/>
-         <q-btn class="q-mr-sm" color="primary" :label="$t('submit')" @click="onElemSubmit"/>
-         <q-btn outline color="primary" :label="$t('cancel')" @click="eleminput = false"/>
-       </div>
-       <q-btn v-else class="q-mb-md q-ml-md" color="primary" :label="$t(elemtype + '.add')" @click="eleminput = true"/>
-     </q-list>
+     <ElemList v-if="elemtype === 'user'" :loading="loading" :elems="data.users"  :data="userdata"  elemtype="user"
+               @addElem="(selected) => addElem(selected, data.users)"  @removeElem="(id) => removeElem(id, data.users)"/>
+
+     <ElemList                            :loading="loading" :elems="data.events" :data="eventdata" elemtype="event"
+               @addElem="(selected) => addElem(selected, data.events)" @removeElem="(id) => removeElem(id, data.events)"/>
    </div>
  </q-page>
 </template>
@@ -109,15 +88,12 @@
 <script>
 import {api} from "boot/axios";
 import {useRoute} from "vue-router";
-import EventSelect from "components/EventSelect.vue";
-import UserSelect from "components/UserSelect.vue";
-import EventLink from "components/EventLink.vue";
-import UserLink from "components/UserLink.vue";
 import TagBadge from "components/TagBadge.vue";
 import {getErrorMessage} from "src/util";
 import TagSelect from "components/TagSelect.vue";
 import ImpactList from "components/ImpactList.vue";
-import { colors } from 'quasar'
+import {colors} from 'quasar'
+import ElemList from "components/ElemList.vue";
 
 const { getPaletteColor } = colors
 
@@ -128,7 +104,8 @@ function update(self, response) {
       id: self.data.id,
       color: self.data.color,
       childrenIds: self.data.children.map(c => c.id),
-      elementIds: self.data.elems.map(e => e.id),
+      userIds: self.data.users === null ? null : self.data.users.map(e => e.id),
+      eventIds: self.data.events.map(e => e.id),
       parentId: self.data.parent === null ? null : self.data.parent.id
     })
     .then(response)
@@ -143,12 +120,14 @@ function changeTags(self, id, onFinish) {
       self.data = self.tagdata.find(t => t.id == id)
       self.data.children = self.data.childrenIds.map(id => self.tagdata.find(t => t.id === id))
       self.data.parent = self.data.parentId === null ? null : self.tagdata.find(t => t.id === self.data.parentId)
-      self.data.elems = self.data.elementIds.map(id => self.elemdata.find(u => u.id === id))
-      self.list = self.data.elems
+      self.data.users  = self.data.userIds  === null ? null : self.data.userIds.map(id => self.userdata.find(u => u.id === id))
+      self.data.events = self.data.eventIds.map(id => self.eventdata.find(e => e.id === id))
+      console.log(self.data.users)
       onFinish.call()
     })
     .catch(error => {
       self.$q.notify(self.$t(getErrorMessage(error)))
+      console.log(error)
       onFinish.call()
     })
 
@@ -156,7 +135,8 @@ function changeTags(self, id, onFinish) {
 
 function updateElems(self) {
   update(self, (response) => {
-    self.data.elems = response.data.elementIds.map(id => self.elemdata.find(u => u.id === id))
+    self.data.users  = response.data.userIds === null ? null : response.data.userIds.map(id => self.userdata.find(u => u.id === id))
+    self.data.events = response.data.eventIds.map(id => self.eventdata.find(e => e.id === id))
     self.list = self.data.elems
   })
 }
@@ -189,12 +169,9 @@ function updateName(self) {
 export default {
   name: "TagDetailPage",
   components: {
+    ElemList,
     ImpactList,
     TagSelect,
-    EventLink,
-    UserLink,
-    EventSelect,
-    UserSelect,
     TagBadge
   },
   props: {
@@ -208,22 +185,24 @@ export default {
       tagdata: null,
       data: {
         name: '',
-        elems: [],
+        users: [],
+        events: [],
         children: [],
         parent: null,
         color: null
       },
       filter: '',
-      eleminput: false,
       parentinput: false,
       childinput: false,
       newchildinput: false,
       nameinput:false,
       name: '',
       childname: '',
-      elemdata: null,
-      list: [],
+      userdata: null,
+      eventdata: null,
       loading: true,
+      userloading: true,
+      eventloading: true
     }
   },
   mounted() {
@@ -231,11 +210,24 @@ export default {
     const self = this
 
     api
-      .get(this.elemtype + 's')
+      .get('users')
       .then((response) => {
-        self.elemdata = response.data
-        changeTags(self, route.params.id, () => {self.loading = false})
-        self.loading = false
+        self.userdata = response.data
+        changeTags(self, route.params.id, () => {self.userloading = false})
+        self.userloading = false
+        if (!self.eventloading) self.loading = false
+      })
+      .catch(error => {
+        this.$q.notify(this.$t(getErrorMessage(error)))
+        this.loading = false
+      })
+    api
+      .get('events')
+      .then((response) => {
+        self.eventdata = response.data
+        //changeTags(self, route.params.id, () => {self.eventloading = false})
+        self.eventloading = false
+        if (!self.userloading) self.loading = false
       })
       .catch(error => {
         this.$q.notify(this.$t(getErrorMessage(error)))
@@ -246,12 +238,10 @@ export default {
 
   },
   methods: {
-    onElemSubmit() {
+    addElem(selected, elemlist) {
       this.loading = true
-      this.data.elems.push(...this.$refs.elemSelect.selected)
+      elemlist.push(...selected)
       updateElems(this)
-      this.$refs.elemSelect.selected = []
-      this.eleminput = false
       this.loading = false
     },
     onParentSubmit() {
@@ -291,31 +281,20 @@ export default {
     resetFilter() {
       this.filter = ''
     },
-    removeElem(id) {
+    removeElem(id, elemlist) {
       this.loading = true
-      this.data.elems.splice(this.data.elems.indexOf(id), 1)
+      elemlist.splice(elemlist.indexOf(id), 1)
       updateElems(this)
       this.loading = false
-    },
-    linkFromElemType() {
-      switch (this.elemtype) {
-        case 'event': return 'EventLink'
-        case 'user':  return 'UserLink'
-      }
-    },
-    selectFromElemType() {
-      switch (this.elemtype) {
-        case 'event': return 'EventSelect'
-        case 'user':  return 'UserSelect'
-      }
     }
   },
   async beforeRouteUpdate(to, from) {
     changeTags(this, to.params.id, () => {})
-    this.eleminput = false
     this.parentinput = false
     this.childinput = false
     this.newchildinput = false
   }
 }
+</script>
+<script setup lang="ts">
 </script>

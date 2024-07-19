@@ -113,20 +113,20 @@ class UserTest extends BaseTest {
         User user3 = new User(id2, null, null, null, null, null);
         User user4 = new User(id2, null, null, null, null, null);
 
-        Assertions.assertTrue(user1.equals(user2));
-        Assertions.assertTrue(user2.equals(user1));
+        Assertions.assertEquals(user1, user2);
+        Assertions.assertEquals(user2, user1);
 
-        Assertions.assertTrue(user3.equals(user4));
-        Assertions.assertTrue(user4.equals(user3));
+        Assertions.assertEquals(user3, user4);
+        Assertions.assertEquals(user4, user3);
 
-        Assertions.assertFalse(user1.equals(user3));
-        Assertions.assertFalse(user3.equals(user1));
+        Assertions.assertNotEquals(user1, user3);
+        Assertions.assertNotEquals(user3, user1);
 
-        Assertions.assertFalse(user1.equals(user4));
-        Assertions.assertFalse(user4.equals(user1));
+        Assertions.assertNotEquals(user1, user4);
+        Assertions.assertNotEquals(user4, user1);
 
-        Assertions.assertFalse(user2.equals(user4));
-        Assertions.assertFalse(user4.equals(user2));
+        Assertions.assertNotEquals(user2, user4);
+        Assertions.assertNotEquals(user4, user2);
     }
 
     @Test
@@ -135,7 +135,7 @@ class UserTest extends BaseTest {
         Set<UserTag> tags = new HashSet<>();
 
         while (tags.size() < 10) {
-            tags.add(new UserTag(randomLong(), randomString(), null, null, null));
+            tags.add(new UserTag(randomLong(), randomString(), null, null, null, null));
         }
 
         User user = new User(null, null, null, null, tags, new HashSet<>());
@@ -163,7 +163,7 @@ class UserTest extends BaseTest {
         Set<UserTag> tags = new HashSet<>();
 
         while (tags.size() < 10) {
-            tags.add(new UserTag(randomLong(), randomString(), new HashSet<>(), null, null));
+            tags.add(new UserTag(randomLong(), randomString(), new HashSet<>(), new HashSet<>(), null, null));
         }
 
         User user = new User(null, null, null, null, new HashSet<>(), new HashSet<>());
@@ -179,7 +179,7 @@ class UserTest extends BaseTest {
         Set<UserTag> tags = new HashSet<>();
 
         while (tags.size() < 10) {
-            tags.add(new UserTag(randomLong(), randomString(), new HashSet<>(), null, null));
+            tags.add(new UserTag(randomLong(), randomString(), new HashSet<>(), new HashSet<>(), null, null));
         }
 
         User user = new User(null, null, null, null, new HashSet<>(tags), new HashSet<>());

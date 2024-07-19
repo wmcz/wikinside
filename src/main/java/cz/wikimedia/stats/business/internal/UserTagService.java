@@ -1,8 +1,10 @@
 package cz.wikimedia.stats.business.internal;
 
 
+import cz.wikimedia.stats.dao.EventRepository;
 import cz.wikimedia.stats.dao.UserRepository;
 import cz.wikimedia.stats.dao.UserTagRepository;
+import cz.wikimedia.stats.model.Event;
 import cz.wikimedia.stats.model.IdAble;
 import cz.wikimedia.stats.model.User;
 import cz.wikimedia.stats.model.UserTag;
@@ -18,10 +20,13 @@ public class UserTagService extends InternalService<UserTag, Long> {
 
     private final UserRepository userRepository;
     private final UserTagRepository userTagRepository;
-    public UserTagService(UserTagRepository repository, UserRepository userRepository) {
+    private final EventRepository eventRepository;
+
+    public UserTagService(UserTagRepository repository, UserRepository userRepository, EventRepository eventRepository) {
         super(repository);
         this.userRepository = userRepository;
         this.userTagRepository = repository;
+        this.eventRepository = eventRepository;
     }
 
     private <T extends IdAble<Long>> Collection<T> applyToNonOwningField(UserTag tag,
@@ -36,12 +41,20 @@ public class UserTagService extends InternalService<UserTag, Long> {
         return applyToNonOwningField(tag, userIds, function, userRepository, UserTag::getTagged);
     }
 
+    private Collection<Event> applyEvents(UserTag tag, Collection<Long> eventIds, Function<Event, Event> function) {
+        return applyToNonOwningField(tag, eventIds, function, eventRepository, UserTag::getEvents);
+    }
+
     private Collection<UserTag> applyChildren(UserTag tag, Collection<Long> userIds, UserTag newParent) {
         return applyToNonOwningField(tag, userIds, c -> c.setParent(newParent), userTagRepository, UserTag::getChildren);
     }
 
     private void updateUsers(UserTag tag, Collection<User> updated) {
         updateNonOwningField(tag, updated, UserTag::getTagged, this::addUsers, this::removeUsers);
+    }
+
+    private void updateEvents(UserTag tag, Collection<Event> updated) {
+        updateNonOwningField(tag, updated, UserTag::getEvents, this::addEvents, this::removeEvents);
     }
 
     private void updateChildren(UserTag tag, Collection<UserTag> updated) {
@@ -54,6 +67,14 @@ public class UserTagService extends InternalService<UserTag, Long> {
 
     public Collection<User> removeUsers(UserTag tag, Collection<Long> userIds) {
         return applyUsers(tag, userIds, u -> u.removeTag(tag));
+    }
+
+    public Collection<Event> addEvents(UserTag tag, Collection<Long> eventIds) {
+        return applyEvents(tag, eventIds, e -> e.addUserTag(tag));
+    }
+
+    public Collection<Event> removeEvents(UserTag tag, Collection<Long> eventIds) {
+        return applyEvents(tag, eventIds, e -> e.removeUserTag(tag));
     }
 
     private Collection<UserTag> addChildren(UserTag tag, Collection<Long> childrenIds) {
@@ -90,6 +111,7 @@ public class UserTagService extends InternalService<UserTag, Long> {
     public void deleteById(Long id) {
         findById(id).ifPresent(t -> {
             removeUsers   (t, t.getTagged()  .stream().map(User::getId)   .toList());
+            removeEvents  (t, t.getEvents()  .stream().map(Event::getId)  .toList());
             removeChildren(t, t.getChildren().stream().map(UserTag::getId).toList());
         });
         super.deleteById(id);
@@ -102,6 +124,7 @@ public class UserTagService extends InternalService<UserTag, Long> {
         Optional<S> res = super.create(tag);
         if (res.isPresent()) {
             addUsers   (res.get(), toIds(tag.getTagged()));
+            addEvents  (res.get(), toIds(tag.getEvents()));
             addChildren(res.get(), toIds(tag.getChildren()));
             return update(res.get());
 
@@ -117,6 +140,7 @@ public class UserTagService extends InternalService<UserTag, Long> {
         if (current.isEmpty()) return Optional.empty();
         else {
             updateUsers   (current.get(), tag.getTagged());
+            updateEvents  (current.get(), tag.getEvents());
             updateChildren(current.get(), tag.getChildren());
             return super.update(tag);
         }

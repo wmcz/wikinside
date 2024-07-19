@@ -1,5 +1,6 @@
 package cz.wikimedia.stats.business.internal;
 
+import cz.wikimedia.stats.dao.EventRepository;
 import cz.wikimedia.stats.dao.UserRepository;
 import cz.wikimedia.stats.dao.UserTagRepository;
 import cz.wikimedia.stats.model.User;
@@ -25,19 +26,23 @@ class UserTagServiceTest {
     @MockBean
     UserRepository userRepository;
 
+    @MockBean
+    EventRepository eventRepository;
+
     UserTagService service;
+
     @BeforeEach
     void setUp() {
         User userone = new User(1001L, "one");
         User usertwo = new User(1002L, "two");
         User userthree = new User(1003L, "three");
 
-        UserTag one   = new UserTag(1L, "one", new HashSet<>(), null, new HashSet<>());
-        UserTag two   = new UserTag(2L, "two", new HashSet<>(List.of(userone, usertwo)), one, new HashSet<>());
-        UserTag three = new UserTag(3L, "three", new HashSet<>(List.of(usertwo, userthree)), null, new HashSet<>(List.of(one, two)));
+        UserTag one   = new UserTag(1L, "one", new HashSet<>(), new HashSet<>(), null, new HashSet<>());
+        UserTag two   = new UserTag(2L, "two", new HashSet<>(List.of(userone, usertwo)), new HashSet<>(), one, new HashSet<>());
+        UserTag three = new UserTag(3L, "three", new HashSet<>(List.of(usertwo, userthree)), new HashSet<>(), null, new HashSet<>(List.of(one, two)));
 
 
-        service = new UserTagService(repository, userRepository);
+        service = new UserTagService(repository, userRepository, eventRepository);
 
         Mockito.when(repository.save(ArgumentMatchers.any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
         Mockito.when(repository.findById(1L)).thenReturn(Optional.of(one));
@@ -78,27 +83,27 @@ class UserTagServiceTest {
 
     @Test
     void create() {
-        Mockito.when(repository.findById(4L)).thenReturn(Optional.of(new UserTag(4L, "four", new HashSet<>(), null, new HashSet<>())));
-        Mockito.when(repository.findById(5L)).thenReturn(Optional.of(new UserTag(5L, "five", new HashSet<>(), null, new HashSet<>())));
-        Mockito.when(repository.findById(6L)).thenReturn(Optional.of(new UserTag(6L, "six", new HashSet<>(), null, new HashSet<>())));
+        Mockito.when(repository.findById(4L)).thenReturn(Optional.of(new UserTag(4L, "four", new HashSet<>(), new HashSet<>(), null, new HashSet<>())));
+        Mockito.when(repository.findById(5L)).thenReturn(Optional.of(new UserTag(5L, "five", new HashSet<>(), new HashSet<>(), null, new HashSet<>())));
+        Mockito.when(repository.findById(6L)).thenReturn(Optional.of(new UserTag(6L, "six", new HashSet<>(), new HashSet<>(), null, new HashSet<>())));
 
-        Assertions.assertEquals(Optional.empty(), service.create(new UserTag(1L, "one", new HashSet<>(), null, new HashSet<>())));
-        Mockito.verify(repository, Mockito.never()).save(new UserTag(1L, "one", new HashSet<>(), null, new HashSet<>()));
+        Assertions.assertEquals(Optional.empty(), service.create(new UserTag(1L, "one", new HashSet<>(), new HashSet<>(), null, new HashSet<>())));
+        Mockito.verify(repository, Mockito.never()).save(new UserTag(1L, "one", new HashSet<>(), new HashSet<>(), null, new HashSet<>()));
         Mockito.verifyNoInteractions(userRepository);
 
-        Assertions.assertTrue(service.create(new UserTag(4L, "four", new HashSet<>(), null, new HashSet<>())).isPresent());
-        Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(4L, "four", null, null, null));
+        Assertions.assertTrue(service.create(new UserTag(4L, "four", new HashSet<>(), new HashSet<>(), null, new HashSet<>())).isPresent());
+        Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(4L, "four", new HashSet<>(), null, null, null));
         Mockito.verifyNoInteractions(userRepository);
 
-        Assertions.assertTrue(service.create(new UserTag(5L, "five", new HashSet<>(), null, new HashSet<>(List.of(new UserTag(1L, "one", null, null, new HashSet<>()), new UserTag(2L, "two", null, null, new HashSet<>()))))).isPresent());
-        Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(5L, "five", null, null, null));
-        Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(1L, "one", null, null, null));
-        Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(2L, "two", null, null, null));
+        Assertions.assertTrue(service.create(new UserTag(5L, "five", new HashSet<>(), new HashSet<>(), null, new HashSet<>(List.of(new UserTag(1L, "one", null, null, null, new HashSet<>()), new UserTag(2L, "two", null, null, null, new HashSet<>()))))).isPresent());
+        Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(5L, "five", null, null, null, null));
+        Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(1L, "one", null, null, null, null));
+        Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(2L, "two", null, null, null, null));
         Mockito.verifyNoInteractions(userRepository);
 
 
-        Assertions.assertTrue(service.create(new UserTag(6L, "six", new HashSet<>(List.of(new User(1001L, "one"), new User(1002L, "two"))), null, new HashSet<>())).isPresent());
-        Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(6L, "six", null, null, null));
+        Assertions.assertTrue(service.create(new UserTag(6L, "six", new HashSet<>(List.of(new User(1001L, "one"), new User(1002L, "two"))), new HashSet<>(), null, new HashSet<>())).isPresent());
+        Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(6L, "six", null, null, null, null));
         Mockito.verify(userRepository, Mockito.atLeastOnce()).save(new User(1001L, "one"));
         Mockito.verify(userRepository, Mockito.atLeastOnce()).save(new User(1002L, "two"));
     }
@@ -107,22 +112,22 @@ class UserTagServiceTest {
     void update() {
         Mockito.when(repository.findById(4L)).thenReturn(Optional.empty());
 
-        Assertions.assertTrue(service.update(new UserTag(4L, "four", Set.of(new User(1007L, "name")), null, new HashSet<>())).isEmpty());
+        Assertions.assertTrue(service.update(new UserTag(4L, "four", Set.of(new User(1007L, "name")), new HashSet<>(), null, new HashSet<>())).isEmpty());
         Mockito.verify(repository, Mockito.never()).save(ArgumentMatchers.any());
         Mockito.verifyNoInteractions(userRepository);
 
-        Assertions.assertTrue(service.update(new UserTag(1L, "one", new HashSet<>(), null, new HashSet<>())).isPresent());
-        Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(1L, "one", new HashSet<>(), null, new HashSet<>()));
+        Assertions.assertTrue(service.update(new UserTag(1L, "one", new HashSet<>(), new HashSet<>(), null, new HashSet<>())).isPresent());
+        Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(1L, "one", new HashSet<>(), new HashSet<>(), null, new HashSet<>()));
         Mockito.verifyNoInteractions(userRepository);
 
-        Assertions.assertTrue(service.update(new UserTag(1L, "one", new HashSet<>(), null, new HashSet<>(List.of(new UserTag(3L, "three", null, null, new HashSet<>()))))).isPresent());
-        Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(1L, "one", null, null, null));
-        Mockito.verify(repository, Mockito.never())      .save(new UserTag(2L, "two", null, null, null));
-        Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(3L, "three", null, null, null));
+        Assertions.assertTrue(service.update(new UserTag(1L, "one", new HashSet<>(), new HashSet<>(), null, new HashSet<>(List.of(new UserTag(3L, "three", null, null, null, new HashSet<>()))))).isPresent());
+        Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(1L, "one", null, null, null, null));
+        Mockito.verify(repository, Mockito.never())      .save(new UserTag(2L, "two", null, null, null, null));
+        Mockito.verify(repository, Mockito.atLeastOnce()).save(new UserTag(3L, "three", null, null, null, null));
         Mockito.verifyNoInteractions(userRepository);
 
 
-        Assertions.assertTrue(service.update(new UserTag(1L, "one", new HashSet<>(List.of(new User(1001L, "one"), new User(1002L, "two"))), null, new HashSet<>())).isPresent());
+        Assertions.assertTrue(service.update(new UserTag(1L, "one", new HashSet<>(List.of(new User(1001L, "one"), new User(1002L, "two"))), new HashSet<>(), null, new HashSet<>())).isPresent());
         Mockito.verify(userRepository, Mockito.atLeastOnce()).save(new User(1001L, "one"));
         Mockito.verify(userRepository, Mockito.atLeastOnce()).save(new User(1002L, "two"));
     }
