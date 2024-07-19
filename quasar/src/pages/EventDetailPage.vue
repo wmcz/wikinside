@@ -242,7 +242,6 @@ export default {
             this.tagloading = false
             this.$q.notify(this.$t(getErrorMessage(error)))
           })
-        !response.data.userIds.length ? this.userloading = false :
           api
             .get('tags/user-tags')
             .then((usertagresponse) => {
