@@ -6,7 +6,6 @@ import cz.wikimedia.stats.model.Event;
 import cz.wikimedia.stats.model.Image;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Function;
@@ -42,11 +41,11 @@ public class ImageService extends InternalService<Image, Long> {
         Optional<Image> original = imageRepository.findById(image.getId());
 
         if (original.isPresent()) {
-            update(original.get().addCategories(image.getCategories()));
-            Collection<Event> events = new ArrayList<>(original.get().getEvents());
+            Image og = original.get();
+            og.addCategories(image.getCategories());
 
-            events.addAll(image.getEvents());
-            updateEvents(original.get(), events);
+            updateEvents(og, image.getEvents());
+            super.update(og);
 
         } else create(image);
     }
