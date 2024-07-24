@@ -49,7 +49,8 @@ export default {
     color: 'Color',
     assign_color: 'Assign color',
     new_child: 'Create child',
-    from_event: 'From events: '
+    from_event: 'From events: ',
+    group: 'Group by category'
   },
   project: {
     one: 'Project',

@@ -6,7 +6,7 @@
       <span class="text-h6 q-pr-xs">{{ username }}</span>
 
     </q-item-label>
-    <q-item-label v-if="!supresstags" caption lines="1">
+    <q-item-label v-if="!suppresstags" caption lines="1">
       <TagBadge class="q-mr-xs" v-for="tag in tags" :key="tag.name" :id="tag.id" :name="tag.name" v-bind="tag" elemtype="user"/>
       <caption v-if="!tags.length">{{ $t('tag.none') }}</caption>
     </q-item-label>
@@ -38,7 +38,7 @@ export default {
       type: Array,
       required: true
     },
-    supresstags: {
+    suppresstags: {
       type: Boolean
     },
     rightIcon: {

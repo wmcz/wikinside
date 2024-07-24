@@ -14,7 +14,7 @@
     <q-table :rows="elems" :row-key="name" grid :loading="loading" :filter="filter"
              :pagination="{ rowsPerPage: 10}">
       <template v-slot:item="props">
-        <component :is="linkFromElemType()" :key="props.row.name" supresstags v-bind="props.row" right-icon="clear"
+        <component :is="linkFromElemType()" :key="props.row.name" :suppresstags="!badges" :suppresselems="!badges" v-bind="props.row" right-icon="clear"
                    @deleteElem="(id) => $emit('removeElem', id)"/>
       </template>
       <template v-slot:no-data>
@@ -35,14 +35,18 @@ import EventSelect from "components/EventSelect.vue";
 import UserSelect from "components/UserSelect.vue";
 import EventLink from "components/EventLink.vue";
 import UserLink from "components/UserLink.vue";
+import TagLink from "components/TagLink.vue";
+import TagSelect from "components/TagSelect.vue";
 
 export default {
   name: 'ElemList',
   components: {
     EventLink,
     UserLink,
+    TagLink,
     EventSelect,
-    UserSelect
+    UserSelect,
+    TagSelect
   },
   props: {
     elems: {
@@ -59,6 +63,9 @@ export default {
     },
     loading: {
       type: Boolean
+    },
+    badges: {
+      type: Boolean
     }
   },
   data() {
@@ -72,12 +79,14 @@ export default {
       switch (this.elemtype) {
         case 'event': return 'EventLink'
         case 'user':  return 'UserLink'
+        case 'tag': return 'TagLink'
       }
     },
     selectFromElemType() {
       switch (this.elemtype) {
         case 'event': return 'EventSelect'
         case 'user':  return 'UserSelect'
+        case 'tag': return 'TagSelect'
       }
     },
     resetFilter() {
