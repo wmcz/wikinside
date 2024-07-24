@@ -14,7 +14,7 @@
     <q-table :rows="elems" :row-key="name" grid :loading="loading" :filter="filter"
              :pagination="{ rowsPerPage: 10}">
       <template v-slot:item="props">
-        <component :is="linkFromElemType()" :key="props.row.name" :suppresstags="!badges" :suppresselems="!badges" v-bind="props.row" right-icon="clear"
+        <component :is="linkFromElemType()" :key="props.row.name" :suppresstags="!badges" :suppresselems="!badges" elemtype="event" v-bind="props.row" right-icon="clear"
                    @deleteElem="(id) => $emit('removeElem', id)"/>
       </template>
       <template v-slot:no-data>
