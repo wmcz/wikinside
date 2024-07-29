@@ -91,59 +91,15 @@
 
      <ImpactList :url="'events/' + $route.params.id" ref="impactref"/>
 
-     <q-list top bordered class="rounded-borders">
-       <q-item class="q-py-none q-pl-none">
-         <q-item-label header>{{ $t('tag.many') }}</q-item-label>
-         <q-space />
-         <q-input  side dense input-class="text-right" style="float: right" class="q-pt-xs" v-model="tagfilter" :label="$t('filter')">
-           <template v-slot:append>
-             <q-icon v-if="tagfilter !== ''" name="clear" class="cursor-pointer" @click="resetTagFilter" />
-             <q-icon v-else name="search"/>
-           </template>
-         </q-input>
-       </q-item>
-       <q-table :rows="taglist" :row-key="name" grid  :loading="tagloading" :filter="tagfilter" :pagination="{ rowsPerPage: 10}">
-         <template v-slot:item="props">
-           <TagLink elemtype="event" :key="props.row.name" suppresselems v-bind="props.row" right-icon="clear" @deleteTag="(id) => removeTag(id)"/>
-         </template>
-         <template v-slot:no-data>
-           {{ $t('tag.none') }}
-         </template>
-       </q-table>
-       <div v-if="taginput" class="q-mb-md q-mx-md q-mt-none">
-         <TagSelect  url="tags/event-tags" :label="$t('tag.add')" ref="tagSelect"/>
-         <q-btn class="q-mr-sm" color="primary" :label="$t('submit')" @click="onTagSubmit"/>
-         <q-btn outline color="primary" :label="$t('cancel')" @click="taginput = false"/>
-       </div>
-       <q-btn v-else class="q-mb-md q-ml-md" color="primary" :label="$t('tag.add')" @click="taginput = true"/>
-     </q-list>
+     <ElemList :loading="tagloading" :elems="taglist" :data="tagdata" elemtype="tag"
+               @addElem="(selected) => onTagSubmit(selected)"  @removeElem="(id) => removeTag(id)"/>
 
-     <q-list top bordered class="rounded-borders">
-       <q-item class="q-py-none q-pl-none">
-         <q-item-label header>{{ $t('user.many') }}</q-item-label>
-         <q-space />
-         <q-input  side dense input-class="text-right" style="float: right" class="q-pt-xs" v-model="userfilter" :label="$t('filter')">
-           <template v-slot:append>
-             <q-icon v-if="userfilter !== ''" name="clear" class="cursor-pointer" @click="resetUserFilter" />
-             <q-icon v-else name="search"/>
-           </template>
-         </q-input>
-       </q-item>
-       <q-table :rows="userlist" :row-key="name" grid :loading="userloading" :filter="userfilter" :pagination="{ rowsPerPage: 10}">
-         <template v-slot:item="props">
-           <UserLink :key="props.row.username" supresstags v-bind="props.row" right-icon="clear" @deleteElem="(id) => removeUser(id)"/>
-         </template>
-         <template v-slot:no-data>
-           {{ $t('user.none') }}
-         </template>
-       </q-table>
-       <div v-if="userinput" class="q-mb-md q-mx-md q-mt-none">
-         <UserSelect :label="$t('user.add')" ref="userSelect"/>
-         <q-btn class="q-mr-sm" color="primary" :label="$t('submit')" @click="onUserSubmit"/>
-         <q-btn outline color="primary" :label="$t('cancel')" @click="userinput = false"/>
-       </div>
-       <q-btn v-else class="q-mb-md q-ml-md" color="primary" :label="$t('user.add')" @click="userinput = true"/>
-     </q-list>
+     <q-toggle v-model="summary" :label="$t('tag.group')" class="q-pb-none"/>
+
+     <ElemList v-if="!summary" class="q-mt-none" :loading="userloading" :elems="userlist" :data="userdata" elemtype="user" badges
+               @addElem="(selected) => onUserSubmit(selected)"  @removeElem="(id) => removeUser(id)"/>
+
+     <SummaryList v-else class="q-mt-none" :users="userlist" :tags="[...new Set(userlist.flatMap(u => u.tags))]" :loading="userloading"/>
    </div>
  </q-page>
 </template>
@@ -151,13 +107,11 @@
 <script>
 import {api} from "boot/axios";
 import {useRoute} from "vue-router";
-import UserSelect from "components/UserSelect.vue";
-import TagSelect from "components/TagSelect.vue";
-import TagLink from "components/TagLink.vue";
-import UserLink from "components/UserLink.vue";
 import {getErrorMessage} from "src/util";
 import ImpactList from "components/ImpactList.vue";
 import TagBadge from "components/TagBadge.vue";
+import ElemList from "components/ElemList.vue";
+import SummaryList from "components/SummaryList.vue";
 
 function submit(self, then) {
   self.$refs.impactref.showDisclaimer = true
@@ -189,12 +143,10 @@ function updateName(self) {
 export default {
   name: "EventDetailPage",
   components: {
+    SummaryList,
     TagBadge,
     ImpactList,
-    UserLink,
-    TagLink,
-    TagSelect,
-    UserSelect
+    ElemList
   },
   data() {
     return {
@@ -223,6 +175,7 @@ export default {
       projectinput: false,
       nameinput:false,
       name: '',
+      summary: false
     }
   },
   mounted() {
@@ -242,31 +195,38 @@ export default {
             this.tagloading = false
             this.$q.notify(this.$t(getErrorMessage(error)))
           })
-        !response.data.userIds.length ? this.userloading = false :
-        api
-          .get('users')
-          .then((userresponse) => {
-            this.userdata = userresponse.data
-            this.userlist = this.userdata.filter(u => response.data.userIds.includes(u.id))
-            this.userloading = false
-          })
-          .catch(error => {
-            this.userloading = false
-            this.$q.notify(this.$t(getErrorMessage(error)))
-          })
+          api
+            .get('tags/user-tags')
+            .then((usertagresponse) => {
+              this.usertagdata = usertagresponse.data
+              this.usertaglist = this.usertagdata.filter(t => response.data.userTagIds.includes(t.id))
+              this.usertagselect = this.usertaglist
+
+              api
+                .get('users')
+                .then((userresponse) => {
+                  this.userdata = userresponse.data
+                  this.userlist = this.userdata.filter(u => response.data.userIds.includes(u.id)).map(
+                    function (item) { return {
+                      username: item.username,
+                      id: item.id,
+                      tags: [...new Set(item.inherentTagIds.concat(item.eventTagIds))].map(id => usertagresponse.data.find(e => id === e.id))
+                    }}
+                  )
+                  this.userloading = false
+                })
+                .catch(error => {
+                  console.log(error)
+                  this.userloading = false
+                  this.$q.notify(this.$t(getErrorMessage(error)))
+                })
+            })
         api
           .get('projects')
           .then((projectresponse) => {
             this.projectdata = projectresponse.data
             this.projects = this.projectdata.filter(p => response.data.projectIds.includes(p.id))
             this.projectselect = this.projects
-          })
-        api
-          .get('tags/user-tags')
-          .then((usertagresponse) => {
-            this.usertagdata = usertagresponse.data
-            this.usertaglist = this.usertagdata.filter(t => response.data.userTagIds.includes(t.id))
-            this.usertagselect = this.usertaglist
           })
       })
       .catch(error => {
@@ -276,15 +236,15 @@ export default {
       })
   },
   methods: {
-    onUserSubmit() {
+    onUserSubmit(users) {
       this.userloading = true
-      this.eventdata.userIds.push(...this.$refs.userSelect.selected.map(u => u.id))
+      this.eventdata.userIds.push(...users)
       updateUsers(this)
       this.userloading = false
     },
-    onTagSubmit() {
+    onTagSubmit(tags) {
       this.tagloading = true
-      this.eventdata.tagIds.push(...this.$refs.tagSelect.selected.map(t => t.id))
+      this.eventdata.tagIds.push(...tags)
       updateTags(this)
       this.tagloading = false
     },

@@ -29,21 +29,30 @@ public class TagConverter {
         else            return service.findById(id).orElse(null);
     }
 
-    public <T extends Tag<S>, S extends IdAble<Long>> TagDto toDto(T tag) {
+    public TagDto toDto(UserTag tag) {
+        return toDto(tag, ConverterUtils.getIds(tag.getTagged()), ConverterUtils.getIds(tag.getEvents()));
+    }
+
+    public TagDto toDto(EventTag tag) {
+        return toDto(tag, null, ConverterUtils.getIds(tag.getTagged()));
+    }
+    private <T extends Tag<S>, S extends IdAble<Long>> TagDto toDto(T tag, Collection<Long> users, Collection<Long> events) {
 
         return new TagDto(tag.getName(),
                           tag.getId(),
                           tag.getParent() == null ? null : tag.getParent().getId(),
                           tag.getColor(),
                           ConverterUtils.getIds(tag.getChildren()),
-                          ConverterUtils.getIds(tag.getTagged()));
+                          users,
+                          events);
     }
 
     public UserTag toUserTag(TagDto dto) {
         return new UserTag(dto.id(),
                            dto.name(),
                            dto.color(),
-                           ConverterUtils.getElems(dto.elementIds(), userService),
+                           ConverterUtils.getElems(dto.userIds(), userService),
+                           ConverterUtils.getElems(dto.eventIds(), eventService),
                            getParent(dto.parentId(), userTagService),
                            ConverterUtils.getElems(dto.childrenIds(), userTagService));
     }
@@ -54,12 +63,8 @@ public class TagConverter {
         return new EventTag(dto.id(),
                             dto.name(),
                             dto.color(),
-                            ConverterUtils.getElems(dto.elementIds(), eventService),
+                            ConverterUtils.getElems(dto.eventIds(), eventService),
                             getParent(dto.parentId(), eventTagService),
                             ConverterUtils.getElems(dto.childrenIds(), eventTagService));
-    }
-
-    public <T extends Tag<S>, S extends IdAble<Long>> Collection<TagDto> toDto(Collection<T> tags) {
-        return tags.stream().map(this::toDto).toList();
     }
 }

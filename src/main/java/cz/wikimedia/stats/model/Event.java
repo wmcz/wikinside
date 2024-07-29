@@ -187,6 +187,16 @@ public class Event implements IdAble<Long> {
         return this;
     }
 
+    public Event addUserTag(UserTag tag) {
+        userTags.add(tag);
+        return this;
+    }
+
+    public Event removeUserTag(UserTag tag) {
+        userTags.remove(tag);
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

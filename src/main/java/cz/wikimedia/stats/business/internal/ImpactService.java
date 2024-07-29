@@ -139,10 +139,12 @@ public class ImpactService {
         }
 
         public Impact getImpact(UserTag tag) {
-            Set<Revision> revs = new HashSet<>();
-            Set<Image> images = new HashSet<>();
-            populate(tag, revs, User::getRevisions);
+            Set<Revision> revs = new HashSet<>(tag.getEvents().stream().flatMap(e -> e.getRevisions().stream()).toList());
+            Set<Image> images  = new HashSet<>(tag.getEvents().stream().flatMap(e -> e.getImages()   .stream()).toList());
+
+            populate(tag, revs,   User::getRevisions);
             populate(tag, images, User::getImages);
+
             return getUserTagImpact(revs, images);
         }
 

@@ -49,7 +49,8 @@ export default {
     color: 'Barva',
     assign_color: 'Přiřadit barvu',
     new_child: 'Vytvořit podkategorii',
-    from_event: 'Z událostí: '
+    from_event: 'Z událostí: ',
+    group: 'Seskupit dle kategorií'
   },
   project: {
     one: 'Projekt',
