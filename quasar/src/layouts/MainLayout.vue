@@ -14,7 +14,7 @@
         <q-toolbar-title class="logo-typography">
           {{ $t('app_name')}}
         </q-toolbar-title>
-
+        <q-btn flat class="q-mr-xl" label="login" :href="url"/>
         <div>0.3</div>
       </q-toolbar>
     </q-header>
@@ -24,7 +24,9 @@
       show-if-above
       bordered
     >
-      <q-list style="height: 100%;">
+      <q-list
+        style="height: 100%;"
+      >
         <!--<q-item-label header>
           Essential Links
         </q-item-label>-->
@@ -33,6 +35,7 @@
           v-for="link in navLinks"
           :key="link.title"
           v-bind="link"
+          :disable="!getAuthStatus"
         />
         <NavLink style="position: absolute; bottom: 0; width: 100%" :title="$t('project.many')" icon="travel_explore" link="/project"/>
       </q-list>
@@ -60,6 +63,13 @@ import {computed, defineComponent, ref} from 'vue'
 import NavLink from 'components/NavLink.vue'
 import {date} from 'quasar'
 import {useI18n} from "vue-i18n";
+import {useAuthStore} from "stores/authstore";
+import {api} from "boot/axios";
+import {storeToRefs} from "pinia";
+
+const auth = useAuthStore()
+const { authenticate, deauthenticate } = auth
+const { getAuthStatus } = storeToRefs(auth)
 
 export default defineComponent({
   name: 'MainLayout',
@@ -71,6 +81,7 @@ export default defineComponent({
   setup () {
     const { t } = useI18n()
     const leftDrawerOpen = ref(false)
+    const url = process.env.BACKEND_URL + '/api/login/login-only'
     const today =  computed(() => {
       return date.formatDate(Date.now(), 'YYYY-MM-DD')
     })
@@ -108,8 +119,15 @@ export default defineComponent({
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
       },
-      today
+      today,
+      getAuthStatus,
+      url
     }
+  },
+  created() {
+    api.get('/oauth2')
+      .then(() => authenticate())
+      .catch(() => deauthenticate())
   }
 })
 </script>
