@@ -12,7 +12,7 @@
           </template>
         </q-input>
       </q-item>
-      <q-table :rows="eventdata" :row-key="name" grid :loading="loading" :filter="filter" :pagination="{ rowsPerPage: 10}">
+      <q-table :rows="eventdata" :row-key="name" grid :loading="loading" :filter="filter" :pagination="{ rowsPerPage: 10, sortBy:'id', descending: true}">
         <template v-slot:item="props">
           <EventLink :key="props.row.name" v-bind="props.row" @deleteElem="(id) => deleteEvent(id)"/>
         </template>
