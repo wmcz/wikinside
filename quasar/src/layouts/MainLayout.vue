@@ -14,7 +14,7 @@
         <q-toolbar-title class="logo-typography">
           {{ $t('app_name')}}
         </q-toolbar-title>
-        <q-btn flat class="q-mr-xl" label="login" :href="url"/>
+        <q-btn v-if="!getAuthStatus" flat class="q-mr-xl" label="login" :href="url"/>
         <div>0.3</div>
       </q-toolbar>
     </q-header>
