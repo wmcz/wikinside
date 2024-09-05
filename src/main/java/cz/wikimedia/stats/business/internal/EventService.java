@@ -2,14 +2,13 @@ package cz.wikimedia.stats.business.internal;
 
 import cz.wikimedia.stats.dao.EventRepository;
 import cz.wikimedia.stats.model.Event;
-import cz.wikimedia.stats.model.Revision;
+import cz.wikimedia.stats.model.ImageCategory;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class EventService extends InternalService<Event, Long> {
@@ -39,18 +38,17 @@ public class EventService extends InternalService<Event, Long> {
                         event.getProjects().contains(r.getProject()) &&
                         event.getParticipants().contains(r.getUser())
                 ))
-                .toList()
+                .toList() // to ensure things don't run in parallel
                 .forEach(event::removeRevision);
-
-        if (event.getHashtag() != null)
-            // for automatically generated users, remove them if they have no revisions
-            event
-                    .getParticipants()
-                    .retainAll(event
-                            .getRevisions()
-                            .stream()
-                            .map(Revision::getUser)
-                            .collect(Collectors.toSet()));
+        event
+                .getImages()
+                .stream()
+                .filter(i -> !(
+                        isWithinDateRange(i.getTimestamp(), event.getStartDate(), event.getEndDate()) &&
+                        i.getCategories().contains(new ImageCategory(event.getCategory()))
+                        ))
+                .toList() // to ensure things don't run in parallel
+                .forEach(event::removeImage);
     }
 
     @Override

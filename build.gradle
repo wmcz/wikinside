@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'cz.wikimedia.stats'
-version = '0.2'
+version = '0.3.0'
 sourceCompatibility = '18'
 
 repositories {
@@ -26,6 +26,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

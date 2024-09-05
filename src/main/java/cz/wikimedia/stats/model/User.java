@@ -29,6 +29,8 @@ public class User implements IdAble<Long> {
     @OneToMany(mappedBy = "user")
     private Set<Revision> revisions;
 
+    @OneToMany(mappedBy = "user")
+    private Set<Image> images;
 
     /* CONSTRUCTORS */
 
@@ -69,7 +71,19 @@ public class User implements IdAble<Long> {
     }
 
     public Set<UserTag> getTags() {
+        Set<UserTag> res = new HashSet<>(tags);
+        events.forEach(e -> res.addAll(e.getUserTags()));
+        return res;
+    }
+
+    public Set<UserTag> getInherentTags() {
         return tags;
+    }
+
+    public Set<UserTag> getEventTags() {
+        Set<UserTag> res = new HashSet<>();
+        events.forEach(e -> res.addAll(e.getUserTags()));
+        return res;
     }
 
     public Set<Event> getEvents() {
@@ -84,18 +98,22 @@ public class User implements IdAble<Long> {
         return revisions;
     }
 
+    public Set<Image> getImages() {
+        return images;
+    }
+
     public User setUsername(String username) {
         this.username = username;
         return this;
     }
 
     public User addTag(UserTag tag) {
-        tags.add(tag.addTagged(this));
+        tags.add(tag);
         return this;
     }
 
     public User removeTag(UserTag tag) {
-        tags.remove(tag.removeTagged(this));
+        tags.remove(tag);
         return this;
     }
 

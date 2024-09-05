@@ -9,11 +9,16 @@ import java.util.Set;
 @Entity
 public class UserTag extends Tag<User> {
 
-    public UserTag(Long id, String name, Set<User> tagged, UserTag parent, Set<UserTag> children) {
-        super(id, name);
+    public UserTag(Long id, String name, String color, Set<User> tagged, Set<Event> events, UserTag parent, Set<UserTag> children) {
+        super(id, name, color);
         this.tagged = tagged;
+        this.events = events;
         this.parent = parent;
         this.children = children;
+    }
+
+    public UserTag(Long id, String name, Set<User> tagged, Set<Event> events, UserTag parent, Set<UserTag> children) {
+        this(id, name, null, tagged, events, parent, children);
     }
     public UserTag() {
         super();
@@ -22,13 +27,15 @@ public class UserTag extends Tag<User> {
     @ManyToMany(mappedBy = "tags")
     private Set<User> tagged;
 
+    @ManyToMany(mappedBy = "userTags")
+    private Set<Event> events;
+
     @Nullable
     @ManyToOne
     private UserTag parent;
 
     @OneToMany(mappedBy = "parent")
     private Set<UserTag> children;
-
 
     @Override
     public Collection<User> getTagged() {
@@ -73,6 +80,10 @@ public class UserTag extends Tag<User> {
     public Tag<User> removeChild(Tag<User> tag) {
         if (tag instanceof UserTag) children.remove((UserTag) tag);
         return this;
+    }
+
+    public Set<Event> getEvents() {
+        return events;
     }
 
     @Override

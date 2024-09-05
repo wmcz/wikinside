@@ -4,15 +4,18 @@
   <q-item-section top>
     <q-item-label lines="1">
       <span class="text-h6 q-pr-xs ellipsis fit">{{ name }}</span>
+      <q-badge v-if="color" :style="`background: ${color}`"/>
     </q-item-label>
     <q-item-label v-if="!suppresselems" caption lines="1">
       {{ elems.length }} {{ $t(elemtype + '.many').toLowerCase() }}
     </q-item-label>
   </q-item-section>
   <q-item-section side>
-    <div class="text-grey-8 q-gutter-xs">
-      <q-btn class="gt-xs" size="12px" flat dense round :icon="rightIcon ? rightIcon : 'delete'" @click.prevent="$emit('deleteTag', id)" />
-    </div>
+    <slot>
+      <div class="text-grey-8 q-gutter-xs">
+        <q-btn class="gt-xs" size="12px" flat dense round :icon="rightIcon ? rightIcon : 'delete'" @click.prevent="$emit('deleteTag', id)" />
+      </div>
+    </slot>
   </q-item-section>
 </q-item>
 </template>
@@ -43,6 +46,9 @@ export default {
     },
     suppresselems: {
       type: Boolean
+    },
+    color: {
+      type: String
     }
   }
 }

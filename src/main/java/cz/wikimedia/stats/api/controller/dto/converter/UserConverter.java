@@ -28,7 +28,9 @@ public class UserConverter {
     private UserDto toDtoInner(User user) {
        return new UserDto(user.getId(),
                           user.getUsername(),
-                          ConverterUtils.getIds(user.getTags()),
+                          user.getRegistration(),
+                          ConverterUtils.getIds(user.getInherentTags()),
+                          ConverterUtils.getIds(user.getEventTags()),
                           ConverterUtils.getIds(user.getEvents()));
     }
 
@@ -38,7 +40,7 @@ public class UserConverter {
                         existing == null ? null : existing.getLocalId(),
                         dto.username(),
                         existing == null ? null : existing.getRegistration(),
-                        ConverterUtils.getElems(dto.tagIds(), userTagService),
+                        ConverterUtils.getElems(dto.inherentTagIds(), userTagService),
                         ConverterUtils.getElems(dto.eventIds(), eventService));
     }
 

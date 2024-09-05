@@ -16,7 +16,7 @@ class UserTagTest extends BaseTest {
     void getId() {
         Long id = randomLong();
 
-        UserTag tag = new UserTag(id, null, null, null, null);
+        UserTag tag = new UserTag(id, null, null, null, null, null);
 
         Assertions.assertEquals(id, tag.getId());
     }
@@ -26,7 +26,7 @@ class UserTagTest extends BaseTest {
     void getName() {
         String name = randomString();
 
-        UserTag tag = new UserTag(null, name, null, null, null);
+        UserTag tag = new UserTag(null, name, null, null, null, null);
 
         Assertions.assertEquals(name, tag.getName());
     }
@@ -36,7 +36,7 @@ class UserTagTest extends BaseTest {
     void setName() {
         String name = randomString();
 
-        UserTag tag = new UserTag(null, randomString(), null, null, null);
+        UserTag tag = new UserTag(null, randomString(), null, null, null, null);
         tag = tag.setName(name);
 
         Assertions.assertEquals(name, tag.getName());
@@ -50,7 +50,7 @@ class UserTagTest extends BaseTest {
             tagged.add(new User(randomLong(), randomLong(), randomString(), randomInstant(), Collections.emptySet(), Collections.emptySet()));
         }
 
-        UserTag tag = new UserTag(null, null, tagged, null, null);
+        UserTag tag = new UserTag(null, null, tagged, null, null, null);
 
         Assertions.assertEquals(tagged, tag.getTagged());
     }
@@ -58,9 +58,9 @@ class UserTagTest extends BaseTest {
     @Test
     @Repeat(TEST_REPEATS)
     void getParent() {
-        UserTag parent = new UserTag(randomLong(), randomString(), null, null, null);
+        UserTag parent = new UserTag(randomLong(), randomString(), null, null, null, null);
 
-        UserTag child = new UserTag(null, null, null, parent, null);
+        UserTag child = new UserTag(null, null, null, null, parent, null);
 
         Assertions.assertEquals(parent, child.getParent());
     }
@@ -71,10 +71,10 @@ class UserTagTest extends BaseTest {
         Set<UserTag> children = new HashSet<>();
 
         while (children.size() < 10) {
-            children.add(new UserTag(randomLong(), randomString(),  null, null, null));
+            children.add(new UserTag(randomLong(), randomString(), null, null, null, null));
         }
 
-        UserTag parent = new UserTag(null, null, null, null, children);
+        UserTag parent = new UserTag(null, null, null, null, null, children);
 
         Assertions.assertEquals(children, parent.getChildren());
     }
@@ -82,7 +82,7 @@ class UserTagTest extends BaseTest {
     @Test
     @Repeat(TEST_REPEATS)
     void addTagged() {
-        UserTag tag = new UserTag(null, null, new HashSet<>(), null, null);
+        UserTag tag = new UserTag(null, null, new HashSet<>(), null, null, null);
 
         Set<User> tagged = new HashSet<>();
         while (tagged.size() < 10) {
@@ -102,7 +102,7 @@ class UserTagTest extends BaseTest {
             tagged.add(new User(randomLong(), randomLong(), randomString(), randomInstant(), null, null));
         }
 
-        UserTag tag = new UserTag(null, null, new HashSet<>(), null, null);
+        UserTag tag = new UserTag(null, null, new HashSet<>(), null, null, null);
 
         tagged.forEach(tag::removeTagged);
 
@@ -113,10 +113,10 @@ class UserTagTest extends BaseTest {
     void addChild() {
         Set<UserTag> children = new HashSet<>();
         while (children.size() < 10) {
-            children.add(new UserTag(randomLong(), randomString(), null, null, null));
+            children.add(new UserTag(randomLong(), randomString(), null, null, null, null));
         }
 
-        UserTag tag = new UserTag(null, null, null, null, new HashSet<>());
+        UserTag tag = new UserTag(null, null, null, null, null, new HashSet<>());
 
         children.forEach(tag::addChild);
 
@@ -128,10 +128,10 @@ class UserTagTest extends BaseTest {
     void removeChild() {
         Set<UserTag> children = new HashSet<>();
         while (children.size() < 10) {
-            children.add(new UserTag(randomLong(), randomString(), null, null, null));
+            children.add(new UserTag(randomLong(), randomString(), null, null, null, null));
         }
 
-        UserTag tag = new UserTag(null, null, null, null, new HashSet<>(children));
+        UserTag tag = new UserTag(null, null, null, null, null, new HashSet<>(children));
 
         children.forEach(tag::removeChild);
 
@@ -141,10 +141,10 @@ class UserTagTest extends BaseTest {
     @Test
     @Repeat(TEST_REPEATS)
     void setParent() {
-        UserTag parent1 = new UserTag(randomLong(), randomString(), null, null, new HashSet<>());
-        UserTag parent2 = new UserTag(randomLong(), randomString(), null, null, new HashSet<>());
+        UserTag parent1 = new UserTag(randomLong(), randomString(), null, null, null, new HashSet<>());
+        UserTag parent2 = new UserTag(randomLong(), randomString(), null, null, null, new HashSet<>());
 
-        UserTag child = new UserTag(null, null, null, parent1, null);
+        UserTag child = new UserTag(null, null, null, null, parent1, null);
 
         child.setParent(parent2);
 
@@ -164,25 +164,25 @@ class UserTagTest extends BaseTest {
             id2 = randomLong();
         }
 
-        UserTag tag1 = new UserTag(id1, null, null, null, null);
-        UserTag tag2 = new UserTag(id1, null, null, null, null);
+        UserTag tag1 = new UserTag(id1, null, null, null, null, null);
+        UserTag tag2 = new UserTag(id1, null, null, null, null, null);
 
-        UserTag tag3 = new UserTag(id2, null, null, null, null);
-        UserTag tag4 = new UserTag(id2, null, null, null, null);
+        UserTag tag3 = new UserTag(id2, null, null, null, null, null);
+        UserTag tag4 = new UserTag(id2, null, null, null, null, null);
 
-        Assertions.assertTrue(tag1.equals(tag2));
-        Assertions.assertTrue(tag2.equals(tag1));
+        Assertions.assertEquals(tag1, tag2);
+        Assertions.assertEquals(tag2, tag1);
 
-        Assertions.assertTrue(tag3.equals(tag4));
-        Assertions.assertTrue(tag4.equals(tag3));
+        Assertions.assertEquals(tag3, tag4);
+        Assertions.assertEquals(tag4, tag3);
 
-        Assertions.assertFalse(tag1.equals(tag3));
-        Assertions.assertFalse(tag3.equals(tag1));
+        Assertions.assertNotEquals(tag1, tag3);
+        Assertions.assertNotEquals(tag3, tag1);
 
-        Assertions.assertFalse(tag1.equals(tag4));
-        Assertions.assertFalse(tag4.equals(tag1));
+        Assertions.assertNotEquals(tag1, tag4);
+        Assertions.assertNotEquals(tag4, tag1);
 
-        Assertions.assertFalse(tag2.equals(tag4));
-        Assertions.assertFalse(tag4.equals(tag2));
+        Assertions.assertNotEquals(tag2, tag4);
+        Assertions.assertNotEquals(tag4, tag2);
     }
 }

@@ -1,6 +1,6 @@
 <template>
   <router-link :to="{name: elemtype + 'tag', params: {id: id}}">
-    <q-badge rounded color="primary" :label="name"/>
+    <q-badge rounded :style="color ? `background: ${color}` : `background: primary`" :label="name"/>
   </router-link>
 </template>
 
@@ -19,6 +19,9 @@ export default {
     elemtype: {
       type: String,
       required: true
+    },
+    color: {
+      type: String
     }
   }
 }

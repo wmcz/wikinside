@@ -2,7 +2,7 @@
   <q-page class="flex flex-center">
     <img
       alt="Wikimedia CZ logo"
-      src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Wikimedia_CZ_-_vertical_logo_-_English_version.svg"
+      src="https://upload.wikimedia.org/wikipedia/commons/2/26/Wikinside_logo.png"
       style="width:50%; max-width: 300px"
     >
   </q-page>

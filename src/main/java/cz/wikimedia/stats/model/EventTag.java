@@ -11,11 +11,15 @@ import java.util.Set;
 @Entity
 public class EventTag extends Tag<Event> {
 
-    public EventTag(Long id, String name, Set<Event> tagged, EventTag parent, Set<EventTag> children) {
-        super(id, name);
+    public EventTag(Long id, String name, String color, Set<Event> tagged, EventTag parent, Set<EventTag> children) {
+        super(id, name, color);
         this.tagged = tagged;
         this.parent = parent;
         this.children = children;
+    }
+
+    public EventTag(Long id, String name, Set<Event> tagged, EventTag parent, Set<EventTag> children) {
+        this(id, name, null, tagged, parent, children);
     }
 
     public EventTag() {

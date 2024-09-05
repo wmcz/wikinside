@@ -31,9 +31,9 @@ class EventTagServiceTest {
     EventTagService service;
     @BeforeEach
     void setUp() {
-        Event eventone = new Event(1001L, new HashSet<>(), "one", null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>());
-        Event eventtwo = new Event(1002L, new HashSet<>(), "two", null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>());
-        Event eventthree = new Event(1003L, new HashSet<>(),"three", null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>());
+        Event eventone = new Event(1001L, new HashSet<>(), null, "one", null, null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>());
+        Event eventtwo = new Event(1002L, new HashSet<>(), null, "two", null, null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>());
+        Event eventthree = new Event(1003L, new HashSet<>(),null, "three", null, null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>());
 
         EventTag one   = new EventTag(1L, "one", new HashSet<>(), null, new HashSet<>());
         EventTag two   = new EventTag(2L, "two", new HashSet<>(List.of(eventone, eventtwo)), one, new HashSet<>());
@@ -76,8 +76,8 @@ class EventTagServiceTest {
 
         service.deleteById(3L);
         Mockito.verify(repository).deleteById(3L);
-        Mockito.verify(eventRepository, Mockito.atLeastOnce()).save(new Event(1002L, new HashSet<>(), "two", null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>()));
-        Mockito.verify(eventRepository, Mockito.atLeastOnce()).save(new Event(1003L, new HashSet<>(), "three", null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>()));
+        Mockito.verify(eventRepository, Mockito.atLeastOnce()).save(new Event(1002L, new HashSet<>(), null, "two", null, null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>()));
+        Mockito.verify(eventRepository, Mockito.atLeastOnce()).save(new Event(1003L, new HashSet<>(), null, "three", null, null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>()));
     }
 
     @Test
@@ -101,17 +101,17 @@ class EventTagServiceTest {
         Mockito.verifyNoInteractions(eventRepository);
 
 
-        Assertions.assertTrue(service.create(new EventTag(6L, "six", new HashSet<>(List.of(new Event(1001L, new HashSet<>(), "one", null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>()), new Event(1002L, new HashSet<>(), "two", null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>()))), null, new HashSet<>())).isPresent());
+        Assertions.assertTrue(service.create(new EventTag(6L, "six", new HashSet<>(List.of(new Event(1001L, new HashSet<>(), null, "one", null, null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>()), new Event(1002L, new HashSet<>(), null, "two", null, null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>()))), null, new HashSet<>())).isPresent());
         Mockito.verify(repository, Mockito.atLeastOnce()).save(new EventTag(6L, "six", null, null, null));
-        Mockito.verify(eventRepository, Mockito.atLeastOnce()).save(new Event(1001L, new HashSet<>(), "one", null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>()));
-        Mockito.verify(eventRepository, Mockito.atLeastOnce()).save(new Event(1002L, new HashSet<>(), "two", null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>()));
+        Mockito.verify(eventRepository, Mockito.atLeastOnce()).save(new Event(1001L, new HashSet<>(), null, "one", null, null, null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>()));
+        Mockito.verify(eventRepository, Mockito.atLeastOnce()).save(new Event(1002L, new HashSet<>(), null, "two", null, null, null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>()));
     }
 
     @Test
     void update() {
         Mockito.when(repository.findById(4L)).thenReturn(Optional.empty());
 
-        Assertions.assertTrue(service.update(new EventTag(4L, "four", Set.of(new Event(1007L, new HashSet<>(), "seven", null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>())), null, new HashSet<>())).isEmpty());
+        Assertions.assertTrue(service.update(new EventTag(4L, "four", Set.of(new Event(1007L, new HashSet<>(), null, "seven", null, null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>())), null, new HashSet<>())).isEmpty());
         Mockito.verify(repository, Mockito.never()).save(ArgumentMatchers.any());
         Mockito.verifyNoInteractions(eventRepository);
 
@@ -126,8 +126,8 @@ class EventTagServiceTest {
         Mockito.verifyNoInteractions(eventRepository);
 
 
-        Assertions.assertTrue(service.update(new EventTag(1L, "one", new HashSet<>(List.of(new Event(1001L, new HashSet<>(), "one", null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>()), new Event(1002L, new HashSet<>(), "two", null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>()))), null, new HashSet<>())).isPresent());
-        Mockito.verify(eventRepository, Mockito.atLeastOnce()).save(new Event(1001L, new HashSet<>(), "one", null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>()));
-        Mockito.verify(eventRepository, Mockito.atLeastOnce()).save(new Event(1002L, new HashSet<>(), "two", null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>()));
+        Assertions.assertTrue(service.update(new EventTag(1L, "one", new HashSet<>(List.of(new Event(1001L, new HashSet<>(), null, "one", null, null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>()), new Event(1002L, null, new HashSet<>(), "two", null, null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>()))), null, new HashSet<>())).isPresent());
+        Mockito.verify(eventRepository, Mockito.atLeastOnce()).save(new Event(1001L, null, new HashSet<>(), "one", null, null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>()));
+        Mockito.verify(eventRepository, Mockito.atLeastOnce()).save(new Event(1002L, null, new HashSet<>(), "two", null, null, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>()));
     }
 }

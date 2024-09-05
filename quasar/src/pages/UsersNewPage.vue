@@ -37,13 +37,13 @@ export default defineComponent({
         .post('/users', {
           username: this.username,
           id: null,
-          tagIds: this.$refs.tagselect.selected === null ? [] : this.$refs.tagselect.selected.map(s => s.id),
+          inherentTagIds: this.$refs.tagselect.selected === null ? [] : this.$refs.tagselect.selected.map(s => s.id),
           eventIds: []
         })
         .then((response) => this.userdata.push({
           username: response.data.username,
           id: response.data.id,
-          tags: response.data.tagIds.map(i => this.tagdata.find(e => e.id === i))
+          tags: response.data.inherentTagIds.concat(response.data.eventTagIds).map(i => this.tagdata.find(e => e.id === i))
         }))
         .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))
 
