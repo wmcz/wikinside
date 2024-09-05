@@ -12,7 +12,7 @@
           </template>
         </q-input>
       </q-item>
-      <q-table :rows="userdata" :row-key="username" grid :loading="loading" :filter="filter" :pagination="{ rowsPerPage: 10}">
+      <q-table :rows="userdata" :row-key="username" grid :loading="loading" :filter="filter" :pagination="{ rowsPerPage: 10, sortBy:'id', descending: true}">
         <template v-slot:item="props">
           <UserLink :key="props.row.username" v-bind="props.row" @deleteElem="(id) => deleteUser(id)"/>
         </template>

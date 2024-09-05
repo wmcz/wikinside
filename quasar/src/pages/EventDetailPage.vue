@@ -55,12 +55,21 @@
          <q-item-section avatar>
            <q-icon color="primary" class="text-weight-bolder">#</q-icon>
          </q-item-section>
-         <q-item-section class="text-weight-bold">
+         <q-item-section v-if="hashtaginput">
+           <q-input v-model="hashtag"/>
+         </q-item-section>
+         <q-item-section v-else class="text-weight-bold">
            <a style='color: black' v-if="eventdata.strat === 'PHOTO'" :href="'https://commons.wikimedia.org/wiki/' + eventdata.category">
              {{ eventdata.category.substring(eventdata.category.indexOf(':') + 1) }}
            </a>
            <div v-else>
              {{ eventdata.category }}
+           </div>
+         </q-item-section>
+         <q-item-section side>
+           <div>
+             <q-btn v-if="hashtaginput" color="primary" :label="$t('submit')" @click="onHashtagSubmit"/>
+             <q-btn flat color="primary" :label="hashtaginput ? $t('cancel') : $t('edit')" @click="hashtaginput=!hashtaginput"/>
            </div>
          </q-item-section>
        </q-item>
@@ -173,6 +182,8 @@ export default {
       userinput: false,
       dateinput: false,
       projectinput: false,
+      hashtaginput: false,
+      hashtag: '',
       nameinput:false,
       name: '',
       summary: false
@@ -183,6 +194,7 @@ export default {
       .get('events/' + useRoute().params.id)
       .then((response) => {
         this.eventdata = response.data
+        this.hashtag = response.data.category
         this.date = {from: this.eventdata.startDate, to: this.eventdata.endDate}
         api
           .get('tags/event-tags')
@@ -262,6 +274,13 @@ export default {
         this.projects = this.projectdata.filter(p => response.data.projectIds.includes(p.id))
       })
       this.projectinput = false
+    },
+    onHashtagSubmit() {
+      this.eventdata.category = this.hashtag;
+      submit(this, (response) => {
+        this.eventdata.category = response.data.category
+      })
+      this.hashtaginput = false
     },
     onUserTagSubmit() {
       this.eventdata.userTagIds = this.usertagselect.map(t => t.id);
