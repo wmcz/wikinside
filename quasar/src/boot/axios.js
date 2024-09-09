@@ -9,7 +9,9 @@ import axios from 'axios'
 // for each client)
 
 const api = axios.create({ baseURL: process.env.BACKEND_URL + '/api' ,
-                                         withCredentials: true
+                                         withCredentials: true,
+                                         withXSRFToken: true,
+                                         xsrfHeaderName: 'X-Csrf-Token'
                                       })
 
 export default boot(({ app }) => {
