@@ -126,7 +126,10 @@ export default defineComponent({
   },
   created() {
     api.get('/oauth2')
-      .then(() => authenticate())
+      .then((response) => {
+        authenticate()
+        api.defaults.headers.common['X-Csrf-Token'] = response.headers['x-csrf-token']
+      })
       .catch(() => deauthenticate())
   }
 })
