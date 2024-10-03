@@ -13,7 +13,7 @@
   <q-item-section side>
     <slot>
       <div class="text-grey-8 q-gutter-xs">
-        <q-btn class="gt-xs" size="12px" flat dense round :icon="rightIcon ? rightIcon : 'delete'" @click.prevent="$emit('deleteTag', id)" />
+        <q-btn class="gt-xs" size="12px" flat dense round :icon="rightIcon ? rightIcon : 'delete'" @click.prevent="$emit('deleteElem', id)" />
       </div>
     </slot>
   </q-item-section>
