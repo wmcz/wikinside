@@ -250,13 +250,13 @@ export default {
   methods: {
     onUserSubmit(users) {
       this.userloading = true
-      this.eventdata.userIds.push(...users)
+      this.eventdata.userIds.push(...users.map(u => u.id))
       updateUsers(this)
       this.userloading = false
     },
     onTagSubmit(tags) {
       this.tagloading = true
-      this.eventdata.tagIds.push(...tags)
+      this.eventdata.tagIds.push(...tags.map(t => t.id))
       updateTags(this)
       this.tagloading = false
     },
