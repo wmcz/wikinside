@@ -15,7 +15,7 @@
           {{ $t('app_name')}}
         </q-toolbar-title>
         <q-btn v-if="!getAuthStatus" flat class="q-mr-xl" label="login" :href="url"/>
-        <div>0.3.0</div>
+        <div>0.3.1a</div>
       </q-toolbar>
     </q-header>
 

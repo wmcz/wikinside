@@ -1,7 +1,7 @@
 <template>
   <q-list top bordered class="rounded-borders">
     <q-item class="q-py-none q-pl-none">
-      <q-item-label header>{{ $t(elemtype + '.many') }}</q-item-label>
+      <q-item-label header>{{ $t(elemtype.split('/')[0] + '.many') }}</q-item-label>
       <q-space/>
       <q-input side dense input-class="text-right" style="float: right" class="q-pt-xs" v-model="filter"
                :label="$t('filter')">
@@ -18,15 +18,15 @@
                    @deleteElem="(id) => $emit('removeElem', id)"/>
       </template>
       <template v-slot:no-data>
-        {{ $t(elemtype + '.none') }}
+        {{ $t(elemtype.split('/')[0] + '.none') }}
       </template>
     </q-table>
     <div v-if="input" class="q-mb-md q-mx-md q-mt-none">
-      <component :is="selectFromElemType()" :label="$t(elemtype + '.add')" ref="elemSelect"/>
+      <component :is="selectFromElemType()" :url="urlFromElemType()" :label="$t(elemtype.split('/')[0] + '.add')" ref="elemSelect"/>
       <q-btn class="q-mr-sm" color="primary" :label="$t('submit')" @click="$emit('addElem', $refs.elemSelect.selected);$refs.elemSelect.selected=[];input=false"/>
       <q-btn outline color="primary" :label="$t('cancel')" @click="input = false"/>
     </div>
-    <q-btn v-else class="q-mb-md q-ml-md" color="primary" :label="$t(elemtype + '.add')" @click="input = true"/>
+    <q-btn v-else class="q-mb-md q-ml-md" color="primary" :label="$t(elemtype.split('/')[0] + '.add')" @click="input = true"/>
   </q-list>
 </template>
 
@@ -79,14 +79,23 @@ export default {
       switch (this.elemtype) {
         case 'event': return 'EventLink'
         case 'user':  return 'UserLink'
-        case 'tag': return 'TagLink'
+        case 'tag/user':
+        case 'tag/event': return 'TagLink'
       }
     },
     selectFromElemType() {
       switch (this.elemtype) {
         case 'event': return 'EventSelect'
         case 'user':  return 'UserSelect'
-        case 'tag': return 'TagSelect'
+        case 'tag/user':
+        case 'tag/event': return 'TagSelect'
+      }
+    },
+    urlFromElemType() {
+      switch (this.elemtype) {
+        case 'tag/user': return 'tags/user-tags'
+        case 'tag/event': return 'tags/event-tags'
+        default: return null;
       }
     },
     resetFilter() {

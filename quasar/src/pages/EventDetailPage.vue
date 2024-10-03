@@ -100,7 +100,7 @@
 
      <ImpactList :url="'events/' + $route.params.id" ref="impactref"/>
 
-     <ElemList :loading="tagloading" :elems="taglist" :data="tagdata" elemtype="tag"
+     <ElemList :loading="tagloading" :elems="taglist" :data="tagdata" elemtype="tag/event"
                @addElem="(selected) => onTagSubmit(selected)"  @removeElem="(id) => removeTag(id)"/>
 
      <q-toggle v-model="summary" :label="$t('tag.group')" class="q-pb-none"/>
