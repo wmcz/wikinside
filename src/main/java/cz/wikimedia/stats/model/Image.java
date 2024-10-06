@@ -21,7 +21,7 @@ public class Image implements IdAble<Long>, Impactable {
 
     private String title;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany
     private Set<ImageCategory> categories;
 
     @ManyToMany

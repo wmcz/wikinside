@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-public class ImageCategory {
+public class ImageCategory implements IdAble<String> {
     @Id
     private String title;
 
@@ -30,5 +30,10 @@ public class ImageCategory {
     @Override
     public int hashCode() {
         return Objects.hashCode(title);
+    }
+
+    @Override
+    public String getId() {
+        return title;
     }
 }
