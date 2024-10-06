@@ -100,7 +100,7 @@
 
      <ImpactList :url="'events/' + $route.params.id" ref="impactref"/>
 
-     <ElemList :loading="tagloading" :elems="taglist" :data="tagdata" elemtype="tag"
+     <ElemList :loading="tagloading" :elems="taglist" :data="tagdata" elemtype="tag/event"
                @addElem="(selected) => onTagSubmit(selected)"  @removeElem="(id) => removeTag(id)"/>
 
      <q-toggle v-model="summary" :label="$t('tag.group')" class="q-pb-none"/>
@@ -250,13 +250,13 @@ export default {
   methods: {
     onUserSubmit(users) {
       this.userloading = true
-      this.eventdata.userIds.push(...users)
+      this.eventdata.userIds.push(...users.map(u => u.id))
       updateUsers(this)
       this.userloading = false
     },
     onTagSubmit(tags) {
       this.tagloading = true
-      this.eventdata.tagIds.push(...tags)
+      this.eventdata.tagIds.push(...tags.map(t => t.id))
       updateTags(this)
       this.tagloading = false
     },

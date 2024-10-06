@@ -3,6 +3,7 @@ package cz.wikimedia.stats.api.client.dto.converter;
 import cz.wikimedia.stats.api.client.dto.GlobalUsage;
 import cz.wikimedia.stats.api.client.dto.WmImage;
 import cz.wikimedia.stats.api.client.dto.WmPage;
+import cz.wikimedia.stats.business.internal.ImageCategoryService;
 import cz.wikimedia.stats.business.internal.UsageService;
 import cz.wikimedia.stats.business.internal.UserService;
 import cz.wikimedia.stats.model.*;
@@ -17,10 +18,12 @@ import java.util.Set;
 public class ImageConverter {
     private final UserService userService;
     private final UsageService usageService;
+    private final ImageCategoryService imageCategoryService;
 
-    public ImageConverter(UserService userService, UsageService usageService) {
+    public ImageConverter(UserService userService, UsageService usageService, ImageCategoryService imageCategoryService) {
         this.userService = userService;
         this.usageService = usageService;
+        this.imageCategoryService = imageCategoryService;
     }
 
     private Set<GlobalPage> getUsage(Collection<WmPage> commonsUsage, Collection<GlobalUsage> globalUsage) {
@@ -38,7 +41,7 @@ public class ImageConverter {
                 image.imageInfo().stream().findAny().get().timestamp(),
                 image.title(),
                 getUsage(image.commonsUsage(), image.globalUsage()),
-                Set.of(new ImageCategory(event.getCategory()))
+                Set.of(imageCategoryService.processCategory(event.getCategory()))
         );
     }
 }

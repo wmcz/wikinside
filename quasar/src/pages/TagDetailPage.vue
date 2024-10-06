@@ -283,7 +283,7 @@ export default {
     },
     removeElem(id, elemlist) {
       this.loading = true
-      elemlist.splice(elemlist.indexOf(id), 1)
+      elemlist.splice(elemlist.map(e => e.id).indexOf(id), 1)
       updateElems(this)
       this.loading = false
     }
