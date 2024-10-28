@@ -2,13 +2,11 @@ package cz.wikimedia.stats.api.controller.dto.converter;
 
 import cz.wikimedia.stats.api.controller.dto.TagDto;
 import cz.wikimedia.stats.business.internal.*;
-import cz.wikimedia.stats.model.EventTag;
-import cz.wikimedia.stats.model.IdAble;
-import cz.wikimedia.stats.model.Tag;
-import cz.wikimedia.stats.model.UserTag;
+import cz.wikimedia.stats.model.*;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Component
 public class TagConverter {
@@ -30,20 +28,26 @@ public class TagConverter {
     }
 
     public TagDto toDto(UserTag tag) {
-        return toDto(tag, ConverterUtils.getIds(tag.getTagged()), ConverterUtils.getIds(tag.getEvents()));
+        return toDto(tag,
+                ConverterUtils.getIds(tag.getTagged()),
+                ConverterUtils.getIds(tag.getEvents()),
+                ConverterUtils.getIds(tag.getEvents().stream()
+                        .flatMap(e -> e.getParticipants().stream())
+                        .collect(Collectors.toSet())));
     }
 
     public TagDto toDto(EventTag tag) {
-        return toDto(tag, null, ConverterUtils.getIds(tag.getTagged()));
+        return toDto(tag, null, ConverterUtils.getIds(tag.getTagged()), null);
     }
-    private <T extends Tag<S>, S extends IdAble<Long>> TagDto toDto(T tag, Collection<Long> users, Collection<Long> events) {
+    private <T extends Tag<S>, S extends IdAble<Long>> TagDto toDto(T tag, Collection<Long> inherentUsers, Collection<Long> events, Collection<Long> eventUsers) {
 
         return new TagDto(tag.getName(),
                           tag.getId(),
                           tag.getParent() == null ? null : tag.getParent().getId(),
                           tag.getColor(),
                           ConverterUtils.getIds(tag.getChildren()),
-                          users,
+                          inherentUsers,
+                          eventUsers,
                           events);
     }
 
@@ -51,7 +55,7 @@ public class TagConverter {
         return new UserTag(dto.id(),
                            dto.name(),
                            dto.color(),
-                           ConverterUtils.getElems(dto.userIds(), userService),
+                           ConverterUtils.getElems(dto.inherentUserIds(), userService),
                            ConverterUtils.getElems(dto.eventIds(), eventService),
                            getParent(dto.parentId(), userTagService),
                            ConverterUtils.getElems(dto.childrenIds(), userTagService));

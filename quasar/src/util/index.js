@@ -1,4 +1,5 @@
 export function getErrorMessage(error) {
+  console.log(error)
   if (error.response) {
     if (error.response.status === 500) {
       return 'notification.500'

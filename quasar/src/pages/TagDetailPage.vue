@@ -77,7 +77,15 @@
      <ImpactList :url="'tags/' + elemtype + '-tags/' + $route.params.id" :key="$route.params.id"/>
 
      <ElemList v-if="elemtype === 'user'" :loading="loading" :elems="data.users"  :data="userdata"  elemtype="user"
-               @addElem="(selected) => addElem(selected, data.users)"  @removeElem="(id) => removeElem(id, data.users)"/>
+               @addElem="(selected) => addElem(selected, data.users)"  @removeElem="(id) => removeElem(id, data.users)">
+       <template #disclaimer>
+         <q-item>
+           <q-item-label caption class="q-pr-xs" style="align-content: center">
+             {{ $t('tag.from_event') + " " + data.eventUsers.length + " " + $t('user.many').toLowerCase() }}
+           </q-item-label>
+         </q-item>
+       </template>
+     </ElemList>
 
      <ElemList                            :loading="loading" :elems="data.events" :data="eventdata" elemtype="event"
                @addElem="(selected) => addElem(selected, data.events)" @removeElem="(id) => removeElem(id, data.events)"/>
@@ -104,7 +112,7 @@ function update(self, response) {
       id: self.data.id,
       color: self.data.color,
       childrenIds: self.data.children.map(c => c.id),
-      userIds: self.data.users === null ? null : self.data.users.map(e => e.id),
+      inherentUserIds: self.data.users === null ? null : self.data.users.map(e => e.id),
       eventIds: self.data.events.map(e => e.id),
       parentId: self.data.parent === null ? null : self.data.parent.id
     })
@@ -120,7 +128,8 @@ function changeTags(self, id, onFinish) {
       self.data = self.tagdata.find(t => t.id == id)
       self.data.children = self.data.childrenIds.map(id => self.tagdata.find(t => t.id === id))
       self.data.parent = self.data.parentId === null ? null : self.tagdata.find(t => t.id === self.data.parentId)
-      self.data.users  = self.data.userIds  === null ? null : self.data.userIds.map(id => self.userdata.find(u => u.id === id))
+      self.data.users  = self.data.inherentUserIds  === null ? null : self.data.inherentUserIds.map(id => self.userdata.find(u => u.id === id))
+      self.data.eventUsers = self.data.eventUserIds === null ? null : self.data.eventUserIds.map(id => self.userdata.find(u => u.id === id))
       self.data.events = self.data.eventIds.map(id => self.eventdata.find(e => e.id === id))
       console.log(self.data.users)
       onFinish.call()
@@ -135,7 +144,8 @@ function changeTags(self, id, onFinish) {
 
 function updateElems(self) {
   update(self, (response) => {
-    self.data.users  = response.data.userIds === null ? null : response.data.userIds.map(id => self.userdata.find(u => u.id === id))
+    self.data.users  = response.data.inherentUserIds === null ? null : response.data.inherentUserIds.map(id => self.userdata.find(u => u.id === id))
+    self.data.eventUsers = response.data.eventUserIds === null ? null : response.data.eventUserIds.map(id => self.userdata.find(u => u.id === id))
     self.data.events = response.data.eventIds.map(id => self.eventdata.find(e => e.id === id))
     self.list = self.data.elems
   })
@@ -186,6 +196,7 @@ export default {
       data: {
         name: '',
         users: [],
+        eventUsers: [],
         events: [],
         children: [],
         parent: null,
