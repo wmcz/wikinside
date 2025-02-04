@@ -11,6 +11,7 @@
         </template>
       </q-input>
     </q-item>
+    <slot name="disclaimer"/>
     <q-table :rows="elems" :row-key="name" grid :loading="loading" :filter="filter"
              :pagination="{ rowsPerPage: 10}">
       <template v-slot:item="props">

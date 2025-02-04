@@ -7,5 +7,6 @@ public record TagDto(String name,
                      Long parentId,
                      String color,
                      Collection<Long> childrenIds,
-                     Collection<Long> userIds,
+                     Collection<Long> inherentUserIds,
+                     Collection<Long> eventUserIds,
                      Collection<Long> eventIds) {}
