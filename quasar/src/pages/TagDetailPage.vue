@@ -112,7 +112,7 @@ function update(self, response) {
       id: self.data.id,
       color: self.data.color,
       childrenIds: self.data.children.map(c => c.id),
-      inherentUserIds: self.data.users === null ? null : self.data.users.map(e => e.id),
+      inherentUserIds: self.data.users === null ? null : self.data.users.filter(e => !e.gray).map(e => e.id),
       eventIds: self.data.events.map(e => e.id),
       parentId: self.data.parent === null ? null : self.data.parent.id
     })
@@ -129,6 +129,7 @@ function changeTags(self, id, onFinish) {
       self.data.children = self.data.childrenIds.map(id => self.tagdata.find(t => t.id === id))
       self.data.parent = self.data.parentId === null ? null : self.tagdata.find(t => t.id === self.data.parentId)
       self.data.users  = self.data.inherentUserIds  === null ? null : self.data.inherentUserIds.map(id => self.userdata.find(u => u.id === id))
+                                                                 .concat(self.data.eventUserIds.map(id => self.userdata.find(u => u.id === id)).map(e => ({...e, gray: true})))
       self.data.eventUsers = self.data.eventUserIds === null ? null : self.data.eventUserIds.map(id => self.userdata.find(u => u.id === id))
       self.data.events = self.data.eventIds.map(id => self.eventdata.find(e => e.id === id))
       console.log(self.data.users)

@@ -3,7 +3,7 @@
 
   <q-item-section top>
     <q-item-label lines="1">
-      <span class="text-h6 q-pr-xs">{{ username }}</span>
+      <span :class="gray ? 'text-h6 q-pr-xs text-grey-8' : 'text-h6 q-pr-xs'">{{ username }}</span>
 
     </q-item-label>
     <q-item-label v-if="!suppresstags" caption lines="1">
@@ -11,7 +11,7 @@
       <caption v-if="!tags.length">{{ $t('tag.none') }}</caption>
     </q-item-label>
   </q-item-section>
-  <q-item-section side>
+  <q-item-section side v-if="!gray">
     <div class="text-grey-8 q-gutter-xs">
       <q-btn class="gt-xs" size="12px" flat dense round :icon="rightIcon ? rightIcon : 'delete'" @click.prevent="$emit('deleteElem', id)"/>
     </div>
@@ -43,6 +43,9 @@ export default {
     },
     rightIcon: {
       type: String
+    },
+    gray: {
+      type: Boolean
     }
   }
 }
