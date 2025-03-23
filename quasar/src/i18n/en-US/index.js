@@ -21,6 +21,10 @@ export default {
     none: 'No events',
     add: 'Add events',
     name: 'Event name',
+    copy: 'Duplicate event',
+    copy_name: ' - Copy',
+    copy_success: 'Copy successfully created.',
+    copy_link: 'Go to copy',
     strategy: {
       label: 'Event type',
       manual: 'With manual user selection',
@@ -42,7 +46,7 @@ export default {
     none: 'No categories',
     event: 'Event categories',
     name: 'Category name',
-    add: 'Add categories',
+    add: 'Edit categories',
     parent: 'Parent category',
     no_children: 'No child categories',
     no_parent: 'No parent category',
@@ -50,7 +54,8 @@ export default {
     assign_color: 'Assign color',
     new_child: 'Create child',
     from_event: 'From events: ',
-    group: 'Group by category'
+    group: 'Group by category',
+    selected: 'Selected categories:'
   },
   project: {
     one: 'Project',

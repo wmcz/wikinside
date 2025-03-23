@@ -6,11 +6,11 @@
       class="q-gutter-md"
     >
       <q-input :rules="[ val => val && val.length > 0 || '']" v-model="username" :label="$t('user.name') + ' *'" />
-      <TagSelect ref="tagselect" url="tags/user-tags"/>
+      <TagSelect ref="tagselect" url="tags/user-tags" label="tag.user"/>
       <q-btn color="primary" type="submit">{{ $t('submit') }}</q-btn>
     </q-form>
     <q-list bottom bordered class="rounded-borders">
-      <UserLink v-for="user in userdata" :key="user.username" v-bind="user"/>
+      <UserLink v-for="user in userdata" :key="user.username" v-bind="user" suppresstags/>
     </q-list>
     </div>
   </q-page>
@@ -37,13 +37,13 @@ export default defineComponent({
         .post('/users', {
           username: this.username,
           id: null,
-          inherentTagIds: this.$refs.tagselect.selected === null ? [] : this.$refs.tagselect.selected.map(s => s.id),
+          inherentTagIds: this.$refs.tagselect.selected === null ? [] : this.$refs.tagselect.selected,
           eventIds: []
         })
         .then((response) => this.userdata.push({
           username: response.data.username,
-          id: response.data.id,
-          tags: response.data.inherentTagIds.concat(response.data.eventTagIds).map(i => this.tagdata.find(e => e.id === i))
+          id: response.data.id //,
+          //tags: response.data.inherentTagIds.concat(response.data.eventTagIds).map(i => this.tagdata.find(e => e.id === i))
         }))
         .catch(error => this.$q.notify(this.$t(getErrorMessage(error))))
 

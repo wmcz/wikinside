@@ -20,7 +20,7 @@
           :filter-method="node => node.name.toLowerCase().includes(filter.toLowerCase())"
         >
           <template v-slot:default-header="prop">
-            <TagLink :elems="[...prop.node.users]" :name="prop.node.name" :id="prop.node.id" :color="prop.node.color" elemtype="user" @deleteTag="(id) => deleteTag(id)"/>
+            <TagLink :elems="[...prop.node.users]" :name="prop.node.name" :id="prop.node.id" :color="prop.node.color" elemtype="user" @deleteElem="(id) => deleteTag(id)"/>
           </template>-->
         </q-tree>
       </q-list>

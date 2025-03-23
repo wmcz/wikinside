@@ -33,17 +33,13 @@
             <q-icon color="primary" name="north_west"/>
          </q-item-section>
          <q-item-section>
-           <TagSelect parent :url="'tags/' + elemtype + '-tags'" :default-selected="data.parent" v-if="parentinput" ref="parentSelect"/>
-           <q-item-label v-else-if="data.parent">
+           <q-item-label v-if="data.parent">
             <TagBadge v-bind="data.parent" :elemtype="elemtype"/>
            </q-item-label>
            <q-item-label v-else caption> {{ $t('tag.no_parent') }} </q-item-label>
          </q-item-section>
          <q-item-section side>
-           <div>
-            <q-btn v-if="parentinput" color="primary" :label="$t('submit')" @click="onParentSubmit"/>
-            <q-btn color="primary" flat :label="parentinput ? $t('cancel') : $t('edit')" @click="parentinput=!parentinput"/>
-           </div>
+           <TagSelect buttononly parent :url="'tags/' + elemtype + '-tags'" label="tag.parent" ref="parentSelect" @tagsSelected="(tags) => onParentSubmit(tags)"/>
          </q-item-section>
        </q-item>
        <q-item >
@@ -51,17 +47,13 @@
            <q-icon color="primary" name="subdirectory_arrow_right"></q-icon>
          </q-item-section>
          <q-item-section class="text-weight-bold">
-           <TagSelect v-if="childinput" :url="'tags/' + elemtype + '-tags'" :default-selected="data.children" ref="childSelect"/>
-           <q-item-label v-else-if="data.children.length" lines="1">
+           <q-item-label v-if="data.children.length" lines="1">
              <TagBadge class="q-mr-xs" v-for="tag in data.children" v-bind="tag" :key="tag.name" :elemtype="elemtype"/>
            </q-item-label>
            <q-item-label v-else caption> {{ $t('tag.no_children') }} </q-item-label>
          </q-item-section>
          <q-item-section side>
-           <div>
-             <q-btn v-if="childinput" color="primary" :label="$t('submit')" @click="onChildSubmit"/>
-            <q-btn color="primary" flat :label="childinput ? $t('cancel') : $t('edit')" @click="childinput=!childinput"/>
-           </div>
+           <TagSelect :url="'tags/' + elemtype + '-tags'" label="tag.many" ref="childSelect" buttononly @tagsSelected="(tags) => onChildSubmit(tags)"/>
          </q-item-section>
        </q-item>
        <q-item>
@@ -111,10 +103,10 @@ function update(self, response) {
       name: self.data.name,
       id: self.data.id,
       color: self.data.color,
-      childrenIds: self.data.children.map(c => c.id),
+      childrenIds: self.data.childrenIds,
       inherentUserIds: self.data.users === null ? null : self.data.users.filter(e => !e.gray).map(e => e.id),
       eventIds: self.data.events.map(e => e.id),
-      parentId: self.data.parent === null ? null : self.data.parent.id
+      parentId: self.data.parentId
     })
     .then(response)
     .catch(error => self.$q.notify(self.$t(getErrorMessage(error))))
@@ -128,6 +120,8 @@ function changeTags(self, id, onFinish) {
       self.data = self.tagdata.find(t => t.id == id)
       self.data.children = self.data.childrenIds.map(id => self.tagdata.find(t => t.id === id))
       self.data.parent = self.data.parentId === null ? null : self.tagdata.find(t => t.id === self.data.parentId)
+      self.$refs.childSelect.selected = self.data.childrenIds
+      self.$refs.parentSelect.selected = self.data.parentId
       self.data.users  = self.data.inherentUserIds  === null ? null : self.data.inherentUserIds.map(id => self.userdata.find(u => u.id === id))
                                                                  .concat(self.data.eventUserIds.map(id => self.userdata.find(u => u.id === id)).map(e => ({...e, gray: true})))
       self.data.eventUsers = self.data.eventUserIds === null ? null : self.data.eventUserIds.map(id => self.userdata.find(u => u.id === id))
@@ -155,12 +149,16 @@ function updateElems(self) {
 function updateParent(self) {
   update(self, (response) => {
     self.data.parent = self.tagdata.find(t => t.id === response.data.parentId)
+    self.$refs.childSelect.updateTree(self.$refs.childSelect)
+    self.$refs.parentSelect.updateTree(self.$refs.parentSelect)
   })
 }
 
 function updateChildren(self) {
   update(self, (response) => {
     self.data.children = response.data.childrenIds.map(id => self.tagdata.find(t => t.id === id))
+    self.$refs.childSelect.updateTree(self.$refs.childSelect)
+    self.$refs.parentSelect.updateTree(self.$refs.parentSelect)
   })
 }
 
@@ -256,13 +254,13 @@ export default {
       updateElems(this)
       this.loading = false
     },
-    onParentSubmit() {
-      this.data.parent = this.$refs.parentSelect.selected
+    onParentSubmit(tag) {
+      this.data.parentId = tag
       updateParent(this)
       this.parentinput = false
     },
-    onChildSubmit() {
-      this.data.children = this.$refs.childSelect.selected
+    onChildSubmit(tags) {
+      this.data.childrenIds = tags
       updateChildren(this)
       this.childinput = false
     },

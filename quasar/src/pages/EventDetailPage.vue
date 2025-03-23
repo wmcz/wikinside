@@ -62,6 +62,9 @@
            <a style='color: black' v-if="eventdata.strat === 'PHOTO'" :href="'https://commons.wikimedia.org/wiki/' + eventdata.category">
              {{ eventdata.category.substring(eventdata.category.indexOf(':') + 1) }}
            </a>
+           <a style='color: black' v-else-if="eventdata.strat === 'HASHTAG'" :href="'https://hashtags.wmcloud.org/?query=' + eventdata.category + '&startdate=' + eventdata.startDate + '&enddate=' + eventdata.endDate">
+             {{ eventdata.category }}
+           </a>
            <div v-else>
              {{ eventdata.category }}
            </div>
@@ -100,8 +103,9 @@
 
      <ImpactList :url="'events/' + $route.params.id" ref="impactref"/>
 
-     <ElemList :loading="tagloading" :elems="taglist" :data="tagdata" elemtype="tag/event"
-               @addElem="(selected) => onTagSubmit(selected)"  @removeElem="(id) => removeTag(id)"/>
+     <!--<ElemList :loading="tagloading" :elems="taglist" :data="tagdata" elemtype="tag/event"
+               @addElem="(selected) => onTagSubmit(selected)"  @removeElem="(id) => removeTag(id)"/>-->
+     <TagSelect label="tag.event" url="tags/event-tags" ref="tagSelect" linkable @tagsSelected="(tags) => onTagSubmit(tags)" @tagDeleted="(id) => removeTag(id)"/>
 
      <q-toggle v-model="summary" :label="$t('tag.group')" class="q-pb-none"/>
 
@@ -109,7 +113,10 @@
                @addElem="(selected) => onUserSubmit(selected)"  @removeElem="(id) => removeUser(id)"/>
 
      <SummaryList v-else class="q-mt-none" :users="userlist" :tags="[...new Set(userlist.flatMap(u => u.tags))]" :loading="userloading"/>
+
+     <q-btn style="float:right" outline color="primary" @click="duplicate(this)"> {{ $t("event.copy")}}</q-btn>
    </div>
+
  </q-page>
 </template>
 
@@ -121,6 +128,7 @@ import ImpactList from "components/ImpactList.vue";
 import TagBadge from "components/TagBadge.vue";
 import ElemList from "components/ElemList.vue";
 import SummaryList from "components/SummaryList.vue";
+import TagSelect from "components/TagSelect.vue";
 
 function submit(self, then) {
   self.$refs.impactref.showDisclaimer = true
@@ -139,7 +147,8 @@ function updateUsers(self) {
 function updateTags(self) {
   submit(self, (response) => {
     self.eventdata = response.data
-    self.taglist = self.tagdata.filter(t => self.eventdata.tagIds.includes(t.id))})
+    self.$refs.tagSelect.selected = self.eventdata.tagIds})
+
 }
 
 function updateName(self) {
@@ -152,6 +161,7 @@ function updateName(self) {
 export default {
   name: "EventDetailPage",
   components: {
+    TagSelect,
     SummaryList,
     TagBadge,
     ImpactList,
@@ -159,7 +169,6 @@ export default {
   },
   data() {
     return {
-      tagfilter: '',
       userfilter: '',
       eventdata: {},
       tagdata: [],
@@ -196,6 +205,7 @@ export default {
         this.eventdata = response.data
         this.hashtag = response.data.category
         this.date = {from: this.eventdata.startDate, to: this.eventdata.endDate}
+        this.$refs.tagSelect.selected = this.eventdata.tagIds
         api
           .get('tags/event-tags')
           .then((tagresponse) => {
@@ -256,7 +266,7 @@ export default {
     },
     onTagSubmit(tags) {
       this.tagloading = true
-      this.eventdata.tagIds.push(...tags.map(t => t.id))
+      this.eventdata.tagIds = tags
       updateTags(this)
       this.tagloading = false
     },
@@ -293,12 +303,6 @@ export default {
       this.eventdata.name = this.name
       updateName(this)
     },
-    resetTagFilter() {
-      this.tagfilter = ''
-    },
-    resetUserFilter() {
-      this.userfilter = ''
-    },
     removeTag(id) {
       this.tagloading = true
       this.eventdata.tagIds.splice(this.eventdata.tagIds.indexOf(id), 1)
@@ -316,7 +320,34 @@ export default {
     },
     filterUserTags(val, update, abort) {
       update(() => this.usertagoptions = this.usertagdata.filter((u) => u.name.toLowerCase().includes(val.toLowerCase())))
+    },
+    duplicate() {
+      const dupe = {
+        ...this.eventdata,
+        id: null,
+        name: this.eventdata.name + this.$t('event.copy_name')}
+      api
+        .post('/events', dupe)
+        .then((response) => this.$q.notify({
+          message: this.$t('event.copy_success'),
+          actions: [
+            {
+              label: this.$t('event.copy_link'),
+              handler: () => {
+                this.$router.push({name: 'event', params: {id: response.data.id}})
+              }
+            }
+          ]
+        }))
+        .catch(error => {
+          this.$q.notify(this.$t(getErrorMessage(error)))
+        })
     }
+  },
+  async beforeRouteUpdate(to, from) {
+    api
+      .get('/events/' + to.params.id)
+      .then((response) => this.eventdata = response.data)
   }
 }
 </script>
