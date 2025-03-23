@@ -42,7 +42,7 @@ export default {
     user: 'Uživatelské kategorie',
     event: 'Kategorie událostí',
     name: 'Jméno kategorie',
-    add: 'Přidat kategorie',
+    add: 'Upravit kategorie',
     parent: 'Nadřazená kategorie',
     no_children: 'Žádné podřazené kategorie',
     no_parent: 'Žádná nadřazená kategorie',
@@ -50,7 +50,8 @@ export default {
     assign_color: 'Přiřadit barvu',
     new_child: 'Vytvořit podkategorii',
     from_event: 'Z událostí: ',
-    group: 'Seskupit dle kategorií'
+    group: 'Seskupit dle kategorií',
+    selected: 'Vybrané kategorie:'
   },
   project: {
     one: 'Projekt',

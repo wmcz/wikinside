@@ -9,7 +9,7 @@
 
       <UserSelect ref="userSelect"/>
 
-      <TagSelect ref="parentSelect" parent url="tags/user-tags"/>
+      <TagSelect ref="parentSelect" parent url="tags/user-tags" label="tag.parent"/>
 
       <q-input v-model="color" :label="$t('tag.color') + $t('optional')">
         <template v-slot:append>
@@ -59,7 +59,7 @@ export default defineComponent({
           color: this.color,
           inherentUserIds: this.$refs.userSelect.selected.map(s => s.id),
           eventIds: [],
-          parentId: this.$refs.parentSelect.selected ? this.$refs.parentSelect.selected.id : null,
+          parentId: this.$refs.parentSelect.selected ? this.$refs.parentSelect.selected : null,
           childrenIds: []
         })
         .then((response) => this.tagdata.push(response.data))

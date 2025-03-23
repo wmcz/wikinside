@@ -100,8 +100,9 @@
 
      <ImpactList :url="'events/' + $route.params.id" ref="impactref"/>
 
-     <ElemList :loading="tagloading" :elems="taglist" :data="tagdata" elemtype="tag/event"
-               @addElem="(selected) => onTagSubmit(selected)"  @removeElem="(id) => removeTag(id)"/>
+     <!--<ElemList :loading="tagloading" :elems="taglist" :data="tagdata" elemtype="tag/event"
+               @addElem="(selected) => onTagSubmit(selected)"  @removeElem="(id) => removeTag(id)"/>-->
+     <TagSelect label="tag.event" url="tags/event-tags" ref="tagSelect" linkable @tagsSelected="(tags) => onTagSubmit(tags)" @tagDeleted="(id) => removeTag(id)"/>
 
      <q-toggle v-model="summary" :label="$t('tag.group')" class="q-pb-none"/>
 
@@ -121,6 +122,7 @@ import ImpactList from "components/ImpactList.vue";
 import TagBadge from "components/TagBadge.vue";
 import ElemList from "components/ElemList.vue";
 import SummaryList from "components/SummaryList.vue";
+import TagSelect from "components/TagSelect.vue";
 
 function submit(self, then) {
   self.$refs.impactref.showDisclaimer = true
@@ -139,7 +141,8 @@ function updateUsers(self) {
 function updateTags(self) {
   submit(self, (response) => {
     self.eventdata = response.data
-    self.taglist = self.tagdata.filter(t => self.eventdata.tagIds.includes(t.id))})
+    self.$refs.tagSelect.selected = self.eventdata.tagIds})
+
 }
 
 function updateName(self) {
@@ -152,6 +155,7 @@ function updateName(self) {
 export default {
   name: "EventDetailPage",
   components: {
+    TagSelect,
     SummaryList,
     TagBadge,
     ImpactList,
@@ -159,7 +163,6 @@ export default {
   },
   data() {
     return {
-      tagfilter: '',
       userfilter: '',
       eventdata: {},
       tagdata: [],
@@ -196,6 +199,7 @@ export default {
         this.eventdata = response.data
         this.hashtag = response.data.category
         this.date = {from: this.eventdata.startDate, to: this.eventdata.endDate}
+        this.$refs.tagSelect.selected = this.eventdata.tagIds
         api
           .get('tags/event-tags')
           .then((tagresponse) => {
@@ -256,7 +260,7 @@ export default {
     },
     onTagSubmit(tags) {
       this.tagloading = true
-      this.eventdata.tagIds.push(...tags.map(t => t.id))
+      this.eventdata.tagIds = tags
       updateTags(this)
       this.tagloading = false
     },
@@ -292,12 +296,6 @@ export default {
     onNameSubmit() {
       this.eventdata.name = this.name
       updateName(this)
-    },
-    resetTagFilter() {
-      this.tagfilter = ''
-    },
-    resetUserFilter() {
-      this.userfilter = ''
     },
     removeTag(id) {
       this.tagloading = true

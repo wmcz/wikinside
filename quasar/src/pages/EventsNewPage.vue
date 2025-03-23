@@ -10,8 +10,8 @@
       <ProjectSelect :style="{visibility: strat === 'PHOTO' ? 'hidden' : 'visible'}" ref="projectSelect"/>
       <UserSelect ref="userSelect" v-if="strat === 'MANUAL'"/>
       <q-input :rules="[ val => val && val.length > 0 || '']" v-else :label="$t('event.' + strat.toLowerCase()) + ' *'" v-model="hashtag" :hint="$t('event.'+ strat.toLowerCase() + '_hint')"/>
-      <TagSelect ref="tagSelect" url="tags/event-tags"/>
-      <TagSelect ref="userTagSelect" url="tags/user-tags"/>
+      <TagSelect ref="tagSelect" url="tags/event-tags" label="tag.event"/>
+      <TagSelect ref="userTagSelect" url="tags/user-tags" label="tag.user"/>
 
       <div>
         <q-field :label="$t('event.dates')" :hint="$t('event.dates_hint')" stack-label borderless>
@@ -59,8 +59,8 @@ export default defineComponent({
         .post('/events', {
           name: this.name,
           id: null,
-          tagIds: this.$refs.tagSelect.selected === null ? [] : this.$refs.tagSelect.selected.map(s => s.id),
-          userTagIds: this.$refs.userTagSelect.selected === null ? [] : this.$refs.userTagSelect.selected.map(s => s.id),
+          tagIds: this.$refs.tagSelect.selected === null ? [] : this.$refs.tagSelect.selected,
+          userTagIds: this.$refs.userTagSelect.selected === null ? [] : this.$refs.userTagSelect.selected,
           projectIds: this.$refs.projectSelect.selected.map(p => p.id),
           userIds: this.strat !== 'MANUAL' || this.$refs.userSelect.selected === null ? [] : this.$refs.userSelect.selected.map(s => s.id),
           strat: this.strat,

@@ -16,41 +16,18 @@
 
       <ImpactList :url="'users/' + $route.params.id" ref="impactref"/>
 
-    <q-list top bordered class="rounded-borders">
-      <q-item class="q-py-none q-pl-none">
-        <q-item-label header>{{ $t('tag.user') }}</q-item-label>
-        <q-space />
-        <q-input  side dense input-class="text-right" style="float: right" class="q-pt-xs" v-model="tagfilter" :label="$t('filter')">
-          <template v-slot:append>
-            <q-icon v-if="tagfilter !== ''" name="clear" class="cursor-pointer" @click="resetTagFilter" />
-            <q-icon v-else name="search"/>
-          </template>
-        </q-input>
-      </q-item>
-      <q-item>
-        <q-item-label caption class="q-pr-xs" style="align-content: center">
-          {{ $t('tag.from_event') }}
-        </q-item-label>
-        <q-item-label>
-          <TagBadge class="q-mr-xs" v-for="tag in eventtaglist" :key="tag.name" :id="tag.id" :name="tag.name" v-bind="tag" elemtype="user"/>
-        </q-item-label>
-      </q-item>
-      <q-table :rows="taglist" :row-key="name" grid :loading="tagloading" :filter="tagfilter" :pagination="{ rowsPerPage: 10}">
-        <template v-slot:item="props">
-          <TagLink elemtype="user" :key="props.row.name" suppresselems v-bind="props.row" right-icon="clear" @deleteTag="(id) => removeTag(id)"/>
+      <TagSelect url="tags/user-tags" label="tag.user" ref="tagSelect" linkable @tagsSelected="(tags) => onTagSubmit(tags)" @tagDeleted="(id) => removeTag(id)">
+        <template v-if="eventtaglist.length > 0" v-slot:disclaimer>
+          <q-item class="q-my-none">
+            <q-item-label caption class="q-pr-xs" style="align-content: center">
+              {{ $t('tag.from_event') }}
+            </q-item-label>
+            <q-item-label>
+              <TagBadge class="q-mr-xs" v-for="tag in eventtaglist" :key="tag.name" :id="tag.id" :name="tag.name" v-bind="tag" elemtype="user"/>
+            </q-item-label>
+          </q-item>
         </template>
-        <template v-slot:no-data>
-          {{ $t('tag.none') }}
-        </template>
-      </q-table>
-
-      <div v-if="taginput" class="q-mb-md q-mx-md q-mt-none">
-        <TagSelect  url="tags/user-tags" :label="$t('tag.add')" ref="tagSelect"/>
-        <q-btn class="q-mr-sm" color="primary" :label="$t('submit')" @click="onTagSubmit"/>
-        <q-btn outline color="primary" :label="$t('cancel')" @click="taginput = false"/>
-      </div>
-      <q-btn v-else class="q-mb-md q-ml-md" color="primary" :label="$t('tag.add')" @click="taginput = true"/>
-    </q-list>
+      </TagSelect>
 
     <q-list top bordered class="rounded-borders">
       <q-item class="q-py-none q-pl-none">
@@ -87,7 +64,6 @@ import {defineComponent} from 'vue'
 import { api } from 'boot/axios'
 import {useRoute} from "vue-router";
 import EventLink from "components/EventLink.vue";
-import TagLink from "components/TagLink.vue";
 import TagSelect from "components/TagSelect.vue";
 import EventSelect from "components/EventSelect.vue";
 import {getErrorMessage} from "src/util";
@@ -116,7 +92,7 @@ function updateTags(self) {
     .put('users', self.userdata)
     .then((response) => {
       self.userdata = response.data
-      self.taglist = self.tagdata.filter(t => self.userdata.inherentTagIds.includes(t.id))
+      self.$refs.tagSelect.selected = self.userdata.inherentTagIds
     })
     .catch(error => self.$q.notify(self.$t(getErrorMessage(error))))
 
@@ -126,18 +102,15 @@ function updateTags(self) {
 export default defineComponent({
   data() {
     return {
-      tagfilter: '',
       eventfilter: '',
       userdata: {},
       tagdata: [],
-      taglist: [],
       eventtaglist: [],
       eventdata: [],
       eventlist: [],
       tagloading: true,
       eventloading: true,
-      eventinput: false,
-      taginput: false
+      eventinput: false
     }
   },
   name: 'UserDetailPage',
@@ -146,7 +119,6 @@ export default defineComponent({
     ImpactList,
     TagSelect,
     EventLink,
-    TagLink,
     EventSelect
   },
   mounted() {
@@ -154,11 +126,11 @@ export default defineComponent({
       .get('users/' + useRoute().params.id)
       .then((response) => {
         this.userdata = response.data
+        this.$refs.tagSelect.selected = response.data.inherentTagIds
         api
           .get('tags/user-tags')
           .then((tagresponse) => {
             this.tagdata = tagresponse.data
-            this.taglist = this.tagdata.filter(t => response.data.inherentTagIds.includes(t.id))
             this.eventtaglist = this.tagdata.filter(t => response.data.eventTagIds.includes(t.id))
             this.tagloading = false
           })
@@ -191,15 +163,12 @@ export default defineComponent({
       })
   },
   methods: {
-    resetTagFilter() {
-      this.tagfilter = ''
-    },
     resetEventFilter() {
       this.eventfilter = ''
     },
-    onTagSubmit() {
+    onTagSubmit(tags) {
       this.tagloading = true
-      this.userdata.inherentTagIds.push(...this.$refs.tagSelect.selected.map(t => t.id))
+      this.userdata.inherentTagIds = tags
       updateTags(this)
       this.tagloading = false
     },

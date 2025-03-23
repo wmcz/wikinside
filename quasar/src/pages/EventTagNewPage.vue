@@ -9,7 +9,7 @@
 
       <EventSelect ref="eventSelect"/>
 
-      <TagSelect ref="parentSelect" parent url="tags/event-tags"/>
+      <TagSelect ref="parentSelect" parent url="tags/event-tags" label="tag.parent"/>
 
       <q-input v-model="color" :label="$t('tag.color') + $t('optional')">
         <template v-slot:append>
@@ -54,7 +54,7 @@ export default defineComponent({
           id: null,
           color: this.color,
           eventIds: this.$refs.eventSelect.selected.map(s => s.id),
-          parentId: this.$refs.parentSelect.selected ? this.$refs.parentSelect.selected.id : null,
+          parentId: this.$refs.parentSelect.selected ? this.$refs.parentSelect.selected : null,
           childrenIds: []
         })
         .then((response) => this.tagdata.push(response.data))

@@ -22,6 +22,9 @@ export default {
     },
     color: {
       type: String
+    },
+    suppressLink: {
+      type: Boolean
     }
   }
 }
