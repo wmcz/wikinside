@@ -21,6 +21,10 @@ export default {
     none: 'Žádné události',
     add: 'Přidat události',
     name: 'Jméno události',
+    copy: 'Duplikovat událost',
+    copy_name: ' - Kopie',
+    copy_success: 'Kopie úspěšně vytvořena.',
+    copy_link: 'Přejít',
     strategy: {
       label: 'Typ události',
       manual: 'S manuálním výběrem uživatel',

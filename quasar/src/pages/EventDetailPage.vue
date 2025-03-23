@@ -62,6 +62,9 @@
            <a style='color: black' v-if="eventdata.strat === 'PHOTO'" :href="'https://commons.wikimedia.org/wiki/' + eventdata.category">
              {{ eventdata.category.substring(eventdata.category.indexOf(':') + 1) }}
            </a>
+           <a style='color: black' v-else-if="eventdata.strat === 'HASHTAG'" :href="'https://hashtags.wmcloud.org/?query=' + eventdata.category + '&startdate=' + eventdata.startDate + '&enddate=' + eventdata.endDate">
+             {{ eventdata.category }}
+           </a>
            <div v-else>
              {{ eventdata.category }}
            </div>
@@ -110,7 +113,10 @@
                @addElem="(selected) => onUserSubmit(selected)"  @removeElem="(id) => removeUser(id)"/>
 
      <SummaryList v-else class="q-mt-none" :users="userlist" :tags="[...new Set(userlist.flatMap(u => u.tags))]" :loading="userloading"/>
+
+     <q-btn style="float:right" outline color="primary" @click="duplicate(this)"> {{ $t("event.copy")}}</q-btn>
    </div>
+
  </q-page>
 </template>
 
@@ -314,7 +320,34 @@ export default {
     },
     filterUserTags(val, update, abort) {
       update(() => this.usertagoptions = this.usertagdata.filter((u) => u.name.toLowerCase().includes(val.toLowerCase())))
+    },
+    duplicate() {
+      const dupe = {
+        ...this.eventdata,
+        id: null,
+        name: this.eventdata.name + this.$t('event.copy_name')}
+      api
+        .post('/events', dupe)
+        .then((response) => this.$q.notify({
+          message: this.$t('event.copy_success'),
+          actions: [
+            {
+              label: this.$t('event.copy_link'),
+              handler: () => {
+                this.$router.push({name: 'event', params: {id: response.data.id}})
+              }
+            }
+          ]
+        }))
+        .catch(error => {
+          this.$q.notify(this.$t(getErrorMessage(error)))
+        })
     }
+  },
+  async beforeRouteUpdate(to, from) {
+    api
+      .get('/events/' + to.params.id)
+      .then((response) => this.eventdata = response.data)
   }
 }
 </script>

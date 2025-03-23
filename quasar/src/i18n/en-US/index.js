@@ -21,6 +21,10 @@ export default {
     none: 'No events',
     add: 'Add events',
     name: 'Event name',
+    copy: 'Duplicate event',
+    copy_name: ' - Copy',
+    copy_success: 'Copy successfully created.',
+    copy_link: 'Go to copy',
     strategy: {
       label: 'Event type',
       manual: 'With manual user selection',
