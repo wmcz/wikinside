@@ -2,7 +2,7 @@
   "name": "quasar",
   "version": "0.0.1",
   "description": "A web interface to access the stats tool",
-    "productName": "WIKINSIDE",
+  "productName": "WIKINSIDE",
   "author": "korinivo",
   "private": true,
   "scripts": {
@@ -35,5 +35,8 @@
     "node": "^18 || ^16 || ^14.19",
     "npm": ">= 6.13.4",
     "yarn": ">= 1.21.1"
+  },
+  "overrides": {
+    "electron": "22.3.25"
   }
 }
