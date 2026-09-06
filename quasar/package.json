@@ -2,7 +2,7 @@
   "name": "quasar",
   "version": "0.0.1",
   "description": "A web interface to access the stats tool",
-    "productName": "WIKINSIDE",
+  "productName": "WIKINSIDE",
   "author": "korinivo",
   "private": true,
   "scripts": {
@@ -23,7 +23,7 @@
   "devDependencies": {
     "@intlify/vite-plugin-vue-i18n": "^3.3.1",
     "@quasar/app-vite": "^1.0.0",
-    "@vue/devtools": "^6.5.0",
+    "@vue/devtools": "^8.2.1",
     "autoprefixer": "^10.4.2",
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.1.0",
