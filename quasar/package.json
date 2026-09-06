@@ -23,7 +23,7 @@
   "devDependencies": {
     "@intlify/vite-plugin-vue-i18n": "^3.3.1",
     "@quasar/app-vite": "^1.0.0",
-    "@vue/devtools": "^6.5.0",
+    "@vue/devtools": "^8.2.1",
     "autoprefixer": "^10.4.2",
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.1.0",
@@ -35,8 +35,5 @@
     "node": "^18 || ^16 || ^14.19",
     "npm": ">= 6.13.4",
     "yarn": ">= 1.21.1"
-  },
-  "overrides": {
-    "electron": "22.3.25"
   }
 }
