@@ -1,4 +1,4 @@
-FROM gradle:jdk18-alpine
+FROM gradle:jdk18
 COPY . /src
 WORKDIR /src
 
