@@ -1,17 +1,17 @@
 package cz.wikimedia.stats.api.client;
 
-import org.springframework.boot.info.BuildProperties;
+import cz.wikimedia.stats.UserAgent;
 import org.springframework.stereotype.Component;
 
 @Component
 public class WmClientFactory {
-    private final BuildProperties properties;
+    private final UserAgent userAgent;
 
-    public WmClientFactory(BuildProperties properties) {
-        this.properties = properties;
+    public WmClientFactory(UserAgent userAgent) {
+        this.userAgent = userAgent;
     }
 
     public WmClient create(String projectUrl) {
-        return new WmClient(projectUrl, properties);
+        return new WmClient(projectUrl, userAgent.value());
     }
 }

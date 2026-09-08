@@ -1,12 +1,12 @@
 package cz.wikimedia.stats.api.client;
 
-import org.springframework.boot.info.BuildProperties;
+import cz.wikimedia.stats.UserAgent;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CommonsClient extends WmClient {
-    public CommonsClient(BuildProperties properties) {
-        super("commons.wikimedia.org", properties);
+    public CommonsClient(UserAgent userAgent) {
+        super("commons.wikimedia.org", userAgent.value());
     }
 
 

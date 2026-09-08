@@ -1,7 +1,6 @@
 package cz.wikimedia.stats.api.client;
 
 import cz.wikimedia.stats.api.client.dto.*;
-import org.springframework.boot.info.BuildProperties;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
@@ -23,10 +22,10 @@ public class WmClient extends AbstractClient {
         return getWithRetries(uriBuilder -> params.apply(getdefaultQueryParams(uriBuilder)).build(), type);
     }
 
-    public WmClient(String projectUrl, BuildProperties properties) {
+    public WmClient(String projectUrl, String userAgent) {
         super(WebClient
                 .builder()
-                .defaultHeader("User-Agent", properties.getName() + "/" + properties.getVersion() + " (" + properties.get("contact") + ")")
+                .defaultHeader("User-Agent", userAgent)
                 .baseUrl("https://" + projectUrl + "/w/api.php")
                 .build());
     }
