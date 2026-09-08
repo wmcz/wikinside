@@ -1,9 +1,6 @@
 services:
   db:
     image: mariadb:latest
-    container_name: db
-    ports:
-      - "3306:3306"
     environment:
       MARIADB_USER: ${DATABASE_USERNAME}
       MARIADB_PASSWORD: ${DATABASE_PASSWORD}
@@ -17,9 +14,9 @@ services:
 
   backend:
     build: .
-    container_name: server
+    env_file: .env
     depends_on:
       db:
         condition: service_healthy
     ports:
-      - "8080:8080"
+      - "8070:8080"
