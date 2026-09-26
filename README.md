@@ -36,9 +36,7 @@ Once received, store the client application key as `METAWIKI_KEY` and the client
 
 ### Backend
 
-To start the backend, run `docker compose up --build` in the root folder of the repository. This will build the database and the backend of the server, and start it for you. The API will be available at port 8070 by default, under the `/api` path.
-
-Restarting and rebuilding (`docker compose up --build`) keeps the database. Running `docker compose down` removes the database container, and the next `docker compose up` starts with an empty database. Use `docker compose down -v` instead to also delete the old database volume, which `docker compose down` otherwise leaves behind unused.
+To start the backend, run `docker compose up --build` in the root folder of the repository. This will build the database and the backend of the server, and start it for you. The API will be available at port 8070 by default, under the `/api` path. Please do note that restarting and rebuilding does not clear the database by default.
 
 Backend tests use an in-memory database and can be run with `./gradlew test` (requires JDK 18).
 
