@@ -6,6 +6,8 @@ services:
       MARIADB_PASSWORD: ${DATABASE_PASSWORD}
       MARIADB_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
       MARIADB_DATABASE: metrics
+    volumes:
+      - db-data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mariadb-admin", "-p${DATABASE_ROOT_PASSWORD}", "ping"]
       timeout: 5s
@@ -20,3 +22,6 @@ services:
         condition: service_healthy
     ports:
       - "8070:8080"
+
+volumes:
+  db-data:
