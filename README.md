@@ -27,7 +27,6 @@ Keep comments in `.env` on their own lines; a comment after a value may become p
 Register an OAuth consumer at https://meta.wikimedia.org/wiki/Special:OAuthConsumerRegistration (Wikimedia account required):
 
 - Choose OAuth 2.0.
-- Check "This consumer is for use only by (your username)" for local development; such consumers are approved automatically. Other consumers need to be approved by an administrator first.
 - Use `http://localhost:8070/api/login/oauth2/code/metawiki` as the callback URL (in general, `BACKEND_URL/api/login/oauth2/code/metawiki`).
 - Limit the project to metawiki.
 - Keep "Client is confidential" checked.
