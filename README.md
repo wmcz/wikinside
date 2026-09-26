@@ -30,7 +30,7 @@ Register an OAuth consumer at https://meta.wikimedia.org/wiki/Special:OAuthConsu
 - Use `http://localhost:8070/api/login/oauth2/code/metawiki` as the callback URL (in general, `BACKEND_URL/api/login/oauth2/code/metawiki`).
 - Limit the project to metawiki.
 - Keep "Client is confidential" checked.
-- Request only "User identity verification only" – no other grants are needed.
+- Request only "User identity verification only" – no other grants are needed, and this keeps the consumer automatically approved.
 
 Once received, store the client application key as `METAWIKI_KEY` and the client application secret as `METAWIKI_SECRET` in your `.env`.
 
